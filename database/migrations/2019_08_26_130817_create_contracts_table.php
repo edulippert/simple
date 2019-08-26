@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateContractsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('contracts', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('condominium_id');
+            $table->integer('file_id');
+            $table->string('name');
+            $table->string('description');
+            $table->string('total_cost');
+            $table->timestamp('start_date');
+            $table->timestamp('end_date');
+            $table->string('contact_name');
+            $table->string('contact_email');
+            $table->string('contact_phone_number');
+            $table->timestamps();
+
+            $table->foreign('condominium_id')->references('id')->on('condominiums');
+            $table->foreign('file_id')->references('id')->on('files');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('contracts');
+    }
+}
