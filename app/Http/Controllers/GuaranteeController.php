@@ -14,17 +14,7 @@ class GuaranteeController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Guarantee::all();
     }
 
     /**
@@ -35,7 +25,13 @@ class GuaranteeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = request()->validate([
+            'description' => 'required'
+        ]);
+
+        Guarantee::create($attributes);
+
+        return response()->json(['message' => 'Garantia cadastrada com sucesso!']);
     }
 
     /**
@@ -46,18 +42,7 @@ class GuaranteeController extends Controller
      */
     public function show(Guarantee $guarantee)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Guarantee  $guarantee
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Guarantee $guarantee)
-    {
-        //
+        return $guarantee;
     }
 
     /**
@@ -69,7 +54,13 @@ class GuaranteeController extends Controller
      */
     public function update(Request $request, Guarantee $guarantee)
     {
-        //
+        $attributes = request()->validate([
+            'description' => 'required'
+        ]);
+
+        $guarantee->update($attributes);
+
+        return response()->json(['message' => 'Garantia alterada com sucesso!']);
     }
 
     /**
@@ -80,6 +71,6 @@ class GuaranteeController extends Controller
      */
     public function destroy(Guarantee $guarantee)
     {
-        //
+        $guarantee->delete();
     }
 }

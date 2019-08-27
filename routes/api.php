@@ -30,5 +30,7 @@ Route::get('users', 'UserController@index');
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResources([
+        'guarantees' => 'GuaranteeController',
+        'maintenances' => 'MaintenanceController'
     ]);
 });

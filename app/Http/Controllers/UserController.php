@@ -53,7 +53,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return $user;
     }
 
     /**
@@ -65,13 +65,24 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $password = request()->validate([
-            'password' => 'required'
+        $attributes = request()->validate([
+            'role_id' => 'required',
+            'username' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'id_number' => '',
+            'cep' => '',
+            'address' => '',
+            'complement' => '',
+            'phone_number' => '',
+            'is_active' => '',
         ]);
 
-        $user->update(bcrypt($password));
+        $attributes['password'] = bcrypt($attributes['password']);
 
-        return response()->json(['message' => 'Password updated successfully!']);
+        $user->update($attributes);
+
+        return response()->json(['message' => 'Usuário alterado com sucesso!']);
     }
 
     /**

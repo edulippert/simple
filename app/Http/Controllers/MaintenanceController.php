@@ -14,17 +14,7 @@ class MaintenanceController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Maintenance::all();
     }
 
     /**
@@ -35,7 +25,13 @@ class MaintenanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = request()->validate([
+            'description' => 'required'
+        ]);
+
+        Maintenance::create($attributes);
+
+        return response()->json(['message' => 'Manutenção cadastrada com sucesso!']);
     }
 
     /**
@@ -46,18 +42,7 @@ class MaintenanceController extends Controller
      */
     public function show(Maintenance $maintenance)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Maintenance  $maintenance
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Maintenance $maintenance)
-    {
-        //
+        return $maintenance;
     }
 
     /**
@@ -69,7 +54,13 @@ class MaintenanceController extends Controller
      */
     public function update(Request $request, Maintenance $maintenance)
     {
-        //
+        $attributes = request()->validate([
+            'description' => 'required'
+        ]);
+
+        $maintenance->update($attributes);
+
+        return response()->json(['message' => 'Manutenção alterada com sucesso!']);
     }
 
     /**
@@ -80,6 +71,6 @@ class MaintenanceController extends Controller
      */
     public function destroy(Maintenance $maintenance)
     {
-        //
+        $maintenance->delete();
     }
 }
