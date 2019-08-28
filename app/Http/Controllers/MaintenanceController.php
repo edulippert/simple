@@ -26,6 +26,7 @@ class MaintenanceController extends Controller
     public function store(Request $request)
     {
         $attributes = request()->validate([
+            'name' => 'required',
             'description' => 'required'
         ]);
 
@@ -55,6 +56,7 @@ class MaintenanceController extends Controller
     public function update(Request $request, Maintenance $maintenance)
     {
         $attributes = request()->validate([
+            'name' => 'required',
             'description' => 'required'
         ]);
 
