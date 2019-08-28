@@ -23,7 +23,7 @@ class CreateCondominiumsTable extends Migration
             $table->string('complement');
             $table->string('zipcode');
             $table->timestamp('licence_due_date');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->foreign('company_id')->references('id')->on('companies');

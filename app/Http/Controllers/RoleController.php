@@ -50,7 +50,9 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        $role->update($request->all());
+
+        return $role;
     }
 
     /**

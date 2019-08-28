@@ -14,17 +14,7 @@ class CondominiumController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Condominium::all();
     }
 
     /**
@@ -35,7 +25,21 @@ class CondominiumController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = request()->validate([
+            'company_id',
+            'file_id',
+            'name',
+            'id_number',
+            'address',
+            'complement',
+            'zipcode',
+            'licence_due_date',
+            'is_activ'
+        ]);
+
+        $condominium = Condominium::create($attributes);
+
+        return $condominium;
     }
 
     /**
@@ -46,18 +50,7 @@ class CondominiumController extends Controller
      */
     public function show(Condominium $condominium)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Condominium  $condominium
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Condominium $condominium)
-    {
-        //
+        return $condominium;
     }
 
     /**
@@ -69,7 +62,21 @@ class CondominiumController extends Controller
      */
     public function update(Request $request, Condominium $condominium)
     {
-        //
+        $attributes = request()->validate([
+            'company_id',
+            'file_id',
+            'name',
+            'id_number',
+            'address',
+            'complement',
+            'zipcode',
+            'licence_due_date',
+            'is_activ'
+        ]);
+
+        $condominium->update($attributes);
+
+        return $condominium;
     }
 
     /**
@@ -80,6 +87,6 @@ class CondominiumController extends Controller
      */
     public function destroy(Condominium $condominium)
     {
-        //
+        $condominium->delete();
     }
 }

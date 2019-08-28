@@ -14,17 +14,7 @@ class SubitemController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Subitem::all();
     }
 
     /**
@@ -35,7 +25,14 @@ class SubitemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = request()->validate([
+            'item_id' => 'required',
+            'description' => 'required'
+        ]);
+
+        $subitem = Subitem::create($attributes);
+
+        return $subitem;
     }
 
     /**
@@ -46,18 +43,7 @@ class SubitemController extends Controller
      */
     public function show(Subitem $subitem)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Subitem  $subitem
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Subitem $subitem)
-    {
-        //
+        return $subitem;
     }
 
     /**
@@ -69,7 +55,14 @@ class SubitemController extends Controller
      */
     public function update(Request $request, Subitem $subitem)
     {
-        //
+        $attributes = request()->validate([
+            'item_id' => 'required',
+            'description' => 'required'
+        ]);
+
+        $subitem->update($attributes);
+
+        return $subitem;
     }
 
     /**
@@ -80,6 +73,6 @@ class SubitemController extends Controller
      */
     public function destroy(Subitem $subitem)
     {
-        //
+        $subitem->delete();
     }
 }

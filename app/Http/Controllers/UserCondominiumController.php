@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\License;
+use App\Condominium;
+use App\UserCondominium;
 use Illuminate\Http\Request;
 
-class LicenseController extends Controller
+class UserCondominiumController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,7 @@ class LicenseController extends Controller
      */
     public function index()
     {
-        //
+        return Condominium::where('user_id', auth()->user()->id);
     }
 
     /**
@@ -27,56 +28,52 @@ class LicenseController extends Controller
     {
         $attributes = request()->validate([
             'condominium_id' => 'required',
-            'option_id' => 'required',
-            'file_id' => '',
-            'description' => 'required'
+            'user_id' => 'required'
         ]);
 
-        $license = License::create($attributes);
+        $user_condominium = UserCondominium::create($attributes);
 
-        return $license;
+        return $user_condominium;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\License  $license
+     * @param  \App\UserCondominium  $userCondominium
      * @return \Illuminate\Http\Response
      */
-    public function show(License $license)
+    public function show(UserCondominium $userCondominium)
     {
-        return $license;
+        return $userCondominium;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\License  $license
+     * @param  \App\UserCondominium  $userCondominium
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, License $license)
+    public function update(Request $request, UserCondominium $userCondominium)
     {
         $attributes = request()->validate([
             'condominium_id' => 'required',
-            'option_id' => 'required',
-            'file_id' => '',
-            'description' => 'required'
+            'user_id' => 'required'
         ]);
 
-        $license->update($attributes);
+        $userCondominium->update($attributes);
 
-        return $license;
+        return $userCondominium;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\License  $license
+     * @param  \App\UserCondominium  $userCondominium
      * @return \Illuminate\Http\Response
      */
-    public function destroy(License $license)
+    public function destroy(UserCondominium $userCondominium)
     {
-        $license->delete();
+        $userCondominium->delete();
     }
 }

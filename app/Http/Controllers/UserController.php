@@ -40,9 +40,9 @@ class UserController extends Controller
 
         $attributes['password'] = bcrypt($attributes['password']);
 
-        User::create($attributes);
+        $user = User::create($attributes);
 
-        return response()->json(['message' => 'Novo Usuário Cadastrado!'], 201);
+        return $user;
     }
 
     /**
@@ -82,7 +82,7 @@ class UserController extends Controller
 
         $user->update($attributes);
 
-        return response()->json(['message' => 'Usuário alterado com sucesso!']);
+        return $user;
     }
 
     /**
@@ -94,6 +94,5 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->json(['message' => 'Usuário deletado com sucesso!']);
     }
 }

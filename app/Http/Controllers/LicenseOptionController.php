@@ -14,17 +14,7 @@ class LicenseOptionController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return LicenseOption::all();
     }
 
     /**
@@ -35,7 +25,13 @@ class LicenseOptionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = request()->validate([
+            'name' => 'required'
+        ]);
+
+        $license_option = LicenseOption::create($attributes);
+
+        return $license_option;
     }
 
     /**
@@ -46,18 +42,7 @@ class LicenseOptionController extends Controller
      */
     public function show(LicenseOption $licenseOption)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\LicenseOption  $licenseOption
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(LicenseOption $licenseOption)
-    {
-        //
+        return $licenseOption;
     }
 
     /**
@@ -69,7 +54,13 @@ class LicenseOptionController extends Controller
      */
     public function update(Request $request, LicenseOption $licenseOption)
     {
-        //
+        $attributes = request()->validate([
+            'name' => 'required'
+        ]);
+
+        $licenseOption->update($attributes);
+
+        return $licenseOption;
     }
 
     /**
@@ -80,6 +71,6 @@ class LicenseOptionController extends Controller
      */
     public function destroy(LicenseOption $licenseOption)
     {
-        //
+        $licenseOption->delete();
     }
 }

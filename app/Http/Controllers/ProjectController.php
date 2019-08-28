@@ -18,16 +18,6 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -35,7 +25,15 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = request()->validate([
+            'condominium_id' => 'required',
+            'file_id' => 'required',
+            'name' => 'required'
+        ]);
+
+        $project = Project::create($attributes);
+
+        return $project;
     }
 
     /**
@@ -46,18 +44,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project $project)
-    {
-        //
+        return $project;
     }
 
     /**
@@ -69,7 +56,15 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $attributes = request()->validate([
+            'condominium_id' => 'required',
+            'file_id' => 'required',
+            'name' => 'required'
+        ]);
+
+        $project->update($attributes);
+
+        return $project;
     }
 
     /**
@@ -80,6 +75,6 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
     }
 }

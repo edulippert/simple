@@ -14,17 +14,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Group::all();
     }
 
     /**
@@ -35,7 +25,13 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = request()->validate([
+            'description' => 'required'
+        ]);
+
+        $group = Group::create($attributes);
+
+        return $group;
     }
 
     /**
@@ -46,18 +42,7 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Group $group)
-    {
-        //
+        return $group;
     }
 
     /**
@@ -69,7 +54,13 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        //
+        $attributes = request()->validate([
+            'description' => 'required'
+        ]);
+
+        $group->update($attributes);
+
+        return $group;
     }
 
     /**
@@ -80,6 +71,6 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        //
+        $group->delete();
     }
 }
