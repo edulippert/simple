@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\Http\Requests\CompanyRequest;
+use App\Http\Resources\CompanyResource;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -14,7 +16,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $company = Company::all();
+        return  CompanyResource::collection($company); 
     }
 
     /**
@@ -33,9 +36,11 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
-        //
+        $company = Company::create($request->all());
+        $company->refresh();
+        return new CompanyResource($company);
     }
 
     /**

@@ -28,6 +28,8 @@ Route::post('roles', 'RoleController@store');
 Route::post('users', 'UserController@store');
 Route::get('users', 'UserController@index');
 
+Route::resource('companies', 'CompanyController',['only' => ['store','index','destroy']]);
+
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResources([
         'guarantees' => 'GuaranteeController',

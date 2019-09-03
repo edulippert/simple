@@ -24,6 +24,7 @@ class CreateCustomerGuaranteesTable extends Migration
             $table->timestamp('due_date');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_expired')->default(false);
+            $table->string('reference');
             $table->timestamps();
 
             $table->foreign('condominium_id')->references('id')->on('condominiums');
