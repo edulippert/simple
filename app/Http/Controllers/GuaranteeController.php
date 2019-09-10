@@ -25,14 +25,14 @@ class GuaranteeController extends Controller
      */
     public function store(Request $request)
     {
-        $attributes = request()->validate([
-            'name' => 'required',
-            'description' => 'required'
-        ]);
+         $attributes = request()->validate([
+             'name' => 'required',
+             'description' => 'required'
+         ]);
+            
+         Guarantee::create($attributes);   
 
-        Guarantee::create($attributes);
-
-        return response()->json(['message' => 'Garantia cadastrada com sucesso!']);
+        return  response()->json(['message' => 'Garantia cadastrada com sucesso!']);
     }
 
     /**
@@ -59,7 +59,7 @@ class GuaranteeController extends Controller
             'name' => 'required',
             'description' => 'required'
         ]);
-
+        
         $guarantee->update($attributes);
 
         return response()->json(['message' => 'Garantia alterada com sucesso!']);

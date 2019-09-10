@@ -29,6 +29,11 @@ Route::post('users', 'UserController@store');
 Route::get('users', 'UserController@index');
 
 Route::resource('companies', 'CompanyController',['only' => ['store','index','destroy']]);
+Route::resource('groups', 'GroupController',['only' => ['store','index','destroy']]);
+Route::resource('items', 'ItemController',['only' => ['store','index','destroy']]);
+Route::resource('subitems', 'SubitemController',['only' => ['store','index','destroy']]);
+Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => ['store','index','destroy']]);
+Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy']]);
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResources([

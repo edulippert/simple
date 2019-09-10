@@ -16,6 +16,7 @@ class CreateGroupsTable extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('description');
+            $table->boolean('is_guarantee')->default(false);
             $table->timestamps();
         });
     }

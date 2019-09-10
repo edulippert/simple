@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\CustomerGuarantee;
-use App\Http\Requests\CustomerGuaranteeRequest;
+use App\Http\Requests\RootGuaranteeRequest;
+use App\RootGuarantee;
 use Illuminate\Http\Request;
 
-class CustomerGuaranteeController extends Controller
+class RootGuaranteeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class CustomerGuaranteeController extends Controller
      */
     public function index()
     {
-        return CustomerGuarantee::all();
+        return RootGuarantee::all();
     }
 
     /**
@@ -34,20 +34,20 @@ class CustomerGuaranteeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CustomerGuaranteeRequest $request)
+    public function store(RootGuaranteeRequest $request)
     {
-        
-        $customerGuarantee =  CustomerGuarantee::create($request->all());
-        return $customerGuarantee;
+        $rootGuarantee = RootGuarantee::create($request->all());
+
+        return $rootGuarantee;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\CustomerGuarantee  $customerGuarantee
+     * @param  \App\RootGuarantee  $rootGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function show(CustomerGuarantee $customerGuarantee)
+    public function show(RootGuarantee $rootGuarantee)
     {
         //
     }
@@ -55,10 +55,10 @@ class CustomerGuaranteeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\CustomerGuarantee  $customerGuarantee
+     * @param  \App\RootGuarantee  $rootGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function edit(CustomerGuarantee $customerGuarantee)
+    public function edit(RootGuarantee $rootGuarantee)
     {
         //
     }
@@ -67,10 +67,10 @@ class CustomerGuaranteeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\CustomerGuarantee  $customerGuarantee
+     * @param  \App\RootGuarantee  $rootGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CustomerGuarantee $customerGuarantee)
+    public function update(Request $request, RootGuarantee $rootGuarantee)
     {
         //
     }
@@ -78,10 +78,10 @@ class CustomerGuaranteeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\CustomerGuarantee  $customerGuarantee
+     * @param  \App\RootGuarantee  $rootGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CustomerGuarantee $customerGuarantee)
+    public function destroy(RootGuarantee $rootGuarantee)
     {
         //
     }
