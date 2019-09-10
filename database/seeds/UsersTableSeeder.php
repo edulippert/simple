@@ -23,18 +23,5 @@ class UsersTableSeeder extends Seeder
                 'phone_number' => '999433799',
                 'is_active' => true
             ]);
-
-        // User::create([
-        //     'role_id' => 1,
-        //     'username' => 'willian',
-        //     'email' => 'willian@codwise.com',
-        //     'password' => 'secret',
-        //     'id_number' => '12345',
-        //     'cep' => '89806730',
-        //     'address' => 'Rio de Janiero',
-        //     'complement' => 2199,
-        //     'phone_number' => '999433799',
-        //     'is_active' => true
-        // ]);
     }
 }
