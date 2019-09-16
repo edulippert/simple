@@ -15,8 +15,12 @@ class CreateUserCondominiumsTable extends Migration
     {
         Schema::create('user_condominiums', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('condominium_id');
-            $table->unsignedInteger('user_id');
+            $table->integer('user_company_id');
+            $table->integer('condominium_id');
+            
+            $table->foreign('user_company_id')->references('id')->on('user_companies');
+            $table->foreign('condominium_id')->references('id')->on('condominiums');
+
             $table->timestamps();
         });
     }

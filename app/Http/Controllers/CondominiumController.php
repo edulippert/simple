@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Condominium;
+use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Illuminate\Http\Request;
+
 
 class CondominiumController extends Controller
 {
@@ -88,5 +90,16 @@ class CondominiumController extends Controller
     public function destroy(Condominium $condominium)
     {
         $condominium->delete();
+    }
+
+    public function getComdominiums(Request $request)
+    {
+        if ($request->company_id===-1) {
+            $response = Condominium::where('company_id',null)->get();
+        }else {
+            $response = Condominium::where('company_id',$request->company_id)->get();
+        }
+
+        return $response;
     }
 }

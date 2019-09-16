@@ -6,17 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserCondominium extends Model
 {
-    protected $fillable = ['condominium_id', 'user_id'];
+    protected $fillable = ['user_company_id', 'condominium_id'];
     protected $guarded = ['id'];
     protected $table = 'user_condominiums';
 
     public function condominiums()
     {
-        return $this->belongsTo(Condominum::class);
+        return $this->belongsTo(Condominium::class);
     }
 
-    public function users()
+    public function user_companies()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(UserCompany::class,'user_company_id','id');
     }
+
 }
