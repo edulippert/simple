@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\UserCompany;
+use App\UserCondominium;
 
 class UserController extends Controller
 {
@@ -94,5 +96,52 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+    }
+
+    public function saveUserAndAssignments(Request $request)
+    {
+        $user = User::create([
+            'role_id' => $request->role_id,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'id_number' => $request->id_number,
+            'cep' => $request->cep,
+            'address' => $request->address,
+            'complement' => $request->complement,
+            'phone_number' => $request->phone_number,
+            'is_active' => $request->is_active,
+        ]);
+        $user->refresh();
+
+        if ($user) {
+            if ($request->company_id==-1) {
+                $userCompany = UserCompany::create([
+                  'user_id' => $user->id, 
+                  'company_id' => null
+                ]);
+                $userCompany->refresh();
+                UserCondominium::create([
+                  'user_company_id'=>$userCompany->id,
+                  'condominium_id'=>$request->condominium_id
+                  ]);
+                 
+            }else{
+                $userCompany = UserCompany::create([
+                  'user_id' => $user->id,
+                  'company_id' => $request->company_id
+                ]);
+          
+                if ($request->condominium_id!=-1) {
+                  UserCondominium::create([
+                    'user_company_id'=>$userCompany->id,
+                    'condominium_id'=>$request->condominium_id
+                    ]);
+                }
+            }
+        }
+
+        return "ok";
+        
     }
 }

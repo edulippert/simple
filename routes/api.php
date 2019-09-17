@@ -36,7 +36,7 @@ Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => [
 Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy']]);
 
 Route::name('get_condominiums')->post('get_condominiums','CondominiumController@getComdominiums');
-Route::name('user_attributes')->post('user_attributes','UserCompanyController@storeCompanies');
+Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResources([
