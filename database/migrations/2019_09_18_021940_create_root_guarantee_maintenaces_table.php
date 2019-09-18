@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRootMaintenancesTable extends Migration
+class CreateRootGuaranteeMaintenacesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateRootMaintenancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('root_maintenances', function (Blueprint $table) {
+        Schema::create('root_guarantee_maintenaces', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('maintenance_id')->nullable();
+            $table->integer('root_guarantee_id')->nullable();
             $table->integer('group_id')->nullable();
             $table->integer('item_id')->nullable();
             $table->integer('subitem_id')->nullable();
@@ -27,7 +27,7 @@ class CreateRootMaintenancesTable extends Migration
             $table->string('font')->nullable();
             $table->timestamps();
 
-            $table->foreign('maintenance_id')->references('id')->on('maintenances')->onDelete('cascade');
+            $table->foreign('root_guarantee_id')->references('id')->on('root_guarantees')->onDelete('cascade');
         });
     }
 
@@ -38,6 +38,6 @@ class CreateRootMaintenancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('root_maintenances');
+        Schema::dropIfExists('root_guarantee_maintenaces');
     }
 }

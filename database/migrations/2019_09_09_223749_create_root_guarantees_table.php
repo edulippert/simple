@@ -25,7 +25,7 @@ class CreateRootGuaranteesTable extends Migration
             $table->string('reference')->nullable();
             $table->timestamps();
 
-            $table->foreign('guarantee_id')->references('id')->on('guarantees');
+            $table->foreign('guarantee_id')->references('id')->on('guarantees')->onDelete('cascade');
             $table->foreign('group_id')->references('id')->on('groups');
             $table->foreign('item_id')->references('id')->on('items');
             $table->foreign('subitem_id')->references('id')->on('subitems');
