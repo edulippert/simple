@@ -27,19 +27,19 @@ class CondominiumController extends Controller
      */
     public function store(Request $request)
     {
+       // dd($request->name);
         $attributes = request()->validate([
             'company_id',
-            'file_id',
             'name',
             'id_number',
             'address',
             'complement',
             'zipcode',
             'licence_due_date',
-            'is_activ'
+            'is_active'
         ]);
 
-        $condominium = Condominium::create($attributes);
+        $condominium = Condominium::create($request->all());
 
         return $condominium;
     }
@@ -66,14 +66,13 @@ class CondominiumController extends Controller
     {
         $attributes = request()->validate([
             'company_id',
-            'file_id',
             'name',
             'id_number',
             'address',
             'complement',
             'zipcode',
             'licence_due_date',
-            'is_activ'
+            'is_active'
         ]);
 
         $condominium->update($attributes);

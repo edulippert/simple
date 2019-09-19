@@ -98,6 +98,11 @@ class UserController extends Controller
         $user->delete();
     }
 
+    public function getUsersAndAssignments()
+    {
+        return User::getUserAndAssignments();
+    }
+
     public function saveUserAndAssignments(Request $request)
     {
         $user = User::create([

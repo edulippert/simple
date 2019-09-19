@@ -28,20 +28,23 @@ Route::post('roles', 'RoleController@store');
 Route::post('users', 'UserController@store');
 Route::get('users', 'UserController@index');
 
+Route::name('user_assignments')->get('user_assignments','UserController@getUsersAndAssignments');
+
+
 Route::resource('companies', 'CompanyController',['only' => ['store','index','destroy']]);
 Route::resource('groups', 'GroupController',['only' => ['store','index','destroy']]);
 Route::resource('items', 'ItemController',['only' => ['store','index','destroy']]);
 Route::resource('subitems', 'SubitemController',['only' => ['store','index','destroy']]);
 Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => ['store','index','destroy']]);
 Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy']]);
-
+Route::resource('condominiums','CondominiumController');
 Route::name('get_condominiums')->post('get_condominiums','CondominiumController@getComdominiums');
 Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');
 
-Route::group(['middleware' => 'auth:api'], function () {
+//Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResources([
         'guarantees' => 'GuaranteeController',
-        'maintenances' => 'MaintenanceController',
-        'condominiums' => 'CondominiumController'
+        'maintenances' => 'MaintenanceController'
+        //'condominiums' => 'CondominiumController'
     ]);
-});
+//});

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -34,6 +35,18 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     protected $table = 'users';
+
+    public static function getUserAndAssignments()
+    {
+
+        $user_assignments = DB::table('users')
+                            ->join('user_companies','users.id','user_companies.user_id')
+                            ->join('companies','companies.id','user_companies.company_id')
+                            ->select('users.username','users.email','users.phone_number','companies.name')->get();
+        return $user_assignments;
+
+        
+    }
 
     public function role()
     {

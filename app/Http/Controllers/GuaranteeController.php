@@ -26,13 +26,13 @@ class GuaranteeController extends Controller
     public function store(Request $request)
     {
          $attributes = request()->validate([
-             'name' => 'required',
+             'name' => 'required|unique:guarantees,name',
              'description' => 'required'
          ]);
             
-         Guarantee::create($attributes);   
+        $guarantee = Guarantee::create($attributes);   
 
-        return  response()->json(['message' => 'Garantia cadastrada com sucesso!']);
+        return $guarantee;
     }
 
     /**

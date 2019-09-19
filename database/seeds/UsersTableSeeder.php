@@ -23,5 +23,14 @@ class UsersTableSeeder extends Seeder
                 'phone_number' => '999433799',
                 'is_active' => true
             ]);
+        // factory(User::class,10)
+        //     ->create([
+        //         'role_id' => 2,
+        //         'cep' => '89806730',
+        //         'address' => 'Rio de Janiero',
+        //         'complement' => 2199,
+        //         'phone_number' => '999433799',
+        //         'is_active' => true
+        //     ]);
     }
 }
