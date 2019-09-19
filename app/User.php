@@ -41,8 +41,14 @@ class User extends Authenticatable implements JWTSubject
 
         $user_assignments = DB::table('users')
                             ->join('user_companies','users.id','user_companies.user_id')
-                            ->join('companies','companies.id','user_companies.company_id')
-                            ->select('users.username','users.email','users.phone_number','companies.name')->get();
+                            ->leftjoin('companies','companies.id','user_companies.company_id')
+                            ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
+                            ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
+                            ->select('users.username',
+                                      'users.email',
+                                      'users.phone_number',
+                                      'companies.name as company',
+                                      'condominiums.name as condominum')->get();
         return $user_assignments;
 
         
