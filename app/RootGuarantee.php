@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Group;
 use App\RootGuaranteeMaintenance;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -24,8 +25,8 @@ class RootGuarantee extends Model
     {
         $root_guarantees = self::getRootGuarantees($guarantee_id);
 
-        $groups = self::getDistinctGroupsGarantees($root_guarantees);
-
+        $groups = Group::getDistinctGroups($root_guarantees);
+        
         $response = [];
 
         foreach ($groups as $group) {
@@ -50,7 +51,7 @@ class RootGuarantee extends Model
         foreach ($grouped_items as $item ) {
             
             $response[] = [
-                'root_guarantee_id' => $item['id'],
+                'id' => $item['id'],
                 'item_id' => $item['item_id'],
                 'description' => $item['item_description'],
                 'amount' => $item['amount'],
@@ -90,17 +91,6 @@ class RootGuarantee extends Model
                     ->get();
 
         return $root_guarantees;
-    }
-
-    public static function getDistinctGroupsGarantees($root_guarantees)
-    {
-        $groups = $root_guarantees->map->only(['group_id','group_description']);
-        
-        $group_collection = new Collection($groups);
-        
-        $unique_groups = $group_collection->unique();
-        
-        return $unique_groups;
     }
 
     public function root_guarantee_maintenaces(){

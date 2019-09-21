@@ -28,19 +28,18 @@ Route::post('roles', 'RoleController@store');
 Route::post('users', 'UserController@store');
 Route::get('users', 'UserController@index');
 
-
-
-
 Route::resource('companies', 'CompanyController',['only' => ['store','index','destroy']]);
 Route::resource('groups', 'GroupController',['only' => ['store','index','destroy']]);
 Route::resource('items', 'ItemController',['only' => ['store','index','destroy']]);
 Route::resource('subitems', 'SubitemController',['only' => ['store','index','destroy']]);
 Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => ['store','index','destroy']]);
 Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy']]);
+Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController',['only' => ['store','index','destroy']]);
 Route::resource('condominiums','CondominiumController');
 
 Route::name('get_root_guarantees')->post('get_root_guarantees','RootGuaranteeController@getRootGuarantees');
 Route::name('get_condominiums')->post('get_condominiums','CondominiumController@getComdominiums');
+Route::name('get_root_guarantee_maintenances')->post('get_root_guarantee_maintenances','RootGuaranteeMaintenanceController@getRootGuaranteeMaintenances');
 
 Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');
 Route::name('user_assignments')->get('user_assignments','UserController@getUsersAndAssignments');

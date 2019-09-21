@@ -3,12 +3,25 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Group extends Model
 {
     protected $fillable = ['description','is_guarantee'];
     protected $giuarded = ['id'];
     protected $table = 'groups';
+
+    
+    public static function getDistinctGroups($root_guarantees)
+    {
+        $groups = $root_guarantees->map->only(['group_id','group_description']);
+        
+        $group_collection = new Collection($groups);
+        
+        $unique_groups = $group_collection->unique();
+        
+        return $unique_groups;
+    }
 
     public function items()
     {

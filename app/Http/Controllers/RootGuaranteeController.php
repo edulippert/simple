@@ -89,7 +89,8 @@ class RootGuaranteeController extends Controller
     public function getRootGuarantees(Request $request)
     {
 
-        $guarantee_maintenances_groupes = RootGuarantee::buildRootGuaranteesResponse($request->guarantee_id);
-        return $guarantee_maintenances_groupes;
+        $guarantee_maintenances_groups = RootGuarantee::buildRootGuaranteesResponse($request->guarantee_id);
+        
+        return $guarantee_maintenances_groups;
     }
 }

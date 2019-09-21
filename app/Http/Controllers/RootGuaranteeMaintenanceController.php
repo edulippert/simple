@@ -14,7 +14,7 @@ class RootGuaranteeMaintenanceController extends Controller
      */
     public function index()
     {
-        //
+        return RootGuaranteeMaintenance::all();
     }
 
     /**
@@ -35,7 +35,9 @@ class RootGuaranteeMaintenanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $guarantee_maintenances = RootGuaranteeMaintenance::create($request->all());
+
+        return $guarantee_maintenances;
     }
 
     /**
@@ -81,5 +83,12 @@ class RootGuaranteeMaintenanceController extends Controller
     public function destroy(RootGuaranteeMaintennce $rootGuaranteeMaintenance)
     {
         //
+    }
+
+    public function getRootGuaranteeMaintenances(Request $request)
+    {
+        $guarantee_maintenances = RootGuaranteeMaintenance::buildRootGuaranteeMaintenancesResponse($request->root_guarantee_id);
+
+        return $guarantee_maintenances;
     }
 }
