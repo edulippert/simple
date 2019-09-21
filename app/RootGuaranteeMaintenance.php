@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RootMaintenance extends Model
+class RootGuaranteeMaintenance extends Model
 {
-    protected $fillable = [ 'maintenance_id',
+    protected $fillable = [ 'root_guarantee_id',
                             'group_id',
                             'item_id',
                             'subitem_id',
@@ -16,8 +16,8 @@ class RootMaintenance extends Model
                             'periodo',
                             'responsable',
                             'font'
-                        ];
+                            ];
 
-    protected $table = 'root_maintenances';
+    protected $table = 'root_guarantee_maintenances';
 
 }

@@ -38,6 +38,8 @@ Route::resource('subitems', 'SubitemController',['only' => ['store','index','des
 Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => ['store','index','destroy']]);
 Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy']]);
 Route::resource('condominiums','CondominiumController');
+
+Route::name('get_root_guarantees')->post('get_root_guarantees','RootGuaranteeController@getRootGuarantees');
 Route::name('get_condominiums')->post('get_condominiums','CondominiumController@getComdominiums');
 
 Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');

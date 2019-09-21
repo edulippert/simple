@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\RootGuaranteeMaintenace;
+use App\RootGuaranteeMaintenance;
 use Illuminate\Http\Request;
 
-class RootGuaranteeMaintenaceController extends Controller
+class RootGuaranteeMaintenanceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class RootGuaranteeMaintenaceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\RootGuaranteeMaintenace  $rootGuaranteeMaintenace
+     * @param  \App\RootGuaranteeMaintenance  $rootGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function show(RootGuaranteeMaintenace $rootGuaranteeMaintenace)
+    public function show(RootGuaranteeMaintenance $rootGuaranteeMaintenance)
     {
         //
     }
@@ -52,10 +52,10 @@ class RootGuaranteeMaintenaceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\RootGuaranteeMaintenace  $rootGuaranteeMaintenace
+     * @param  \App\RootGuaranteeMaintenance  $rootGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function edit(RootGuaranteeMaintenace $rootGuaranteeMaintenace)
+    public function edit(RootGuaranteeMaintenance $rootGuaranteeMaintenance)
     {
         //
     }
@@ -64,10 +64,10 @@ class RootGuaranteeMaintenaceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RootGuaranteeMaintenace  $rootGuaranteeMaintenace
+     * @param  \App\RootGuaranteeMaintenance  $rootGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, RootGuaranteeMaintenace $rootGuaranteeMaintenace)
+    public function update(Request $request, RootGuaranteeMaintenance $rootGuaranteeMaintenance)
     {
         //
     }
@@ -75,10 +75,10 @@ class RootGuaranteeMaintenaceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\RootGuaranteeMaintenace  $rootGuaranteeMaintenace
+     * @param  \App\RootGuaranteeMaintenance  $rootGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RootGuaranteeMaintenace $rootGuaranteeMaintenace)
+    public function destroy(RootGuaranteeMaintennce $rootGuaranteeMaintenance)
     {
         //
     }
