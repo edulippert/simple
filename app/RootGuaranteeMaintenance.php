@@ -50,6 +50,12 @@ class RootGuaranteeMaintenance extends Model
         foreach ($grouped_items as $item ) {
             
             $response[] = [
+                'item_guarantee_id' => $item['item_guarantee_id'],
+                'item_guarantee_description' => $item['item_guarantee_description'],
+                'group_guarantee_id' => $item['group_guarantee_id'],
+                'group_guarantee_description' => $item['group_guarantee_description'],
+                'guarantee_id' => $item['guarantee_id'],
+                'guarantee_description' => $item['guarantee_description'],
                 'id' => $item['id'],
                 'root_guarantee_id' => $item['id'],
                 'item_id' => $item['item_id'],
@@ -73,7 +79,17 @@ class RootGuaranteeMaintenance extends Model
         $guarantee_maintenances = self::where('root_guarantee_id',$root_guarantee_id)
                                     ->join('groups','groups.id','root_guarantee_maintenances.group_id')
                                     ->join('items','items.id','root_guarantee_maintenances.item_id')
-                                    ->select('root_guarantee_maintenances.id',
+                                    ->join('root_guarantees','root_guarantees.id','root_guarantee_maintenances.root_guarantee_id')
+                                    ->join('guarantees','guarantees.id','root_guarantees.guarantee_id')
+                                    ->join('groups as guarantee_groups','guarantee_groups.id','root_guarantees.group_id')
+                                    ->join('items as guarantee_items','guarantee_items.id','root_guarantees.item_id')
+                                    ->select('guarantee_items.id as item_guarantee_id',
+                                            'guarantee_items.description as item_guarantee_description',
+                                            'guarantee_groups.id as group_guarantee_id',
+                                            'guarantee_groups.description as group_guarantee_description',
+                                            'guarantees.id as guarantee_id',
+                                            'guarantees.description as guarantee_description',
+                                            'root_guarantee_maintenances.id',
                                             'root_guarantee_maintenances.root_guarantee_id',
                                             'groups.id as group_id',
                                             'groups.description as group_description',
