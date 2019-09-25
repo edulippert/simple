@@ -98,10 +98,14 @@ class RootGuarantee extends Model
     }
 
     public function guarantees(){
-        return $this->belongsTo(Guarantee::class);
+        return $this->belongsTo(Guarantee::class,'guarantee_id','id');
     }
 
     public function groups(){
         return $this->belongsTo(Group::class,'group_id','id');
+    }
+
+    public function item(){
+        return $this->belongsTo(Item::class,'item_id','id');
     }
 }

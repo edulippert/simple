@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\RootGuaranteeMaintenance;
+use App\RootGuarantee;
 use Illuminate\Http\Request;
+use App\RootGuaranteeMaintenance;
 
 class RootGuaranteeMaintenanceController extends Controller
 {
@@ -87,8 +88,20 @@ class RootGuaranteeMaintenanceController extends Controller
 
     public function getRootGuaranteeMaintenances(Request $request)
     {
+        $root_guarantee = RootGuarantee::find($request->root_guarantee_id);
+        $guarantee = $root_guarantee->guarantees;
+        $root_guarantee_group = $root_guarantee->groups;
+        $root_guarantee_item = $root_guarantee->item;
+        
+
         $guarantee_maintenances = RootGuaranteeMaintenance::buildRootGuaranteeMaintenancesResponse($request->root_guarantee_id);
 
-        return $guarantee_maintenances;
+        return [
+                'root_guarantee_id' => $root_guarantee->id,
+                'guarantee_description' => $guarantee->description,
+                'root_guarantee_group_description' => $root_guarantee_group->description,
+                'root_guarantee_item_description' => $root_guarantee_item->description,
+                'guarantee_maintenances' =>  $guarantee_maintenances
+                ];
     }
 }
