@@ -18,3 +18,10 @@
 // Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/app',function(){
+  return view('angular');
+});
+
+Route::get('/app/{angular}',function(){
+  return view('angular');
+})->where('angular','.*');
