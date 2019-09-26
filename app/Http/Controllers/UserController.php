@@ -120,18 +120,20 @@ class UserController extends Controller
         $user->refresh();
 
         if ($user) {
-            if ($request->company_id==-1) {
+            if ($request->company_id==-1 && $request->condominium_id!=-1) {
                 $userCompany = UserCompany::create([
                   'user_id' => $user->id, 
                   'company_id' => null
                 ]);
                 $userCompany->refresh();
+
                 UserCondominium::create([
-                  'user_company_id'=>$userCompany->id,
-                  'condominium_id'=>$request->condominium_id
-                  ]);
+                'user_company_id'=>$userCompany->id,
+                'condominium_id'=>$request->condominium_id
+                ]);
+            
                  
-            }else{
+            }elseif ($request->company_id!=-1){
                 $userCompany = UserCompany::create([
                   'user_id' => $user->id,
                   'company_id' => $request->company_id
@@ -146,7 +148,7 @@ class UserController extends Controller
             }
         }
 
-        return "ok";
+        return $user;
         
     }
 }

@@ -16,8 +16,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $company = Company::all();
-        return  CompanyResource::collection($company); 
+        return Company::all();
+        //return  CompanyResource::collection($company); 
     }
 
     /**
@@ -36,11 +36,10 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CompanyRequest $request)
+    public function store(Request $request)
     {
         $company = Company::create($request->all());
-        $company->refresh();
-        return new CompanyResource($company);
+        return $company;
     }
 
     /**
@@ -51,7 +50,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+        return $company;
     }
 
     /**
