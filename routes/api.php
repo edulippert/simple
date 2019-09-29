@@ -28,13 +28,13 @@ Route::post('roles', 'RoleController@store');
 Route::post('users', 'UserController@store');
 Route::get('users', 'UserController@index');
 
-Route::resource('companies', 'CompanyController',['only' => ['store','index','destroy']]);
-Route::resource('groups', 'GroupController',['only' => ['store','index','destroy']]);
-Route::resource('items', 'ItemController',['only' => ['store','index','destroy']]);
-Route::resource('subitems', 'SubitemController',['only' => ['store','index','destroy']]);
-Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => ['store','index','destroy']]);
-Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy']]);
-Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController',['only' => ['store','index','destroy']]);
+Route::resource('companies', 'CompanyController',['only' => ['store','index','destroy','update']]);
+Route::resource('groups', 'GroupController',['only' => ['store','index','destroy','update']]);
+Route::resource('items', 'ItemController',['only' => ['store','index','destroy','update']]);
+Route::resource('subitems', 'SubitemController',['only' => ['store','index','destroy','update']]);
+Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => ['store','index','destroy','update']]);
+Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy','update']]);
+Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController',['only' => ['store','index','destroy','update']]);
 Route::resource('condominiums','CondominiumController');
 
 Route::name('get_root_guarantees')->post('get_root_guarantees','RootGuaranteeController@getRootGuarantees');

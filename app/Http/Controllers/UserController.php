@@ -128,8 +128,8 @@ class UserController extends Controller
                 $userCompany->refresh();
 
                 UserCondominium::create([
-                'user_company_id'=>$userCompany->id,
-                'condominium_id'=>$request->condominium_id
+                    'user_company_id'=>$userCompany->id,
+                    'condominium_id'=>$request->condominium_id
                 ]);
             
                  

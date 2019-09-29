@@ -21,16 +21,6 @@ class CompanyController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -38,7 +28,19 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        $company = Company::create($request->all());
+        $attributes = request()->validate([
+            'name' => 'required|unique:companies,name',
+            'cnpj' => 'required|unique:companies,cnpj',
+            'cep' => 'required',
+            'address'=>'required',
+            'complement'=>'required',
+            'website'=>'required',
+            'email'=>'required|email',
+            'phone_number'=>'required',
+            'responsible'=>'required'
+        ]);
+
+        $company = Company::create($attributes);
         return $company;
     }
 
@@ -53,16 +55,6 @@ class CompanyController extends Controller
         return $company;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Company  $company
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Company $company)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -73,7 +65,22 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $company)
     {
-        //
+
+        $attributes = request()->validate([
+            'name' => 'required|unique:companies,name',
+            'cnpj' => 'required',
+            'cep' => 'required',
+            'address'=>'required',
+            'complement'=>'required',
+            'website'=>'required',
+            'email'=>'required|email',
+            'phone_number'=>'required',
+            'responsible'=>'required'
+        ]);
+
+        $company->fill($attributes);
+        $company->save();
+        return $company;
     }
 
     /**
@@ -84,7 +91,8 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        $company->delete();
+        return response()->json([],204);
     }
 
 }

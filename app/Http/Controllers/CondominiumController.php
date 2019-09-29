@@ -29,17 +29,17 @@ class CondominiumController extends Controller
     {
        // dd($request->name);
         $attributes = request()->validate([
-            'company_id',
-            'name',
-            'id_number',
-            'address',
-            'complement',
-            'zipcode',
-            'licence_due_date',
-            'is_active'
+           // 'company_id' => 'required',
+            'name' => 'required',
+            'id_number' => 'required',
+            'address' => 'required',
+            'complement' => 'required',
+            'zipcode' => 'required',
+            'licence_due_date' => 'required',
+            'is_active' => 'required'
         ]);
 
-        $condominium = Condominium::create($request->all());
+        $condominium = Condominium::create($attributes);
 
         return $condominium;
     }
@@ -65,14 +65,14 @@ class CondominiumController extends Controller
     public function update(Request $request, Condominium $condominium)
     {
         $attributes = request()->validate([
-            'company_id',
-            'name',
-            'id_number',
-            'address',
-            'complement',
-            'zipcode',
-            'licence_due_date',
-            'is_active'
+           // 'company_id' => 'required',
+            'name' => 'required',
+            'id_number' => 'required',
+            'address' => 'required',
+            'complement' => 'required',
+            'zipcode' => 'required',
+            'licence_due_date' => 'required',
+            'is_active' => 'required'
         ]);
 
         $condominium->update($attributes);
@@ -89,6 +89,7 @@ class CondominiumController extends Controller
     public function destroy(Condominium $condominium)
     {
         $condominium->delete();
+        return response()->json([],204);
     }
 
     public function getComdominiums(Request $request)
