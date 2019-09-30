@@ -13,7 +13,7 @@ class RootMaintenance extends Model
                             'activity',
                             'description',
                             'amount',
-                            'periodo',
+                            'period',
                             'responsable',
                             'font'
                         ];

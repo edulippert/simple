@@ -34,8 +34,12 @@ Route::resource('items', 'ItemController',['only' => ['store','index','destroy',
 Route::resource('subitems', 'SubitemController',['only' => ['store','index','destroy','update']]);
 Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => ['store','index','destroy','update']]);
 Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy','update']]);
+Route::resource('rootmaintenances', 'RootMaintenanceController',['only' => ['store','index','destroy','update']]);
 Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController',['only' => ['store','index','destroy','update']]);
-Route::resource('condominiums','CondominiumController');
+Route::resource('condominiums','CondominiumController',['only' => ['store','index','destroy','update']]);
+Route::resource('maintenances','MaintenanceController',['only' => ['store','index','destroy','update']]);
+
+
 
 Route::name('get_root_guarantees')->post('get_root_guarantees','RootGuaranteeController@getRootGuarantees');
 Route::name('get_condominiums')->post('get_condominiums','CondominiumController@getComdominiums');
@@ -43,10 +47,12 @@ Route::name('get_root_guarantee_maintenances')->post('get_root_guarantee_mainten
 
 Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');
 Route::name('user_assignments')->get('user_assignments','UserController@getUsersAndAssignments');
+Route::name('user_assignments')->put('user_assignments/{id}','UserController@updateUserAndAssignments');
+Route::name('user_assignments')->delete('user_assignments/{id}','UserController@deleteUserAndAssignments');
 //Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResources([
         'guarantees' => 'GuaranteeController',
-        'maintenances' => 'MaintenanceController'
+        //'maintenances' => 'MaintenanceController'
         //'condominiums' => 'CondominiumController'
     ]);
 //});

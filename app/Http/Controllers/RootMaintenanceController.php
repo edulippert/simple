@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RootMaintenanceRequest;
 use App\RootMaintenance;
 use Illuminate\Http\Request;
 
@@ -14,17 +15,7 @@ class RootMaintenanceController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return RootMaintenance::all();
     }
 
     /**
@@ -33,9 +24,11 @@ class RootMaintenanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RootMaintenanceRequest $request)
     {
-        //
+        
+        $root_maintenance = RootMaintenance::create($request->all());
+        return $root_maintenance;
     }
 
     /**
@@ -67,9 +60,12 @@ class RootMaintenanceController extends Controller
      * @param  \App\RootMaintenance  $rootMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, RootMaintenance $rootMaintenance)
+    public function update(RootMaintenanceRequest $request, RootMaintenance $rootmaintenance)
     {
-        //
+        
+        $rootmaintenance->fill($request->all());
+        $rootmaintenance->save();
+        return $rootmaintenance;
     }
 
     /**
@@ -78,8 +74,10 @@ class RootMaintenanceController extends Controller
      * @param  \App\RootMaintenance  $rootMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RootMaintenance $rootMaintenance)
+    public function destroy(RootMaintenance $rootmaintenance)
     {
-        //
+        $rootmaintenance->delete();
+
+        return response()->json([],204);
     }
 }

@@ -2,15 +2,19 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Role;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable,SoftDeletes;
+
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'role_id',
@@ -36,21 +40,63 @@ class User extends Authenticatable implements JWTSubject
 
     protected $table = 'users';
 
-    public static function getUserAndAssignments()
-    {
+    public static function buildUserReponse(){
+        
+        $roles = Role::all();
 
-        $user_assignments = DB::table('users')
+        $response=[];
+
+        foreach ($roles as $role) {
+            $response[] = [
+                'role_id' => $role->id,
+                'role_description' => $role->description,
+                'collapse' => true,
+                'users' => self::getUserAndAssignments($role)
+            ];
+        }
+
+        return $response;
+
+    }
+
+    public static function getUserAndAssignments($role = null)
+    {
+        if ($role){
+        
+            $user_assignments = DB::table('users')
+                        ->where('roles.id',$role->id)
+                        ->join('user_companies','users.id','user_companies.user_id')
+                        ->leftjoin('companies','companies.id','user_companies.company_id')
+                        ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
+                        ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
+                        ->leftJoin('roles','roles.id','users.role_id')
+                        ->select('users.username',
+                        'roles.description',
+                        'users.email',
+                        'users.phone_number',
+                        'companies.name as company_name',
+                        'condominiums.name as condominium_name')->get();
+        
+
+        }else{
+
+            $user_assignments = DB::table('users')
                             ->join('user_companies','users.id','user_companies.user_id')
                             ->leftjoin('companies','companies.id','user_companies.company_id')
                             ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
                             ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
+                            ->leftJoin('roles','roles.id','users.role_id')
                             ->select('users.username',
-                                      'users.email',
-                                      'users.phone_number',
-                                      'companies.name as company',
-                                      'condominiums.name as condominum')->get();
-        return $user_assignments;
+                            'roles.description',
+                            'users.email',
+                            'users.phone_number',
+                            'companies.name as company_name',
+                            'condominiums.name as condominium_name')->get();
+            
+        }
 
+        return $user_assignments;
+        
         
     }
 

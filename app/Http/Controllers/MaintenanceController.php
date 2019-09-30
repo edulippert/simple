@@ -30,9 +30,9 @@ class MaintenanceController extends Controller
             'description' => 'required'
         ]);
 
-        Maintenance::create($attributes);
+        $maintenance = Maintenance::create($attributes);
 
-        return response()->json(['message' => 'Manutenção cadastrada com sucesso!']);
+        return $maintenance;
     }
 
     /**
@@ -62,7 +62,7 @@ class MaintenanceController extends Controller
 
         $maintenance->update($attributes);
 
-        return response()->json(['message' => 'Manutenção alterada com sucesso!']);
+        return $maintenance;
     }
 
     /**

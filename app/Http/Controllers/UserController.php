@@ -96,10 +96,18 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+        return response()->json([],'204');
+    }
+
+    public function deleteUserAndAssignments($id){
+        $user_assignments = User::find($id);
+        $user_assignments->delete();
+        return response()->json([],'204');
     }
 
     public function getUsersAndAssignments()
     {
+        return User::buildUserReponse();
         return User::getUserAndAssignments();
     }
 
@@ -147,6 +155,114 @@ class UserController extends Controller
                 }
             }
         }
+
+        return $user;
+        
+    }
+
+    public function updateUserAndAssignments(Request $request,$id)
+    {
+
+        $user = User::find($id);
+        $user->role_id = $request->role_id;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->id_number = $request->id_number;
+        $user->cep = $request->cep;
+        $user->address = $request->address;
+        $user->complement = $request->complement;
+        $user->phone_number = $request->phone_number;
+        $user->is_active = $request->is_active;
+
+        if ($request->company_id!=-1){
+
+            if ($user->user_companies->first()){
+                
+                $user->user_companies->first()->company_id=$request->company_id;
+                        
+                if ($request->condominium_id != -1){
+                
+                    if ($user->user_companies->first()->user_condominiums->first()){
+                        
+                        $user->user_companies->first()->user_condominiums->condominium_id=$request->condominium_id;        
+                    }else{
+                        UserCondominium::create([
+                            'user_company_id'=>$user->user_companies->first()->id,
+                            'condominium_id'=>$request->condominium_id
+                        ]);
+                    } 
+                }else{
+                    if ($user->user_companies->first()->user_condominiums->first()){
+                        $user_condominium = UserCondominium::find($user->user_companies->first()->user_condominiums->first()->id);
+                        $user_condominium->delete();
+                    }
+                }   
+
+            }else{
+                $userCompany = UserCompany::create([
+                    'user_id' => $user->id,
+                    'company_id' => $request->company_id
+                ]);
+
+                $userCompany->refresh();
+
+                if ($request->condominium_id != -1){
+                    UserCondominium::create([
+                        'user_company_id'=>$userCompany->id,
+                        'condominium_id'=>$request->condominium_id
+                    ]);
+                }
+            }
+
+        }else{//nenhum company
+
+            if ($request->condominium_id == -1) {//Todos condominios
+                
+                if ($user->user_companies->first()){
+
+                    if ($user->user_companies->first()->user_condominiums->first()){
+                        $user_condominium = UserCondominium::find($user->user_companies->first()->user_condominiums->first()->id);
+                        $user_condominium->delete();
+                    }
+                    $user_company = UserCompany::find($user->user_companies->first()->id);
+                    $user_company->delete();
+                }
+            }else{
+                
+                if ($user->user_companies->first()){
+
+                    $user->user_companies->first()->company_id=null;
+                    
+                    if ($user->user_companies->first()->user_condominiums->first()){
+                
+                        $user->user_companies->first()->user_condominiums->condominium_id=$request->condominium_id;     
+                    
+                    }else{
+                        UserCondominium::create([
+                            'user_company_id'=>$$user->user_companies->first()->id,
+                            'condominium_id'=>$request->condominium_id
+                        ]);
+                    }
+                }else{
+                    
+                    $userCompany = UserCompany::create([
+                        'user_id' => $user->id, 
+                        'company_id' => null
+                    ]);
+                    $userCompany->refresh();
+      
+                    UserCondominium::create([
+                        'user_company_id'=>$userCompany->id,
+                        'condominium_id'=>$request->condominium_id
+                    ]);
+                }
+            }
+        }
+
+        $user->push();
+
+        $user->refresh();
 
         return $user;
         
