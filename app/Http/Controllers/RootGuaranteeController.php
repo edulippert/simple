@@ -47,9 +47,9 @@ class RootGuaranteeController extends Controller
      * @param  \App\RootGuarantee  $rootGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function show(RootGuarantee $rootGuarantee)
+    public function show(RootGuarantee $rootguarantee)
     {
-        //
+        return $rootguarantee;
     }
 
     /**

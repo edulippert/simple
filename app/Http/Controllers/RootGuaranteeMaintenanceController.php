@@ -47,9 +47,9 @@ class RootGuaranteeMaintenanceController extends Controller
      * @param  \App\RootGuaranteeMaintenance  $rootGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function show(RootGuaranteeMaintenance $rootGuaranteeMaintenance)
+    public function show(RootGuaranteeMaintenance $rootguaranteemaintenance)
     {
-        //
+        return $rootguaranteemaintenance;
     }
 
     /**

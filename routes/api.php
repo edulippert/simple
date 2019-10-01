@@ -28,16 +28,16 @@ Route::post('roles', 'RoleController@store');
 Route::post('users', 'UserController@store');
 Route::get('users', 'UserController@index');
 
-Route::resource('companies', 'CompanyController',['only' => ['store','index','destroy','update']]);
-Route::resource('groups', 'GroupController',['only' => ['store','index','destroy','update']]);
-Route::resource('items', 'ItemController',['only' => ['store','index','destroy','update']]);
-Route::resource('subitems', 'SubitemController',['only' => ['store','index','destroy','update']]);
-Route::resource('customerguarantees', 'CustomerGuaranteeController',['only' => ['store','index','destroy','update']]);
-Route::resource('rootguarantees', 'RootGuaranteeController',['only' => ['store','index','destroy','update']]);
-Route::resource('rootmaintenances', 'RootMaintenanceController',['only' => ['store','index','destroy','update']]);
-Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController',['only' => ['store','index','destroy','update']]);
-Route::resource('condominiums','CondominiumController',['only' => ['store','index','destroy','update']]);
-Route::resource('maintenances','MaintenanceController',['only' => ['store','index','destroy','update']]);
+Route::resource('companies', 'CompanyController');
+Route::resource('groups', 'GroupController');
+Route::resource('items', 'ItemController');
+Route::resource('subitems', 'SubitemController');
+Route::resource('customerguarantees', 'CustomerGuaranteeController');
+Route::resource('rootguarantees', 'RootGuaranteeController');
+Route::resource('rootmaintenances', 'RootMaintenanceController');
+Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController');
+Route::resource('condominiums','CondominiumController');
+Route::resource('maintenances','MaintenanceController');
 
 
 
