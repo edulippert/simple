@@ -65,7 +65,7 @@ class User extends Authenticatable implements JWTSubject
         
             $user_assignments = DB::table('users')
                         ->where('roles.id',$role->id)
-                        ->join('user_companies','users.id','user_companies.user_id')
+                        ->leftjoin('user_companies','users.id','user_companies.user_id')
                         ->leftjoin('companies','companies.id','user_companies.company_id')
                         ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
                         ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
@@ -81,7 +81,7 @@ class User extends Authenticatable implements JWTSubject
         }else{
 
             $user_assignments = DB::table('users')
-                            ->join('user_companies','users.id','user_companies.user_id')
+                            ->leftjoin('user_companies','users.id','user_companies.user_id')
                             ->leftjoin('companies','companies.id','user_companies.company_id')
                             ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
                             ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
