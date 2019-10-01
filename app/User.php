@@ -101,8 +101,8 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public static function showUserAndAssignments($id){
-        $user_assignments = DB::table('users')
-                            ->where('users.id',$id)
+        $user_assignments = //DB::table('users')
+                            self::where('users.id',$id)
                             ->leftjoin('user_companies','users.id','user_companies.user_id')
                             ->leftjoin('companies','companies.id','user_companies.company_id')
                             ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
@@ -116,7 +116,7 @@ class User extends Authenticatable implements JWTSubject
                             'companies.name as company_name',
                             'companies.id as company_id',
                             'condominiums.id as condominium_id',
-                            'condominiums.name as condominium_name')->get();
+                            'condominiums.name as condominium_name')->first();
 
         return $user_assignments;
     }
