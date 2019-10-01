@@ -70,7 +70,7 @@ class User extends Authenticatable implements JWTSubject
                         ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
                         ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
                         ->leftJoin('roles','roles.id','users.role_id')
-                        ->select('users.username',
+                        ->select('users.username','users.id',
                         'roles.description',
                         'users.email',
                         'users.phone_number',
@@ -86,7 +86,7 @@ class User extends Authenticatable implements JWTSubject
                             ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
                             ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
                             ->leftJoin('roles','roles.id','users.role_id')
-                            ->select('users.username',
+                            ->select('users.username','users.id',
                             'roles.description',
                             'users.email',
                             'users.phone_number',
