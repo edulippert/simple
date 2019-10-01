@@ -99,6 +99,10 @@ class UserController extends Controller
         return response()->json([],'204');
     }
 
+    public function showUserAndAssignments($id){
+        return User::showUserAndAssignments($id);
+    }
+
     public function deleteUserAndAssignments($id){
         $user_assignments = User::find($id);
         $user_assignments->delete();

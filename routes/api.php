@@ -49,6 +49,7 @@ Route::name('user_assignments')->post('user_assignments','UserController@saveUse
 Route::name('user_assignments')->get('user_assignments','UserController@getUsersAndAssignments');
 Route::name('user_assignments')->put('user_assignments/{id}','UserController@updateUserAndAssignments');
 Route::name('user_assignments')->delete('user_assignments/{id}','UserController@deleteUserAndAssignments');
+Route::name('user_assignments')->get('user_assignments/{id}','UserController@showUserAndAssignments');
 //Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResources([
         'guarantees' => 'GuaranteeController',

@@ -100,6 +100,27 @@ class User extends Authenticatable implements JWTSubject
         
     }
 
+    public static function showUserAndAssignments($id){
+        $user_assignments = DB::table('users')
+                            ->where('users.id',$id)
+                            ->leftjoin('user_companies','users.id','user_companies.user_id')
+                            ->leftjoin('companies','companies.id','user_companies.company_id')
+                            ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
+                            ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
+                            ->leftJoin('roles','roles.id','users.role_id')
+                            ->select('users.username','users.id',
+                            'roles.description',
+                            'roles.id as roles_id',
+                            'users.email',
+                            'users.phone_number',
+                            'companies.name as company_name',
+                            'companies.id as company_id',
+                            'condominiums.id as condominium_id',
+                            'condominiums.name as condominium_name')->get();
+
+        return $user_assignments;
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class);
