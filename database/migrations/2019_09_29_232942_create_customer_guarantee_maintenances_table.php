@@ -27,7 +27,7 @@ class CreateCustomerGuaranteeMaintenancesTable extends Migration
             $table->string('font')->nullable();
             $table->timestamps();
 
-            $table->foreign('customer_guarantee_id')->references('id')->on('cutomer_guarantess')->onDelete('cascade');
+            $table->foreign('customer_guarantee_id')->references('id')->on('customer_guarantess')->onDelete('cascade');
         });
     }
 
