@@ -108,7 +108,7 @@ class User extends Authenticatable implements JWTSubject
                             ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
                             ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
                             ->leftJoin('roles','roles.id','users.role_id')
-                            ->select('users.username','users.id',
+                            ->select('users.username','users.id','users.id_number','users.cep','users.address','users.complement',
                             'roles.description',
                             'roles.id as roles_id',
                             'users.email',
