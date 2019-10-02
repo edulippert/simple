@@ -23,7 +23,7 @@ class Condominium extends Model
     protected $table = 'condominiums';
 
     public function companies() {
-        return $this->belongsTo(company::class);
+        return $this->belongsTo(Company::class,'company_id');
     }
 
     public function files() {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Condominium;
+use App\Http\Resources\CondominiumResource;
 use Egulias\EmailValidator\Exception\CRLFAtTheEnd;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,9 @@ class CondominiumController extends Controller
      */
     public function index()
     {
-        return Condominium::all();
+        $condominiums = Condominium::with('companies')->orderBy('name')->get();
+        return CondominiumResource::collection($condominiums);
+        
     }
 
     /**
@@ -36,7 +39,6 @@ class CondominiumController extends Controller
             'complement' => 'required',
             'zipcode' => 'required',
             'licence_due_date' => 'required',
-            'is_active' => 'required'
         ]);
 
         $condominium = Condominium::create($attributes);
@@ -72,7 +74,6 @@ class CondominiumController extends Controller
             'complement' => 'required',
             'zipcode' => 'required',
             'licence_due_date' => 'required',
-            'is_active' => 'required'
         ]);
 
         $condominium->update($attributes);

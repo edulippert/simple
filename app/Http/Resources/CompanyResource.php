@@ -16,15 +16,15 @@ class CompanyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'cnpj' => $this->cnpj,
-            'cep' => $this->cep,
-            'address'=> $this->address,
-            'complement'=> $this->complement,
-            'website'=> $this->website,
-            'email'=> $this->email,
-            'phone_number'=> $this->phone_number,
-            'responsible'=> $this->responsible
+            'name' => $this->name
+           // 'cnpj' => $this->cnpj,
+            // 'cep' => $this->cep,
+            // 'address'=> $this->address,
+            // 'complement'=> $this->complement,
+            // 'website'=> $this->website,
+            // 'email'=> $this->email,
+            // 'phone_number'=> $this->phone_number,
+            // 'responsible'=> $this->responsible
         ];
     }
 }
