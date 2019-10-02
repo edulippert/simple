@@ -73,4 +73,6 @@ class GroupController extends Controller
     {
         $group->delete();
     }
+
+    
 }

@@ -21,9 +21,9 @@ class RootMaintenance extends Model
     protected $table = 'root_maintenances';
 
 
-    public static function buildRootMaintenancesResponse($guarantee_id)
+    public static function buildRootMaintenancesResponse($maintenance_id)
     {
-        $root_maintenances = self::getRootGuarantees($guarantee_id);
+        $root_maintenances = self::getRootMaintenances($maintenance_id);
 
         $groups = Group::getDistinctGroups($root_maintenances);
         
@@ -31,20 +31,38 @@ class RootMaintenance extends Model
 
         foreach ($groups as $group) {
             
-            $grouped_root_guarantees = $root_maintenances->where('group_id',$group['group_id']);
+            $grouped_root_maintenances = $root_maintenances->where('group_id',$group['group_id']);
             
             $response[] = [
                 'group_id' => $group['group_id'],
                 'description' => $group['group_description'],
-                'collapse' => true,
-                'items' => self::getGroupedItems($grouped_root_guarantees)
+                'collapse' => false,
+                'items' => self::getGroupedItems($grouped_root_maintenances)
             ];
         }
 
         return $response;
     }
 
-    
+    public static function getGroupedItems($grouped_items)
+    {
+        $response = [];
+
+        foreach ($grouped_items as $item ) {
+            
+            $response[] = [
+                'id' => $item['id'],
+                'item_id' => $item['item_id'],
+                'description' => $item['item_description'],
+                'amount' => $item['amount'],
+                'period' => $item['period'],
+                'font' => $item['font']
+            ];
+
+        }
+
+        return $response;
+    }
 
     public static function getRootMaintenances($maintenance_id)
     {

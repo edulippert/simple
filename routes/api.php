@@ -42,8 +42,13 @@ Route::resource('maintenances','MaintenanceController');
 
 
 Route::name('get_root_guarantees')->post('get_root_guarantees','RootGuaranteeController@getRootGuarantees');
+Route::name('get_root_maintenances')->post('get_root_maintenances','RootMaintenanceController@getRootMaintenances');
+Route::name('get_root_maintenance_groups')->post('get_root_maintenance_groups','RootMaintenanceController@getGroupsRootMaintenance');
+Route::name('get_root_maintenance_items')->post('get_root_maintenance_items','RootMaintenanceController@getItemsRootMaintenance');
 Route::name('get_condominiums')->post('get_condominiums','CondominiumController@getComdominiums');
 Route::name('get_root_guarantee_maintenances')->post('get_root_guarantee_maintenances','RootGuaranteeMaintenanceController@getRootGuaranteeMaintenances');
+
+
 
 Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');
 Route::name('user_assignments')->get('user_assignments','UserController@getUsersAndAssignments');

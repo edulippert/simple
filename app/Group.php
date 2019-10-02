@@ -12,9 +12,9 @@ class Group extends Model
     protected $table = 'groups';
 
     
-    public static function getDistinctGroups($root_guarantees)
+    public static function getDistinctGroups($root_colletion)
     {
-        $groups = $root_guarantees->map->only(['group_id','group_description']);
+        $groups = $root_colletion->map->only(['group_id','group_description']);
         
         $group_collection = new Collection($groups);
         
