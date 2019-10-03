@@ -12,5 +12,7 @@ class Guarantee extends Model
 
     protected $guarded = ['id'];
 
-
+    public function rootGuarantees(){
+        return $this->hasMany(RootGuarantee::class,'guarantee_id');
+    }
 }

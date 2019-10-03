@@ -13,7 +13,7 @@ class CustomerGuarantee extends Model
                             'subitem_id',
                             'start_date',
                             'amount',
-                            'periodo',
+                            'period',
                             'due_date',
                             'is_active',
                             'is_expired',

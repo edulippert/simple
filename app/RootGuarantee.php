@@ -94,7 +94,7 @@ class RootGuarantee extends Model
     }
 
     public function root_guarantee_maintenaces(){
-        return $this->hasMany(RootGuaranteeMaintenance::class);
+        return $this->hasMany(RootGuaranteeMaintenance::class,'root_guarantee_id');
     }
 
     public function guarantees(){

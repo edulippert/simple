@@ -52,8 +52,10 @@ class RootMaintenance extends Model
             
             $response[] = [
                 'id' => $item['id'],
+                'description' => $item['description'],
+                'activity' => $item['activity'],
                 'item_id' => $item['item_id'],
-                'description' => $item['item_description'],
+                'item_description' => $item['item_description'],
                 'amount' => $item['amount'],
                 'period' => $item['period'],
                 'font' => $item['font']
@@ -69,7 +71,7 @@ class RootMaintenance extends Model
         $root_maintenances = self::where('maintenance_id',$maintenance_id)
                     ->join('groups','groups.id','root_maintenances.group_id')
                     ->join('items','items.id','root_maintenances.item_id')
-                    ->select('root_maintenances.id',
+                    ->select('root_maintenances.id','root_maintenances.description','root_maintenances.activity',
                             'maintenance_id',
                             'root_maintenances.group_id',
                             'groups.description as group_description',
