@@ -47,6 +47,7 @@ class CustomerGuarantee extends Model
                 'is_active' => $customer_guarantee->is_active,
                 'is_expired' => $customer_guarantee->is_expired,
                 'reference' => $customer_guarantee->reference,
+                'collapse' => true,
                 'maintenances' => CustomerGuaranteeMaintenance::getGuaranteeMaintenaces($customer_guarantee->id)
             ];
 
@@ -59,6 +60,7 @@ class CustomerGuarantee extends Model
             $array_just_maintenances = [
                 'id' => null,
                 'description' => 'Sem Garantias',
+                'collapse' => true,
                 'maintenances' => $get_just_maintenances
             ];
 
