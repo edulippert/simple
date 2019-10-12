@@ -29,4 +29,12 @@ class Condominium extends Model
     public function files() {
         return $this->hasMany(File::class);
     }
+
+    public function customer_guarantees(){
+        return $this->hasMany(CustomerGuarantee::class,'condominium_id');
+    }
+
+    public function customer_guarantee_maintenances(){
+        return $this->hasMany(CustomerGuaranteeMaintenance::class,'condominium_id');
+    }
 }
