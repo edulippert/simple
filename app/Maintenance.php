@@ -11,4 +11,8 @@ class Maintenance extends Model
     protected $table = 'maintenances';
 
     protected $guarded = ['id'];
+
+    public function rootMaintenances(){
+        return $this->hasMany(RootMaintenance::class,'maintenance_id');
+    }
 }
