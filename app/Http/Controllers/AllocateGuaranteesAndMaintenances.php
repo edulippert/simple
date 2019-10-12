@@ -225,10 +225,10 @@ class AllocateGuaranteesAndMaintenances extends Controller
                 $customer_guarantee_maintenance->refresh();
 
                         
-                if ( $customer_guarantee_maintenance->period == "Anos" ) {
+                if ( $customer_guarantee_maintenance->period == "2" ) {
                     $days_to_next_maintenance = (int)(365/$customer_guarantee_maintenance->amount);
                     $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
-                }elseif ($customer_guarantee_maintenance->period == "Meses") {
+                }elseif ($customer_guarantee_maintenance->period == "1") {
                     $days_to_next_maintenance = (int)(30/$customer_guarantee_maintenance->amount);
                     $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
                 }

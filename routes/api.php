@@ -38,6 +38,7 @@ Route::resource('rootmaintenances', 'RootMaintenanceController');
 Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController');
 Route::resource('condominiums','CondominiumController');
 Route::resource('maintenances','MaintenanceController');
+Route::resource('maintenanceprograms','MaintenanceProgramController');
 
 
 
@@ -50,7 +51,7 @@ Route::name('get_root_guarantee_maintenances')->post('get_root_guarantee_mainten
 Route::name('allocate_guarantees_and_maintenances')->post('allocate_guarantees_and_maintenances','AllocateGuaranteesAndMaintenances@allocateGuaranteesAndMaintenances');
 Route::name('allocates')->post('allocates','AllocateGuaranteesAndMaintenances@allocates');
 Route::name('get_allocateds')->post('get_allocateds','CustomerGuaranteeController@getAllocateds');
-
+Route::name('get_maintenace_programs')->post('get_maintenace_programs','MaintenanceProgramController@getMaintenancePrograms');
 
 
 

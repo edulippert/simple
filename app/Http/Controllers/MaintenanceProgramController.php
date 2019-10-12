@@ -14,7 +14,7 @@ class MaintenanceProgramController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -81,5 +81,9 @@ class MaintenanceProgramController extends Controller
     public function destroy(MaintenanceProgram $maintenanceProgram)
     {
         //
+    }
+
+    public function getMaintenancePrograms(Request $request){
+        return MaintenanceProgram::getMaintenancesPrograms($request->condominium_id);
     }
 }
