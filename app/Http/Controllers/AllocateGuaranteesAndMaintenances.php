@@ -6,17 +6,38 @@ use App\Guarantee;
 use Carbon\Carbon;
 use App\Condominium;
 use App\CustomerGuarantee;
+use App\Maintenance;
 use App\CustomerGuaranteeMaintenance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use App\MaintenanceProgram;
+
 
 class AllocateGuaranteesAndMaintenances extends Controller
 {
     
     /** 
+         * allocate => 1 or 2
+    **/
+    public function allocates(Request $request)
+    {
+        if ($request->allocate == 1) {
+            
+            $response = Guarantee::all();
+
+        }else {
+            $response = Maintenance::all();
+        }
+
+        return $response;
+    }
+
+    /** 
          * guarantee_id => required
          * condominium_id => required
          * root_guarantee_id => optional null when blank
-    * */
+    **/
     public function allocateGuaranteesAndMaintenances(Request $request)
     {
 
@@ -58,20 +79,38 @@ class AllocateGuaranteesAndMaintenances extends Controller
                     
                 $due_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($root_guarantee->amount);
                 $period = 'Dias';      
-            }            
+            }
 
-            $customer_guarantees = CustomerGuarantee::create([
-                'condominium_id' => $request->condominium_id,
-                'group_id' => $root_guarantee->group_id,
-                'item_id' => $root_guarantee->item_id,
-                'start_date' => $start_date,
-                'amount' => $root_guarantee->amount,
-                'period' => $period,
-                'due_date' => $due_date,
-                'is_active' => true,
-                'is_expired' => true,
-                'reference' => $root_guarantee->reference,
-            ]);
+            
+            
+            $request_customer_guarantee = ['condominium_id' => $request->condominium_id,
+                                        'group_id' => $root_guarantee->group_id,
+                                        'item_id' => $root_guarantee->item_id,
+                                        'start_date' => $start_date,
+                                        'amount' => $root_guarantee->amount,
+                                        'period' => $period,
+                                        'due_date' => $due_date,
+                                        'is_active' => true,
+                                        'is_expired' => true,
+                                        'reference' => $root_guarantee->reference
+                                        ];
+
+            $valid_customer_guarantee_request = Validator::make($request_customer_guarantee,[
+                 'item_id' => ['required',
+                     Rule::unique('customer_guarantees')->where(function ($query) use ($request_customer_guarantee){
+                         return $query
+                             ->whereGroupId($request_customer_guarantee['group_id'])
+                             ->whereItemId($request_customer_guarantee['item_id'])
+                             ->whereCondominiumId($request_customer_guarantee['condominium_id']);
+                     }),
+                 ]
+             ]);
+
+            if ($valid_customer_guarantee_request->fails()){
+                return response()->json(['message'=>'Essa Garantia ja foi atribuida para esse Condominio'],200); 
+            }
+
+            $customer_guarantees = CustomerGuarantee::create($request_customer_guarantee);
 
             $customer_guarantees->refresh();
             
@@ -82,6 +121,7 @@ class AllocateGuaranteesAndMaintenances extends Controller
                 foreach ($root_guarantee_maintenances as $root_guarantee_maintenance) {
                     
                     $customer_guarantee_maintenance =  CustomerGuaranteeMaintenance::create([
+                        'condominium_id' => $request->condominium_id,
                         'customer_guarantee_id' => $customer_guarantees->id,
                         'group_id' => $root_guarantee_maintenance->group_id,
                         'item_id' => $root_guarantee_maintenance->item_id,
@@ -93,13 +133,31 @@ class AllocateGuaranteesAndMaintenances extends Controller
                         'responsable' => $root_guarantee_maintenance->responsable,
                         'font' => $root_guarantee_maintenance->font
                     ]);
+
+                    $customer_guarantee_maintenance->refresh();
+
+                    
+                    if ( $customer_guarantee_maintenance->period == "Anos" ) {
+                        $days_to_next_maintenance = (int)(365/$customer_guarantee_maintenance->amount);
+                        $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                    }elseif ($customer_guarantee_maintenance->period == "Meses") {
+                        $days_to_next_maintenance = (int)(30/$customer_guarantee_maintenance->amount);
+                        $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                    }
+
+
+                    $maintenance_program = MaintenanceProgram::create([
+                        'customer_guarantee_maintenance_id' => $customer_guarantee_maintenance->id,
+                        'maintenance_day' => $maintenance_date
+                    ]);
+
                 }
 
             }
 
         }
 
-        return response()->json('Garantias e Manutencoes Distribiudas com sucesso',200);
+        return response()->json(['message'=>'Garantias e Manutencoes Distribiudas com sucesso'],200);
         
 
     }

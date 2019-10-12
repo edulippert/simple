@@ -26,21 +26,22 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
-        $attributes = request()->validate([
-            'name' => 'required|unique:companies,name',
-            'cnpj' => 'required|unique:companies,cnpj',
-            'cep' => 'required',
-            'address'=>'required',
-            'complement'=>'required',
-            'website'=>'required',
-            'email'=>'required|email',
-            'phone_number'=>'required',
-            'responsible'=>'required'
-        ]);
+        dd($request);
+        // $attributes = request()->validate([
+        //     'name' => 'required|unique:companies,name',
+        //     'cnpj' => 'required|unique:companies,cnpj',
+        //     'cep' => 'required',
+        //     'address'=>'required',
+        //     'complement'=>'required',
+        //     'website'=>'required',
+        //     'email'=>'required|email',
+        //     'phone_number'=>'required',
+        //     'responsible'=>'required'
+        // ]);
 
-        $company = Company::create($attributes);
+        $company = Company::create($request);
         return $company;
     }
 

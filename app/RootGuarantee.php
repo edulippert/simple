@@ -93,6 +93,27 @@ class RootGuarantee extends Model
         return $root_guarantees;
     }
 
+    public static function showRootGuarantee($id)
+    {
+        $root_guarantees = self::where('root_guarantees.id',$id)
+                    ->join('groups','groups.id','root_guarantees.group_id')
+                    ->join('items','items.id','root_guarantees.item_id')
+                    ->select('root_guarantees.id',
+                            'guarantee_id',
+                            'root_guarantees.group_id',
+                            'groups.description as group_description',
+                            'item_id',
+                            'items.description as item_description',
+                            'amount',
+                            'period',
+                            'reference')
+                    ->distinct()
+                    ->first();
+
+        return $root_guarantees;
+    }
+
+
     public function root_guarantee_maintenaces(){
         return $this->hasMany(RootGuaranteeMaintenance::class,'root_guarantee_id');
     }

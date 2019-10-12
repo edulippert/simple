@@ -48,6 +48,7 @@ Route::name('get_root_maintenance_items')->post('get_root_maintenance_items','Ro
 Route::name('get_condominiums')->post('get_condominiums','CondominiumController@getComdominiums');
 Route::name('get_root_guarantee_maintenances')->post('get_root_guarantee_maintenances','RootGuaranteeMaintenanceController@getRootGuaranteeMaintenances');
 Route::name('allocate_guarantees_and_maintenances')->post('allocate_guarantees_and_maintenances','AllocateGuaranteesAndMaintenances@allocateGuaranteesAndMaintenances');
+Route::name('allocates')->post('allocates','AllocateGuaranteesAndMaintenances@allocates');
 
 
 

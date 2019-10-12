@@ -92,4 +92,28 @@ class RootGuaranteeMaintenance extends Model
         return $guarantee_maintenances;
     }
 
+    public static function showRootGuaranteeMaintenance($id)
+    {
+
+        $guarantee_maintenances = self::where('root_guarantee_maintenances.id',$id)
+                                    ->leftjoin('groups','groups.id','root_guarantee_maintenances.group_id')
+                                    ->leftjoin('items','items.id','root_guarantee_maintenances.item_id')
+                                    ->leftjoin('root_guarantees','root_guarantees.id','root_guarantee_maintenances.root_guarantee_id')
+                                    ->select('root_guarantee_maintenances.id',
+                                            'root_guarantee_maintenances.root_guarantee_id',
+                                            'groups.id as group_id',
+                                            'groups.description as group_description',
+                                            'items.id as item_id',
+                                            'items.description as item_description',
+                                            'root_guarantee_maintenances.description as maintenances_description',
+                                            'root_guarantee_maintenances.amount',
+                                            'root_guarantee_maintenances.period',
+                                            'root_guarantee_maintenances.responsable',
+                                            'root_guarantee_maintenances.font'
+                                            )
+                                    ->first();
+        
+        return $guarantee_maintenances;
+    }
+
 }

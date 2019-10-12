@@ -47,9 +47,10 @@ class RootGuaranteeController extends Controller
      * @param  \App\RootGuarantee  $rootGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function show(RootGuarantee $rootguarantee)
+    public function show($id)
     {
-        return $rootguarantee;
+    
+        return RootGuarantee::showRootGuarantee($id);
     }
 
     /**
@@ -70,9 +71,11 @@ class RootGuaranteeController extends Controller
      * @param  \App\RootGuarantee  $rootGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, RootGuarantee $rootGuarantee)
+    public function update(Request $request, RootGuarantee $rootguarantee)
     {
-        //
+        $root_guarantee = $rootguarantee->fill($request->all());
+        $root_guarantee->save();
+        return $root_guarantee;
     }
 
     /**
@@ -81,9 +84,9 @@ class RootGuaranteeController extends Controller
      * @param  \App\RootGuarantee  $rootGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RootGuarantee $rootGuarantee)
+    public function destroy(RootGuarantee $rootguarantee)
     {
-        //
+        $rootguarantee->delete();
     }
 
     public function getRootGuarantees(Request $request)

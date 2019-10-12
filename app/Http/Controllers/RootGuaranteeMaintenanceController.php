@@ -47,9 +47,10 @@ class RootGuaranteeMaintenanceController extends Controller
      * @param  \App\RootGuaranteeMaintenance  $rootGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function show(RootGuaranteeMaintenance $rootguaranteemaintenance)
+    public function show($id)
     {
-        return $rootguaranteemaintenance;
+        
+        return  RootGuaranteeMaintenance::showRootGuaranteeMaintenance($id);
     }
 
     /**
@@ -70,9 +71,14 @@ class RootGuaranteeMaintenanceController extends Controller
      * @param  \App\RootGuaranteeMaintenance  $rootGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, RootGuaranteeMaintenance $rootGuaranteeMaintenance)
+    public function update(Request $request, RootGuaranteeMaintenance $rootguaranteemaintenance)
     {
-        //
+        
+        $root_guarantee_maintenance = $rootguaranteemaintenance->fill($request->all());
+        $root_guarantee_maintenance->save();
+        return $root_guarantee_maintenance;
+
+        
     }
 
     /**
