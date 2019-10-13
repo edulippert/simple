@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,7 +16,10 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+    
 });
+
+
 
 Route::post('login', 'AuthController@login');
 Route::post('logout', 'AuthController@logout');
@@ -60,6 +64,9 @@ Route::name('user_assignments')->get('user_assignments','UserController@getUsers
 Route::name('user_assignments')->put('user_assignments/{id}','UserController@updateUserAndAssignments');
 Route::name('user_assignments')->delete('user_assignments/{id}','UserController@deleteUserAndAssignments');
 Route::name('user_assignments')->get('user_assignments/{id}','UserController@showUserAndAssignments');
+
+
+
 //Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResources([
         'guarantees' => 'GuaranteeController',
