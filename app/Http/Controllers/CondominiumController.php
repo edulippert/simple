@@ -97,7 +97,7 @@ class CondominiumController extends Controller
     public function getComdominiums(Request $request)
     {
     
-        if ($request->company_id ==-1) {
+        if ($request->company_id == -1) {
             $response = Condominium::where('company_id',null)->get();
         }else {
             $response = Condominium::where('company_id',$request->company_id)->get();
