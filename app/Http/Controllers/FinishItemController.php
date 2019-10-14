@@ -91,7 +91,11 @@ class FinishItemController extends Controller
 
     public function getFinishItems(Request $request)
     {
-        $finish_items = FinishItem::where('finish_groups.company_id',$request->company_id)
+
+        if ($request->group_id) {
+          
+            $finish_items = FinishItem::where('finish_groups.company_id',$request->company_id)
+                                    ->where('finish_groups.id',$request->group_id)
                                     ->join('finish_groups','finish_groups.id','finish_items.group_id')
                                     ->select(
                                         'finish_items.id',
@@ -102,6 +106,18 @@ class FinishItemController extends Controller
                                     
                                     )->get();
 
+        }else{
+            $finish_items = FinishItem::where('finish_groups.company_id',$request->company_id)
+                                        ->join('finish_groups','finish_groups.id','finish_items.group_id')
+                                        ->select(
+                                            'finish_items.id',
+                                            'finish_items.name',
+                                            'finish_items.description',
+                                            'finish_groups.id as group_id',
+                                            'finish_groups.name as group_name'
+                                        
+                                        )->get();
+        }
         return $finish_items;
     }
 }

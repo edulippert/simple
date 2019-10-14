@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Finish;
+use App\Http\Requests\FinishRequest;
 use Illuminate\Http\Request;
 
 class FinishController extends Controller
@@ -33,9 +34,10 @@ class FinishController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FinishRequest $request)
     {
-        //
+        $finish = Finish::create($request->all());
+        return $finish;
     }
 
     /**
@@ -46,7 +48,7 @@ class FinishController extends Controller
      */
     public function show(Finish $finish)
     {
-        //
+        return $finish;
     }
 
     /**
@@ -69,7 +71,9 @@ class FinishController extends Controller
      */
     public function update(Request $request, Finish $finish)
     {
-        //
+        $finish->fill($request->all());
+        $finish->save();
+        return $finish;
     }
 
     /**
@@ -80,7 +84,8 @@ class FinishController extends Controller
      */
     public function destroy(Finish $finish)
     {
-        //
+        $finish->delete();
+        return response()->json([],402);
     }
 
     public function getFinishs(Request $request)

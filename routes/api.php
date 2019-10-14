@@ -42,9 +42,7 @@ Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController
 Route::resource('condominiums','CondominiumController');
 Route::resource('maintenances','MaintenanceController');
 Route::resource('maintenanceprograms','MaintenanceProgramController');
-Route::resource('finishgroups', 'FinishGroupController');
-Route::resource('finishitems', 'FinishItemController');
-Route::resource('finishes', 'FinishController');
+
 
 
 
@@ -70,6 +68,10 @@ Route::name('user_assignments')->get('user_assignments/{id}','UserController@sho
 
 //Companu Routes
 //------------------------------------------------------
+
+Route::resource('finishgroups', 'FinishGroupController');
+Route::resource('finishitems', 'FinishItemController');
+Route::resource('finishes', 'FinishController');
 
 Route::name('get_finishes')->post('get_finishes','FinishController@getFinishs');
 
