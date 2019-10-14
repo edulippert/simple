@@ -75,6 +75,8 @@ Route::name('get_finishes')->post('get_finishes','FinishController@getFinishs');
 
 Route::name('get_finish_groups')->post('get_finish_groups','FinishGroupController@getFinishGroups');
 
+Route::name('get_finish_items')->post('get_finish_items','FinishItemController@getFinishItems');
+
 //------------------------------------------------------
 
 
