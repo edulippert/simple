@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\FinishGroup;
+use App\Http\Requests\FinishGroupRequest;
 use Illuminate\Http\Request;
 
 class FinishGroupController extends Controller
@@ -14,7 +15,19 @@ class FinishGroupController extends Controller
      */
     public function index()
     {
-        //
+       
+        $company_id = $this->getCompanyId();
+
+        if ($company_id) {
+            
+            return FinishGroup::whereCompanyId($company_id)->get();
+       
+        }else{
+            
+            return FinishGroup::all();
+
+        }
+        
     }
 
     /**
@@ -33,9 +46,10 @@ class FinishGroupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FinishGroupRequest $request)
     {
-        //
+        $finish_groups = FinishGroup::create($request->all());
+        return $finish_groups;
     }
 
     /**
@@ -44,9 +58,9 @@ class FinishGroupController extends Controller
      * @param  \App\FinishGroup  $finishGroup
      * @return \Illuminate\Http\Response
      */
-    public function show(FinishGroup $finishGroup)
+    public function show(FinishGroup $finishgroup)
     {
-        //
+        return $finishgroup;
     }
 
     /**
@@ -67,9 +81,11 @@ class FinishGroupController extends Controller
      * @param  \App\FinishGroup  $finishGroup
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, FinishGroup $finishGroup)
+    public function update(FinishGroupRequest $request, FinishGroup $finishgroup)
     {
-        //
+        $finishgroup->fill($request->all());
+        $finishgroup->save();
+        return $finishgroup;
     }
 
     /**
@@ -78,8 +94,22 @@ class FinishGroupController extends Controller
      * @param  \App\FinishGroup  $finishGroup
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FinishGroup $finishGroup)
+    public function destroy(FinishGroup $finishgroup)
     {
-        //
+        $finishgroup->delete();
+        return response()->json([],204);
+    }
+
+    private function getCompanyId()
+    {
+        $user = \Auth::guard('api')->user();
+        $company=$user->user_companies->first();
+
+        return $company->company_id;
+    }
+
+    public function getFinishGroups(Request $request)
+    {
+        return FinishGroup::whereCompanyId($request->company_id)->get();
     }
 }

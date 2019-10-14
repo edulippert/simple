@@ -82,4 +82,10 @@ class FinishController extends Controller
     {
         //
     }
+
+    public function getFinishs(Request $request)
+    {
+
+        return Finish::buildFinishesResponse($request->condominium_id);
+    }
 }

@@ -28,20 +28,20 @@ class CompanyController extends Controller
      */
     public function store(CompanyRequest $request)
     {
-        dd($request);
-        // $attributes = request()->validate([
-        //     'name' => 'required|unique:companies,name',
-        //     'cnpj' => 'required|unique:companies,cnpj',
-        //     'cep' => 'required',
-        //     'address'=>'required',
-        //     'complement'=>'required',
-        //     'website'=>'required',
-        //     'email'=>'required|email',
-        //     'phone_number'=>'required',
-        //     'responsible'=>'required'
-        // ]);
+    
+         $attributes = request()->validate([
+             'name' => 'required|unique:companies,name',
+             'cnpj' => 'required|unique:companies,cnpj',
+             'cep' => 'required',
+             'address'=>'required',
+             'complement'=>'required',
+             'website'=>'required',
+             'email'=>'required|email',
+             'phone_number'=>'required',
+             'responsible'=>'required'
+         ]);
 
-        $company = Company::create($request);
+        $company = Company::create($attributes);
         return $company;
     }
 

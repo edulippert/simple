@@ -33,12 +33,16 @@ class MaintenanceProgram extends Model
                                     'groups.description as group_description',
                                     'customer_guarantee_maintenances.item_id',
                                     'items.description as item_description',
+                                    'customer_guarantee_maintenances.activity',
+                                    'customer_guarantee_maintenances.description',
                                     'maintenance_day',
                                     'executed_day',
                                     'status',
                                     'is_done',
                                     'is_blocked'
-                                )->get();
+                                )
+                                ->orderBy('maintenance_day')
+                                ->get();
         
         return $maintenance_programs;
 

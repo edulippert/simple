@@ -12,15 +12,26 @@ class Group extends Model
     protected $table = 'groups';
 
     
-    public static function getDistinctGroups($root_colletion)
+    public static function getDistinctGroups($root_colletion):array
     {
+
+        $response = [];
+
         $groups = $root_colletion->map->only(['group_id','group_description']);
         
         $group_collection = new Collection($groups);
         
         $unique_groups = $group_collection->unique();
+
+        foreach ($unique_groups as $unique_group) {
         
-        return $unique_groups;
+            $response[] = [
+                'group_id' => $unique_group['group_id'],
+                'group_description' => $unique_group['group_description']
+            ];
+        }
+        
+        return $response;
     }
 
     public function items()

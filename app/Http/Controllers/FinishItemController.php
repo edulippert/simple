@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\FinishItem;
+use App\Http\Requests\FinishItemRequest;
 use Illuminate\Http\Request;
 
 class FinishItemController extends Controller
@@ -14,7 +15,7 @@ class FinishItemController extends Controller
      */
     public function index()
     {
-        //
+        return FinishItem::all();
     }
 
     /**
@@ -33,9 +34,10 @@ class FinishItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FinishItemRequest $request)
     {
-        //
+        $finish_item = FinishItem::create($request->all());
+        return $finish_item;
     }
 
     /**
@@ -44,9 +46,9 @@ class FinishItemController extends Controller
      * @param  \App\FinishItem  $finishItem
      * @return \Illuminate\Http\Response
      */
-    public function show(FinishItem $finishItem)
+    public function show(FinishItem $finishitem)
     {
-        //
+        return $finishitem;
     }
 
     /**
@@ -67,9 +69,11 @@ class FinishItemController extends Controller
      * @param  \App\FinishItem  $finishItem
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, FinishItem $finishItem)
+    public function update(FinishItemRequest $request, FinishItem $finishitem)
     {
-        //
+        $finishitem->fill($request->all());
+        $finishitem->save();
+        return $finishitem;
     }
 
     /**
@@ -78,8 +82,10 @@ class FinishItemController extends Controller
      * @param  \App\FinishItem  $finishItem
      * @return \Illuminate\Http\Response
      */
-    public function destroy(FinishItem $finishItem)
+    public function destroy(FinishItem $finishitem)
     {
-        //
+        $finishitem->delete();
+        return response()->json([],204);
+
     }
 }

@@ -20,7 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-
 Route::post('login', 'AuthController@login');
 Route::post('logout', 'AuthController@logout');
 Route::post('refresh', 'AuthController@refresh');
@@ -43,6 +42,9 @@ Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController
 Route::resource('condominiums','CondominiumController');
 Route::resource('maintenances','MaintenanceController');
 Route::resource('maintenanceprograms','MaintenanceProgramController');
+Route::resource('finishgroups', 'FinishGroupController');
+Route::resource('finishitems', 'FinishItemController');
+Route::resource('finishes', 'FinishController');
 
 
 
@@ -50,6 +52,8 @@ Route::name('get_root_guarantees')->post('get_root_guarantees','RootGuaranteeCon
 Route::name('get_root_maintenances')->post('get_root_maintenances','RootMaintenanceController@getRootMaintenances');
 Route::name('get_root_maintenance_groups')->post('get_root_maintenance_groups','RootMaintenanceController@getGroupsRootMaintenance');
 Route::name('get_root_maintenance_items')->post('get_root_maintenance_items','RootMaintenanceController@getItemsRootMaintenance');
+Route::name('get_root_maintenance_values')->post('get_root_maintenance_values','RootMaintenanceController@getValuesRootMaintenance');
+
 Route::name('get_condominiums')->post('get_condominiums','CondominiumController@getComdominiums');
 Route::name('get_root_guarantee_maintenances')->post('get_root_guarantee_maintenances','RootGuaranteeMaintenanceController@getRootGuaranteeMaintenances');
 Route::name('allocate_guarantees_and_maintenances')->post('allocate_guarantees_and_maintenances','AllocateGuaranteesAndMaintenances@allocateGuaranteesAndMaintenances');
@@ -57,13 +61,21 @@ Route::name('allocates')->post('allocates','AllocateGuaranteesAndMaintenances@al
 Route::name('get_allocateds')->post('get_allocateds','CustomerGuaranteeController@getAllocateds');
 Route::name('get_maintenace_programs')->post('get_maintenace_programs','MaintenanceProgramController@getMaintenancePrograms');
 
-
-
 Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');
 Route::name('user_assignments')->get('user_assignments','UserController@getUsersAndAssignments');
 Route::name('user_assignments')->put('user_assignments/{id}','UserController@updateUserAndAssignments');
 Route::name('user_assignments')->delete('user_assignments/{id}','UserController@deleteUserAndAssignments');
 Route::name('user_assignments')->get('user_assignments/{id}','UserController@showUserAndAssignments');
+
+
+//Companu Routes
+//------------------------------------------------------
+
+Route::name('get_finishes')->post('get_finishes','FinishController@getFinishs');
+
+Route::name('get_finish_groups')->post('get_finish_groups','FinishGroupController@getFinishGroups');
+
+//------------------------------------------------------
 
 
 

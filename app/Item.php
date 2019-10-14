@@ -11,15 +11,26 @@ class Item extends Model
     protected $guarded = ['id'];
     protected $table = 'items';
 
-    public static function getDistinctItems($root_colletion)
+    public static function getDistinctItems($root_colletion):array
     {
         $items = $root_colletion->map->only(['items_id','items_description']);
         
         $item_collection = new Collection($items);
         
         $unique_items = $item_collection->unique();
+
+        $response = [];
+
+        foreach ($unique_items as $unique_item) {
         
-        return $unique_items;
+            $response[] = [
+                'items_id' => $unique_item['items_id'],
+                'items_description' => $unique_item['items_description']
+            ];
+        }
+        
+        return $response;
+        
     }
 
     public function group()

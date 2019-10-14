@@ -121,4 +121,22 @@ class RootMaintenanceController extends Controller
 
         return $items;
     }
+
+    public function getValuesRootMaintenance(Request $request)
+    {
+        $root_maintenance_values = RootMaintenance::where('maintenance_id',$request->maintenance_id)
+                                            ->where('root_maintenances.group_id',$request->group_id)
+                                            ->where('root_maintenances.item_id',$request->item_id)
+                                            ->select(
+                                                'activity',
+                                                'description',
+                                                'amount',
+                                                'period',
+                                                'responsable',
+                                                'font'  
+                                            )
+                                            ->first();
+        return $root_maintenance_values;
+
+    }
 }

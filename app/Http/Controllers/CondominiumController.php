@@ -30,9 +30,9 @@ class CondominiumController extends Controller
      */
     public function store(Request $request)
     {
-       // dd($request->name);
+        
         $attributes = request()->validate([
-           // 'company_id' => 'required',
+            'company_id' => '',
             'name' => 'required',
             'id_number' => 'required',
             'address' => 'required',
@@ -41,6 +41,7 @@ class CondominiumController extends Controller
             'licence_due_date' => 'required',
         ]);
 
+       
         $condominium = Condominium::create($attributes);
 
         return $condominium;
@@ -67,7 +68,7 @@ class CondominiumController extends Controller
     public function update(Request $request, Condominium $condominium)
     {
         $attributes = request()->validate([
-           // 'company_id' => 'required',
+            'company_id' => '',
             'name' => 'required',
             'id_number' => 'required',
             'address' => 'required',
@@ -95,7 +96,8 @@ class CondominiumController extends Controller
 
     public function getComdominiums(Request $request)
     {
-        if ($request->company_id===-1) {
+    
+        if ($request->company_id ==-1) {
             $response = Condominium::where('company_id',null)->get();
         }else {
             $response = Condominium::where('company_id',$request->company_id)->get();
