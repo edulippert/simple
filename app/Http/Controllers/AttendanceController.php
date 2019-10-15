@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Attendance;
+use App\Http\Requests\AttendanceRequest;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -33,9 +34,10 @@ class AttendanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AttendanceRequest $request)
     {
-        //
+        $attendance = Attendance::create($request->all());
+        return $attendance;
     }
 
     /**
@@ -46,7 +48,7 @@ class AttendanceController extends Controller
      */
     public function show(Attendance $attendance)
     {
-        //
+        return $attendance;
     }
 
     /**
@@ -67,9 +69,11 @@ class AttendanceController extends Controller
      * @param  \App\Attendance  $attendance
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Attendance $attendance)
+    public function update(AttendanceRequest $request, Attendance $attendance)
     {
-        //
+        $attendance->fill($request->all());
+        $attendance->save();
+        return $attendance;
     }
 
     /**
@@ -80,6 +84,15 @@ class AttendanceController extends Controller
      */
     public function destroy(Attendance $attendance)
     {
-        //
+        $attendance->delete();
+        return response()->json([],204);
+    }
+
+    public function getAttendances(Request $request)
+    {
+        $attendances = Attendance::whereCompanyId($request->company_id)
+                                ->whereCondominiumId($request->condominium_id)
+                                ->get();
+        return $attendances;
     }
 }

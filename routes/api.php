@@ -72,6 +72,9 @@ Route::name('user_assignments')->get('user_assignments/{id}','UserController@sho
 Route::resource('finishgroups', 'FinishGroupController');
 Route::resource('finishitems', 'FinishItemController');
 Route::resource('finishes', 'FinishController');
+Route::resource('attendances', 'AttendanceController');
+
+Route::name('get_attendances')->post('get_attendances','AttendanceController@getAttendances');
 
 Route::name('get_finishes')->post('get_finishes','FinishController@getFinishs');
 
