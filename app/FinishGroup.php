@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class FinishGroup extends Model
 {
-    protected $fillable = ['name','company_id'];
+    protected $fillable = ['name','company_id','condominium_id'];
 
     protected $table = 'finish_groups';
 

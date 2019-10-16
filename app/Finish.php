@@ -40,35 +40,35 @@ class Finish extends Model
     public static function getGroupedItems($grouped_items)
     {
         $response = [];
-
-        foreach ($grouped_items as $item ) {
-            
-            $response[] = [
-                'id' => $item['id'],
-                'item_name' => $item['item_name'],
-                'description' => $item['description'],
+        if ($grouped_items->first()['id']) {
+            # code...
+            foreach ($grouped_items as $item ) {
                 
-            ];
-
+                $response[] = [
+                    'id' => $item['id'],
+                    'item_name' => $item['item_name'],
+                    'description' => $item['description'],
+                    
+                ];
+                
+            }
+            
         }
-
         return $response;
 
     }
     
     public static function getFinishes($condominium_id)
     {
-        $finishes = self::where('condominium_id',$condominium_id)
-                        ->join('finish_groups','finish_groups.id','finishes.group_id')
-                        ->join('finish_items','finish_items.id','finishes.item_id')
-                        ->join('condominiums','condominiums.id','finishes.condominium_id')
+        $finishes =     FinishGroup::where('condominium_id',$condominium_id)
+                        ->leftjoin('finish_items','finish_items.group_id','finish_groups.id')
+                        ->leftjoin('condominiums','condominiums.id','finish_groups.condominium_id')
                         ->select(
-                            'finishes.id',
-                            'finishes.description',
-                            'finishes.group_id',
-                            'finish_groups.name as group_name',
-                            'finishes.item_id', 
+                            'finish_items.id',
                             'finish_items.name as item_name',
+                            'finish_items.description',
+                            'finish_groups.id as group_id',
+                            'finish_groups.name as group_name',
                             'condominiums.id as condominium_id',
                             'condominiums.name as condominium_name'
                         )->get();
