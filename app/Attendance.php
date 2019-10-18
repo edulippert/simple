@@ -23,7 +23,8 @@ class Attendance extends Model
         'contact_name',
         'contact_email',
         'contact_phone_number',
-        'condominium_id'
+        'condominium_id',
+        'is_finalized'
     ];
 
     protected $table = 'attendances';

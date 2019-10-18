@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Attendance;
+use App\File;
 use App\Http\Requests\AttendanceRequest;
 use Illuminate\Http\Request;
 
@@ -94,5 +95,44 @@ class AttendanceController extends Controller
                                 ->whereCondominiumId($request->condominium_id)
                                 ->get();
         return $attendances;
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Attendance  $attendance
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadoFiles(Request $request, $id ){
+
+        if ($request->hasFile('file')) {
+            
+           
+
+            $file = File::create([
+                'file' => 'Attendance',
+                'name' => $request->file('file')->getClientOriginalName(),
+                'type' => $request->file('file')->getClientOriginalExtension(),
+            ]);
+
+            $file->refresh();
+
+            $fileName = $file->name;
+            $attendance_path = '/attendances'.'/'.$id;
+                 
+            $path = $request->file('file')->move(public_path($attendance_path),$fileName);
+            
+            $fileUrl = url('/attendance'.'/'.$id.'/'.$fileName);
+            
+            $attendance = Attendance::find($id);
+            $attendance->file_id = $file->id;
+            $attendance->save();
+
+            return response()->json(['url' => $fileUrl],200);
+
+        } else {
+            return 'no file!';
+        }
+        
+
     }
 }

@@ -82,6 +82,8 @@ Route::name('get_finish_groups')->post('get_finish_groups','FinishGroupControlle
 
 Route::name('get_finish_items')->post('get_finish_items','FinishItemController@getFinishItems');
 
+Route::name('attendance_upload_files')->post('attendance_upload_files/{id}','AttendanceController@uploadoFiles');
+
 //------------------------------------------------------
 
 
