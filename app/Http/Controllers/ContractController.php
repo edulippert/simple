@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\File;
 use App\Contract;
 use Illuminate\Http\Request;
 
@@ -35,7 +36,8 @@ class ContractController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $contract = Contract::create($request->all());
+        return $contract;
     }
 
     /**
@@ -46,7 +48,7 @@ class ContractController extends Controller
      */
     public function show(Contract $contract)
     {
-        //
+        return $contract;
     }
 
     /**
@@ -69,7 +71,9 @@ class ContractController extends Controller
      */
     public function update(Request $request, Contract $contract)
     {
-        //
+        $contract->fill($request->all());
+        $contract->save();
+        return $contract;
     }
 
     /**
@@ -80,6 +84,59 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
-        //
+        $contract->delete();
+        return response()->json([],204);
+    }
+
+    public function getContracts(Request $request)
+    {
+        $contracts = Contract::whereCondominiumId($request->condominium_id)->get();
+        return $contracts;
+    }
+
+    public function uploadoFiles(Request $request, $id ){
+
+        if ($request->hasFile('file')) {
+            
+            $file = File::create([
+                'file' => $request->file('file')->getClientOriginalName(),
+                'name' => $request->file('file')->hashName(),
+                'type' => $request->file('file')->getClientOriginalExtension(),
+                'subtype' => 'Contracts'
+            ]);
+
+            $file->refresh();
+
+            $fileName = $file->name;
+            $contract_path = '/contracts'.'/'.$file->id;
+                 
+            $path = $request->file('file')->move(public_path($contract_path),$fileName);
+            
+            $fileUrl = url('/contracts'.'/'.$file->id.'/'.$fileName);
+            
+            $contract = Contract::find($id);
+            $contract->file_id = $file->id;
+            $contract->save();
+
+            return response()->json(['url' => $fileUrl],200);
+
+        } else {
+            return 'no file!';
+        }      
+
+    }
+
+    public function downloadFile($file_id)
+    {
+
+        $file = File::find($file_id);
+
+        if ($file) {
+            $name = $file->name;
+            $contract_path = '/contracts'.'/'.$file->id.'/';
+            $completePath = $contract_path.$name;
+        }
+
+        return response()->download(\public_path($completePath),$file->file);
     }
 }

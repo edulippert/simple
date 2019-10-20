@@ -74,12 +74,16 @@ Route::resource('finishitems', 'FinishItemController');
 Route::resource('finishes', 'FinishController');
 Route::resource('attendances', 'AttendanceController');
 Route::resource('equipmentguarantees', 'EquipmentGuaranteeController');
+Route::resource('contracts', 'ContractController');
+
 
 Route::name('get_equipment_guarantees')->post('get_equipment_guarantees','EquipmentGuaranteeController@getEquipmenteGuarantees');
 
 Route::name('get_attendances')->post('get_attendances','AttendanceController@getAttendances');
 
 Route::name('get_finishes')->post('get_finishes','FinishController@getFinishs');
+
+Route::name('get_contracts')->post('get_contracts','ContractController@getContracts');
 
 Route::name('get_finish_groups')->post('get_finish_groups','FinishGroupController@getFinishGroups');
 
@@ -91,6 +95,8 @@ Route::name('attendance_upload_files')->post('attendance_upload_files/{id}','Att
 Route::name('attendance_download_files')->get('attendance_download_files/{id}','AttendanceController@downloadFile');
 Route::name('attendance_acceptance_term')->get('attendance_acceptance_term/{id}','AttendanceController@acceptanceTerm');
 
+Route::name('contract_upload_files')->post('contract_upload_files/{id}','ContractController@uploadoFiles');
+Route::name('contract_download_files')->get('contract_download_files/{id}','ContractController@downloadFile');
 
 Route::name('equipment_guarantee_upload_files')->post('equipment_guarantee_upload_files/{id}','EquipmentGuaranteeController@uploadoFiles');
 Route::name('equipment_guarantee_download_files')->get('equipment_guarantee_download_files/{id}','EquipmentGuaranteeController@downloadFile');

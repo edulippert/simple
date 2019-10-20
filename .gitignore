@@ -3,6 +3,7 @@
 /public/storage
 /public/attendances
 /public/equipment_guarantees
+/public/contracts
 /storage/*.key
 /vendor
 .env
