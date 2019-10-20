@@ -15,8 +15,7 @@ class Project extends Model
         return $this->belongsTo(Condominium::class);
     }
 
-    public function files()
-    {
-        return $this->belongsTo(File::class);
+    public function file(){
+        return $this->belongsTo(File::class,'file_id');
     }
 }

@@ -5,6 +5,7 @@
 /public/equipment_guarantees
 /public/contracts
 /public/licenses
+/public/projects
 /storage/*.key
 /vendor
 .env
