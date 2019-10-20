@@ -107,21 +107,22 @@ class AttendanceController extends Controller
         if ($request->hasFile('file')) {
             
            
-
             $file = File::create([
-                'file' => 'Attendance',
-                'name' => $request->file('file')->getClientOriginalName(),
+                'file' => $request->file('file')->getClientOriginalName(),
+                'name' => $request->file('file')->hashName(),
                 'type' => $request->file('file')->getClientOriginalExtension(),
+                'subtype' => 'Attendance'
             ]);
+
 
             $file->refresh();
 
             $fileName = $file->name;
-            $attendance_path = '/attendances'.'/'.$id;
+            $attendance_path = '/attendances'.'/'.$file->id;
                  
             $path = $request->file('file')->move(public_path($attendance_path),$fileName);
             
-            $fileUrl = url('/attendance'.'/'.$id.'/'.$fileName);
+            $fileUrl = url('/attendances'.'/'.$file->id.'/'.$fileName);
             
             $attendance = Attendance::find($id);
             $attendance->file_id = $file->id;
@@ -131,8 +132,28 @@ class AttendanceController extends Controller
 
         } else {
             return 'no file!';
+        }       
+
+    }
+
+    public function downloadFile($file_id)
+    {
+
+        $file = File::find($file_id);
+        
+        if ($file) {
+            $name = $file->name;
+            $attendance_path = '/attendances'.'/'.$file->id.'/';
+            $completePath = $attendance_path.$name;
         }
         
+        return response()->download(\public_path($completePath),$file->file);
+    }
+
+    public function acceptanceTerm($id)
+    {
+        $attendance = Attendance::getAcceptanceTerm($id);
+        return $attendance;
 
     }
 }

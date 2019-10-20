@@ -30,5 +30,19 @@ class Attendance extends Model
     protected $table = 'attendances';
 
     
+    public static function getAcceptanceTerm($attendance_id)
+    {
+        $attendance = self::where('attendances.id',$attendance_id)
+                            ->join('companies','companies.id','attendances.company_id')
+                            ->join('condominiums','condominiums.id','attendances.condominium_id')
+                            ->select(
+                                'companies.name as company_name',
+                                'attendances.description',
+                                'attendances.attendance_place',
+                                'condominiums.name',
+                                'condominiums.address'
+                            )->first();
 
+        return $attendance;
+    }
 }
