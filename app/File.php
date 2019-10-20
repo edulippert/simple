@@ -17,7 +17,7 @@ class File extends Model
 
     public static function createFiles($files):Collection{
         try {
-           
+            
             self::uploadFiles($files);
             DB::beginTransaction();
             $files = self::createFileModels($files);

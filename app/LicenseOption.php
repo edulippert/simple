@@ -12,6 +12,6 @@ class LicenseOption extends Model
 
     public function licenses()
     {
-        return $this->hasMany(License::class);
+        return $this->hasMany(License::class,'option_id');
     }
 }
