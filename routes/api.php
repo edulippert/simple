@@ -77,6 +77,7 @@ Route::resource('equipmentguarantees', 'EquipmentGuaranteeController');
 Route::resource('contracts', 'ContractController');
 Route::resource('licenses', 'LicenseController');
 Route::resource('projects', 'ProjectController');
+Route::resource('manuals', 'ManualController');
 
 Route::name('get_equipment_guarantees')->post('get_equipment_guarantees','EquipmentGuaranteeController@getEquipmenteGuarantees');
 
@@ -89,6 +90,8 @@ Route::name('get_contracts')->post('get_contracts','ContractController@getContra
 Route::name('get_licenses')->post('get_licenses','LicenseController@getLicenses');
 
 Route::name('get_projects')->post('get_projects','ProjectController@getProjects');
+
+Route::name('get_manuals')->post('get_manuals','ManualController@getProjects');
 
 Route::name('get_finish_groups')->post('get_finish_groups','FinishGroupController@getFinishGroups');
 
@@ -106,7 +109,10 @@ Route::name('contract_download_files')->get('contract_download_files/{id}','Cont
 Route::name('license_upload_files')->post('license_upload_files/{id}','LicenseController@uploadoFiles');
 Route::name('license_download_files')->get('license_download_files/{id}','LicenseController@downloadFile');
 
-Route::name('project_upload_files')->post('project_upload_files/{id}','ProjectController@uploadoFiles');
+Route::name('manual_upload_files')->post('manual_upload_files','ManualController@uploadoFiles');
+Route::name('manual_download_files')->get('manual_download_files/{id}','ManualController@downloadFile');
+
+Route::name('project_upload_files')->post('project_upload_files','ProjectController@uploadoFiles');
 Route::name('project_download_files')->get('project_download_files/{id}','ProjectController@downloadFile');
 
 Route::name('equipment_guarantee_upload_files')->post('equipment_guarantee_upload_files/{id}','EquipmentGuaranteeController@uploadoFiles');

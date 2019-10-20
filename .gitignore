@@ -6,6 +6,7 @@
 /public/contracts
 /public/licenses
 /public/projects
+/public/manuals
 /storage/*.key
 /vendor
 .env
