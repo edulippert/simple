@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Group;
 use App\Http\Requests\RootGuaranteeRequest;
 use App\RootGuarantee;
 use Illuminate\Http\Request;
@@ -96,4 +97,39 @@ class RootGuaranteeController extends Controller
         
         return $guarantee_maintenances_groups;
     }
+
+    public function getGroupsRootGuarantee(Request $request)
+    {
+        $root_guarantees = RootGuarantee::where('guarantee_id',$request->guarantee_id)
+                                        ->where('groups.is_guarantee',true)
+                                        ->join('groups','groups.id','root_guarantees.group_id')
+                                        ->select(
+                                            'root_guarantees.id',
+                                            'groups.id as group_id',
+                                            'groups.description as group_description'
+                                        )->get();
+
+        $groups = Group::getDistinctGroups($root_guarantees);
+
+        return $groups;
+    }
+
+    public function getItemsRootGuarantee(Request $request)
+    {
+        $root_guarantees = RootGuarantee::where('guarantee_id',$request->maintenance_id)
+                                            ->where('root_guarantees.group_id',$request->group_id)
+                                            ->join('items','items.id','root_guarantees.item_id')
+                                            ->select('root_guarantees.id',
+                                                    'items.id as items_id',
+                                                    'items.description as items_description'
+                                                    )
+                                            ->get();
+        
+        $items = Item::getDistinctItems($root_guarantees);
+
+        return $items;
+    }
+
+    
+
 }

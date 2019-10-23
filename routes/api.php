@@ -43,10 +43,15 @@ Route::resource('condominiums','CondominiumController');
 Route::resource('maintenances','MaintenanceController');
 Route::resource('maintenanceprograms','MaintenanceProgramController');
 
-
+Route::name('get_groups_by_type')->post('get_groups_by_type','GroupController@getGroupsbyType');
+Route::name('get_items_from_group')->post('get_items_from_group','ItemController@getItensFromGroup');
 
 
 Route::name('get_root_guarantees')->post('get_root_guarantees','RootGuaranteeController@getRootGuarantees');
+Route::name('get_root_guarantees_groups')->post('get_root_guarantees_groups','RootGuaranteeController@getGroupsRootGuarantee');
+Route::name('get_root_guarantees_items')->post('get_root_guarantees_items','RootGuaranteeController@getItemsRootGuarantee');
+
+
 Route::name('get_root_maintenances')->post('get_root_maintenances','RootMaintenanceController@getRootMaintenances');
 Route::name('get_root_maintenance_groups')->post('get_root_maintenance_groups','RootMaintenanceController@getGroupsRootMaintenance');
 Route::name('get_root_maintenance_items')->post('get_root_maintenance_items','RootMaintenanceController@getItemsRootMaintenance');

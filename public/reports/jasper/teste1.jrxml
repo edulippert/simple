@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="teste1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7de6bd6a-bb8c-4cc9-8666-594cee633a75">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select 1 as retorno	]]>
+	</queryString>
+	<field name="retorno" class="java.lang.Integer"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="666e1279-99ff-43e6-bc54-b60525e07898"/>
+				<staticText>
+					<reportElement x="20" y="20" width="333" height="43" forecolor="#FFFFFF" uuid="20f3ebe4-cfc9-4475-b443-04d50223d6ba"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Termo de Aceite]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="197">
+			<textField>
+				<reportElement x="39" y="0" width="476" height="197" uuid="8a82864d-cfc6-4da4-8abe-ed2aedadd7ba"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Eu Abaixo Assinado ________________, inscrito no CPF sob nº _________, declaro ter recebido da Empresa (PUXA O NOME DA EMPRESA DO CADASTRO DE LOGIN) a execução do referente serviço: (DESCREVA O OCORRIDO) no local (PUXA LOCAL DO ATENDIMENTO) do edifício (puxa do cadastro da obra) localizado no endereço (puxa do cadastro da obra)."+
+"Assim dá-se quitação de todo e qualquer serviço/manutenção/instalação/entrega de material dos itens listados anteriormente, da empresa (puxa do cadastro do usuário) para com o proprietário do respectivo apartamento. Dando-se por satisfeito, sem mais nada a reclamar."]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="49"/>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="67c38f90-aa89-4638-a1e3-3ee4c2378821"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="6c50e0e3-7a1e-41bc-8807-87c82b21aea6"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="4" width="100" height="13" uuid="dc3e5c2e-9b7c-4ccd-8777-af093b8919e5"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

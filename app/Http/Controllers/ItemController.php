@@ -75,4 +75,11 @@ class ItemController extends Controller
     {
         $item->delete();
     }
+
+    public function getItensFromGroup(Request $request)
+    {
+        $items = Item::where('group_id',$request->group_id)->get();
+
+        return $items;
+    }
 }

@@ -25,8 +25,11 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
+       
         $attributes = request()->validate([
-            'description' => 'required'
+            'description' => 'required',
+            'is_guarantee' => '',
+            'is_maintenance' => '', 
         ]);
 
         $group = Group::create($attributes);
@@ -72,6 +75,19 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         $group->delete();
+    }
+
+    public function getGroupsbyType(Request $request){
+
+        
+        if ($request->type === 'Guarantee'){
+
+            $groups = Group::where('is_guarantee',true)->get();
+        }else {
+            $groups = Group::where('is_maintenance',true)->getI();
+        }
+
+        return $groups;
     }
 
     

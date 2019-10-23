@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class Group extends Model
 {
-    protected $fillable = ['description','is_guarantee'];
+    protected $fillable = ['description','is_guarantee','is_maintenance'];
     protected $giuarded = ['id'];
     protected $table = 'groups';
 
