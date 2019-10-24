@@ -90,7 +90,8 @@ class ContractController extends Controller
 
     public function getContracts(Request $request)
     {
-        $contracts = Contract::whereCondominiumId($request->condominium_id)->get();
+        //$contracts = Contract::whereCondominiumId($request->condominium_id)->get();
+        $contracts = Contract::buildContractsReponse($request->condominium_id);
         return $contracts;
     }
 

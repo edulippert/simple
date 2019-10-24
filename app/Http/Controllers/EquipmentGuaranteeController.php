@@ -90,7 +90,10 @@ class EquipmentGuaranteeController extends Controller
     public function getEquipmenteGuarantees(Request $request)
     {
 
-        $equipment_guarantees = EquipmentGuarantee::whereCondominiumId($request->condominium_id)->get();
+        //$equipment_guarantees = EquipmentGuarantee::whereCondominiumId($request->condominium_id)->get();
+
+        $equipment_guarantees = EquipmentGuarantee::buildEpuipmenteGuaranteeResponse($request->condominium_id);
+
         return $equipment_guarantees;
 
     }
