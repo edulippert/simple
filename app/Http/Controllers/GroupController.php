@@ -84,7 +84,7 @@ class GroupController extends Controller
 
             $groups = Group::where('is_guarantee',true)->get();
         }else {
-            $groups = Group::where('is_maintenance',true)->getI();
+            $groups = Group::where('is_maintenance',true)->get();
         }
 
         return $groups;
