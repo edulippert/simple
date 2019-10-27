@@ -111,7 +111,7 @@ Route::name('attendance_acceptance_term')->get('attendance_acceptance_term/{id}'
 Route::name('contract_upload_files')->post('contract_upload_files/{id}','ContractController@uploadoFiles');
 Route::name('contract_download_files')->get('contract_download_files/{id}','ContractController@downloadFile');
 
-Route::name('license_upload_files')->post('license_upload_files/{id}','LicenseController@uploadoFiles');
+Route::name('license_upload_files')->post('license_upload_files','LicenseController@uploadoFiles');
 Route::name('license_download_files')->get('license_download_files/{id}','LicenseController@downloadFile');
 
 Route::name('manual_upload_files')->post('manual_upload_files','ManualController@uploadoFiles');
@@ -119,6 +119,8 @@ Route::name('manual_download_files')->get('manual_download_files/{id}','ManualCo
 
 Route::name('project_upload_files')->post('project_upload_files','ProjectController@uploadoFiles');
 Route::name('project_download_files')->get('project_download_files/{id}','ProjectController@downloadFile');
+Route::name('project_delete_file')->post('project_delete_file','ProjectController@deleteFile');
+Route::name('project_update_file')->post('project_update_file/{id}','ProjectController@updateFile');
 
 Route::name('equipment_guarantee_upload_files')->post('equipment_guarantee_upload_files/{id}','EquipmentGuaranteeController@uploadoFiles');
 Route::name('equipment_guarantee_download_files')->get('equipment_guarantee_download_files/{id}','EquipmentGuaranteeController@downloadFile');

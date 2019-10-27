@@ -45,7 +45,18 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return $project;
+       //dd($project);
+
+       $file = $project->file;
+
+        return [
+            'id' => $project->id,
+            'name' => $project->name,
+            'condominium_id' => $project->condominium_id,
+            'file_id' => $project->file_id,
+            'file_name' =>  ($file? $file->file:null)
+        ]; 
+        
     }
 
     /**
@@ -57,13 +68,34 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        $attributes = request()->validate([
-            'condominium_id' => 'required',
-            'file_id' => 'required',
-            'name' => 'required'
-        ]);
 
-        $project->update($attributes);
+        if ($request->hasFile('file')) {
+            
+            $file = File::create([
+                'file' => $request->file('file')->getClientOriginalName(),
+                'name' => $request->file('file')->hashName(),
+                'type' => $request->file('file')->getClientOriginalExtension(),
+                'subtype' => 'Project'
+            ]);
+
+            $file->refresh();
+
+            $fileName = $file->name;
+            $project_path = '/projects'.'/'.$file->id;
+                 
+            $path = $request->file('file')->move(public_path($project_path),$fileName);
+            
+            $fileUrl = url('/projects'.'/'.$file->id.'/'.$fileName);
+        }
+        // $attributes = request()->validate([
+        //     'condominium_id' => 'required',
+        //     'file_id' => 'required',
+        //     'name' => 'required'
+        // ]);
+        $project->name = $request->name;
+        $project->file_id = $file->id;
+        $project->save();
+
 
         return $project;
     }
@@ -144,4 +176,57 @@ class ProjectController extends Controller
 
         return response()->download(\public_path($completePath),$file->file);
     }
+
+    public function deleteFile(Request $request)
+    {
+
+        $project = Project::find($request->project_id);
+        
+        $file = File::find($request->file_id);
+
+        $licensePath = '/projects'.'/'.$file->id;
+        $completePath = $licensePath;
+
+        \File::deleteDirectory(\public_path($completePath));
+
+        $project->file_id = null;
+        $project->save();
+        $file->delete();
+
+        return response()->json([],204);
+
+    }
+
+    public function updateFile(Request $request, $project_id)
+    {
+
+        if ($request->hasFile('file')) {
+            
+            $file = File::create([
+                'file' => $request->file('file')->getClientOriginalName(),
+                'name' => $request->file('file')->hashName(),
+                'type' => $request->file('file')->getClientOriginalExtension(),
+                'subtype' => 'Project'
+            ]);
+
+            $file->refresh();
+
+            $fileName = $file->name;
+            $project_path = '/projects'.'/'.$file->id;
+                 
+            $path = $request->file('file')->move(public_path($project_path),$fileName);
+            
+            $fileUrl = url('/projects'.'/'.$file->id.'/'.$fileName);
+        }
+        
+        $project = Project::find($project_id);
+        
+        $project->name = $request->name;
+        $project->file_id = $file->id;
+        $project->save();
+
+
+        return $project;
+    }
+
 }

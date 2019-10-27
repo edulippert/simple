@@ -6,6 +6,7 @@ use App\File;
 use App\License;
 use App\LicenseOption;
 use Illuminate\Http\Request;
+use PharIo\Manifest\License as PharIoLicense;
 
 class LicenseController extends Controller
 {
@@ -29,7 +30,6 @@ class LicenseController extends Controller
     {
         $attributes = request()->validate([
             'condominium_id' => 'required',
-            'option_id' => 'required',
             'file_id' => '',
             'description' => 'required'
         ]);
@@ -96,12 +96,14 @@ class LicenseController extends Controller
 
     public function getLicenses(Request $request)
     {
-        $licenses = License::getLicenses($request->condominium_id);
+
+        $licenses = License::where('condominium_id',$request->condominium_id)->get();
+       // $licenses = License::getLicenses($request->condominium_id);
         //::with('licenses')->where('licenses.condominium_id',$request->condominium_id)->get();
         return $licenses;
     }
 
-    public function uploadoFiles(Request $request, $id ){
+    public function uploadoFiles(Request $request ){
 
         
         if ($request->hasFile('file')) {
@@ -124,7 +126,6 @@ class LicenseController extends Controller
 
             License::create([
                 'condominium_id' => $request->condominium_id,
-                'option_id' => $id,
                 'file_id' => $file->id,
                 'description' => $request->description
             ]);
