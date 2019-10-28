@@ -163,18 +163,22 @@ class ProjectController extends Controller
 
     }
 
-    public function downloadFile($file_id)
+    public function downloadFile($id)
     {
-
-        $file = File::find($file_id);
+        
+        $file = File::find($id);
 
         if ($file) {
             $name = $file->name;
             $project_path = '/projects'.'/'.$file->id.'/';
             $completePath = $project_path.$name;
+
+            return response()->download(\public_path($completePath),$file->file);
+        }else{
+            return response()->json(['Arquivo nao localizado'],202);
         }
 
-        return response()->download(\public_path($completePath),$file->file);
+        
     }
 
     public function deleteFile(Request $request)
