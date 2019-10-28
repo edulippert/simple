@@ -84,6 +84,12 @@ class MaintenanceProgramController extends Controller
     }
 
     public function getMaintenancePrograms(Request $request){
-        return MaintenanceProgram::getMaintenancesPrograms($request->condominium_id);
+       return MaintenanceProgram::getMaintenancesPrograms($request->condominium_id);
+       
+    }
+
+    public function getMaintenanceProgramsMonthGrouped(Request $request)
+    {
+        return MaintenanceProgram::buildMaintenanceResponse($request->condominium_id);
     }
 }
