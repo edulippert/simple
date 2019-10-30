@@ -63,7 +63,7 @@ Route::name('allocate_guarantees_and_maintenances')->post('allocate_guarantees_a
 Route::name('allocates')->post('allocates','AllocateGuaranteesAndMaintenances@allocates');
 Route::name('get_allocateds')->post('get_allocateds','CustomerGuaranteeController@getAllocateds');
 Route::name('get_maintenace_programs')->post('get_maintenace_programs','MaintenanceProgramController@getMaintenancePrograms');
-Route::name('get_maintenace_programs_by_month')->post('get_maintenace_programs_by_month','MaintenanceProgramController@getMaintenanceProgramsMonthGrouped');
+Route::name('get_maintenance_programs_by_month')->post('get_maintenance_programs_by_month','MaintenanceProgramController@getMaintenanceProgramsMonthGrouped');
 
 
 Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');

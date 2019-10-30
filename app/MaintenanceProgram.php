@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -91,6 +92,8 @@ class MaintenanceProgram extends Model
                 'tasks_done' => $maintenance_header->nr_done,
                 'tasks_not_done' => $maintenance_header->nr_not_done,
                 'percent_done' => $percent_done . ' %',
+                'estimated_cost' => $maintenance_header->estimated_cost,
+                'executed_cost' => $maintenance_header->executed_cost,
                 'collapse' => false,
                 'maintenances' => self::getMaintenacesByMonth($condominium_id,$maintenance_header->just_month,$maintenance_header->just_year)
             ];
@@ -104,7 +107,39 @@ class MaintenanceProgram extends Model
     {
         $maintenances = self::getMaintenancesPrograms($condominium_id,$month,$year);
 
-        return $maintenances;
+        $response = [];
+        foreach ($maintenances as $maintenance) {
+            
+            $status = 'Aberto';
+
+            if ($maintenance->executed_day != null) {
+                if ($maintenance->executed_day > $maintenance->maintenance_day) {
+                    $status = 'Executado com atraso';
+                }else{
+                    $status = 'Executado';
+                }
+            }else{
+                if ($maintenance->maintenance_day < Carbon::now()) {
+                    $status = 'Atrasado';
+                }
+            }
+            
+            $response[] = [
+                'id' => $maintenance->id,
+                'day' => $maintenance->just_day,
+                'file_id' => $maintenance->file_id,
+                'item_id' => $maintenance->item_id,
+                'item_description' => $maintenance->item_description,
+                'activity' => $maintenance->activity,
+                'executed_day' => $maintenance->executed_day,
+                'estimated_cost' => $maintenance->estimated_cost,
+                'executed_cost' => $maintenance->executed_cost,
+                'status' => $status,
+
+            ];
+        }
+
+        return $response;
 
     }
 
@@ -117,6 +152,8 @@ class MaintenanceProgram extends Model
                                 extract(year from maintenance_day) as just_year,
                                 sum(case when is_done = true then 1 else 0 end ) as nr_done,
                                 sum(case when is_done = false then 1 else 0 end ) as nr_not_done,
+                                sum(estimated_cost) as estimated_cost,
+                                sum(executed_cost) as executed_cost,
                                 count(*) as total"))
                                 ->groupBy('month_year','just_month','just_year')
                                 ->orderBy('just_year','asc')
@@ -148,6 +185,8 @@ class MaintenanceProgram extends Model
                                         'maintenance_day',
                                         'executed_day',
                                         'status',
+                                        'estimated_cost',
+                                        'executed_cost',
                                         'is_done',
                                         'is_blocked'
                                     )

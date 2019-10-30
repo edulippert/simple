@@ -73,9 +73,10 @@ class RootGuaranteeMaintenanceController extends Controller
      */
     public function update(Request $request, RootGuaranteeMaintenance $rootguaranteemaintenance)
     {
-        
+        //dd($rootguaranteemaintenance);
         $root_guarantee_maintenance = $rootguaranteemaintenance->fill($request->all());
         $root_guarantee_maintenance->save();
+        $root_guarantee_maintenance->refresh();
         return $root_guarantee_maintenance;
 
         
@@ -87,9 +88,10 @@ class RootGuaranteeMaintenanceController extends Controller
      * @param  \App\RootGuaranteeMaintenance  $rootGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RootGuaranteeMaintennce $rootGuaranteeMaintenance)
+    public function destroy(RootGuaranteeMaintenance $rootguaranteemaintenance)
     {
-        //
+        $rootguaranteemaintenance->delete();
+        return response()->json([],204);
     }
 
     public function getRootGuaranteeMaintenances(Request $request)
