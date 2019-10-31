@@ -16,7 +16,8 @@ class RootGuarantee extends Model
                             'amount',
                             'period',
                             'is_active',
-                            'reference'
+                            'reference',
+                            'description'
                         ];
     
     protected $table = 'root_guarantees';
@@ -54,6 +55,7 @@ class RootGuarantee extends Model
                 'id' => $item['id'],
                 'item_id' => $item['item_id'],
                 'description' => $item['item_description'],
+                'guarantee_description' =>$item['guarantee_description'],
                 'amount' => $item['amount'],
                 'period' => $item['period'],
                 'reference' => $item['reference'],
@@ -86,7 +88,8 @@ class RootGuarantee extends Model
                             'items.description as item_description',
                             'amount',
                             'period',
-                            'reference')
+                            'reference',
+                            'root_guarantees.description as guarantee_description')
                     ->distinct()
                     ->get();
 
@@ -106,7 +109,8 @@ class RootGuarantee extends Model
                             'items.description as item_description',
                             'amount',
                             'period',
-                            'reference')
+                            'reference',
+                            'root_guarantees.description')
                     ->distinct()
                     ->first();
 
