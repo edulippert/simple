@@ -50,7 +50,7 @@ class AllocateGuaranteesAndMaintenances extends Controller
             
         
             if (!$start_date){
-                return response()->json(['message'=>'Favor definir a data de habite-se antes de distribuir as Garantias e Manutencoes'],206);
+                return response()->json(['errors'=>'Favor definir a data de habite-se antes de distribuir as Garantias e Manutencoes'],422);
             }
 
             $guarantee = Guarantee::find($request->standard_id);
@@ -114,7 +114,7 @@ class AllocateGuaranteesAndMaintenances extends Controller
                 ]);
                 
                 if ($valid_customer_guarantee_request->fails()){
-                    return response()->json(['message'=>'Essa Garantia ja foi atribuida para esse Condominio'],200); 
+                    return response()->json(['errors'=>'Essa Garantia ja foi atribuida para esse Condominio'],422); 
                 }
 
                 $customer_guarantees = CustomerGuarantee::create($request_customer_guarantee);
@@ -175,13 +175,13 @@ class AllocateGuaranteesAndMaintenances extends Controller
             
         
             if (!$start_date){
-                return response()->json(['message'=>'Favor definir a data de habite-se antes de distribuir as Garantias e Manutencoes'],206);
+                return response()->json(['errors'=>'Favor definir a data de habite-se antes de distribuir as Garantias e Manutencoes'],422);
             }
 
             $maintenance = Maintenance::find($request->standard_id);
 
             if (!$maintenance) {
-                return response()->json(['message'=>'Manutencao Padrao nao localizada'],206);
+                return response()->json(['errors'=>'Manutencao Padrao nao localizada'],422);
             }
 
             if ($request->root_standard_id != null) {
@@ -217,7 +217,7 @@ class AllocateGuaranteesAndMaintenances extends Controller
                 ]);
 
                 if ($valid_customer_maintenanace_request->fails()){
-                    return response()->json(['message'=>'Essa Manutencao ja foi atribuida para esse Condominio'],200); 
+                    return response()->json(['errors'=>'Essa Manutencao ja foi atribuida para esse Condominio'],422); 
                 }
 
                 $customer_guarantee_maintenance =  CustomerGuaranteeMaintenance::create($request_guarantee_maintenance);

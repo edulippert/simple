@@ -117,18 +117,35 @@ class UserController extends Controller
 
     public function saveUserAndAssignments(Request $request)
     {
-        $user = User::create([
-            'role_id' => $request->role_id,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'id_number' => $request->id_number,
-            'cep' => $request->cep,
-            'address' => $request->address,
-            'complement' => $request->complement,
-            'phone_number' => $request->phone_number,
-            'is_active' => $request->is_active,
+        $attributes = request()->validate([
+            'role_id' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            'id_number' => 'required|unique:users',
+            'cep' => 'required',
+            'address' => 'required',
+            'complement' => 'required',
+            'phone_number' => 'required',
+            'is_active' => '',
         ]);
+        
+        $attributes['password'] = bcrypt($attributes['password']);
+
+        $user = User::create($attributes);
+
+        // $user = User::create([
+        //     'role_id' => $request->role_id,
+        //     'username' => $request->username,
+        //     'email' => $request->email,
+        //     'password' => bcrypt($request->password),
+        //     'id_number' => $request->id_number,
+        //     'cep' => $request->cep,
+        //     'address' => $request->address,
+        //     'complement' => $request->complement,
+        //     'phone_number' => $request->phone_number,
+        //     'is_active' => $request->is_active,
+        // ]);
         $user->refresh();
 
         if ($user) {
