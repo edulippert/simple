@@ -78,9 +78,11 @@ class CustomerGuaranteeMaintenanceController extends Controller
      * @param  \App\CustomerGuaranteeMaintenance  $customerGuaranteeMaintenance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CustomerGuaranteeMaintenance $customerGuaranteeMaintenance)
+    public function destroy(CustomerGuaranteeMaintenance $customerguaranteemaintenance)
     {
-        //
+        $customerguaranteemaintenance->delete();
+
+        return response()->json([],204);
     }
 
 }

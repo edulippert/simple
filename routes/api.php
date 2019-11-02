@@ -36,6 +36,7 @@ Route::resource('groups', 'GroupController');
 Route::resource('items', 'ItemController');
 Route::resource('subitems', 'SubitemController');
 Route::resource('customerguarantees', 'CustomerGuaranteeController');
+Route::resource('customerguaranteemaintenances', 'CustomerGuaranteeMaintenanceController');
 Route::resource('rootguarantees', 'RootGuaranteeController');
 Route::resource('rootmaintenances', 'RootMaintenanceController');
 Route::resource('rootguaranteemaintenances', 'RootGuaranteeMaintenanceController');

@@ -21,7 +21,7 @@ class RootMaintenance extends Model
     protected $table = 'root_maintenances';
 
 
-    public static function buildRootMaintenancesResponse($maintenance_id)
+    public static function buildRootMaintenancesResponse($maintenance_id,$condominium_id=null)
     {
         $root_maintenances = self::getRootMaintenances($maintenance_id);
 
@@ -37,33 +37,62 @@ class RootMaintenance extends Model
                 'group_id' => $group['group_id'],
                 'description' => $group['group_description'],
                 'collapse' => false,
-                'items' => self::getGroupedItems($grouped_root_maintenances)
+                'items' => self::getGroupedItems($grouped_root_maintenances,$condominium_id)
             ];
         }
 
         return $response;
     }
 
-    public static function getGroupedItems($grouped_items)
+    public static function getGroupedItems($grouped_items,$condominium_id)
     {
         $response = [];
 
         foreach ($grouped_items as $item ) {
+
+            if ($condominium_id) {
+                
+                $response[] = [
+                    'id' => $item['id'],
+                    'description' => $item['description'],
+                    'activity' => $item['activity'],
+                    'item_id' => $item['item_id'],
+                    'item_description' => $item['item_description'],
+                    'amount' => $item['amount'],
+                    'period' => $item['period'],
+                    'font' => $item['font'],
+                    'was_allocated' => self::wasAllocated($condominium_id,$item['group_id'],$item['item_id'])
+                ];
+
+            }else {
+                
+                $response[] = [
+                    'id' => $item['id'],
+                    'description' => $item['description'],
+                    'activity' => $item['activity'],
+                    'item_id' => $item['item_id'],
+                    'item_description' => $item['item_description'],
+                    'amount' => $item['amount'],
+                    'period' => $item['period'],
+                    'font' => $item['font']
+                ];
+
+            }
             
-            $response[] = [
-                'id' => $item['id'],
-                'description' => $item['description'],
-                'activity' => $item['activity'],
-                'item_id' => $item['item_id'],
-                'item_description' => $item['item_description'],
-                'amount' => $item['amount'],
-                'period' => $item['period'],
-                'font' => $item['font']
-            ];
 
         }
 
         return $response;
+    }
+
+    public static function wasAllocated($condominium_id,$group_id,$item_id)
+    {
+        $customer_guarantee = CustomerGuaranteeMaintenance::where('condominium_id',$condominium_id)
+                                            ->where('group_id',$group_id)
+                                            ->where('item_id',$item_id)
+                                            ->first();
+        
+        return $customer_guarantee ? true:false;
     }
 
     public static function getRootMaintenances($maintenance_id)

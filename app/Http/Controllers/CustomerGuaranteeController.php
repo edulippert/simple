@@ -47,9 +47,9 @@ class CustomerGuaranteeController extends Controller
      * @param  \App\CustomerGuarantee  $customerGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function show(CustomerGuarantee $customerGuarantee)
+    public function show(CustomerGuarantee $customerguarantee)
     {
-        //
+        
     }
 
     /**
@@ -81,9 +81,11 @@ class CustomerGuaranteeController extends Controller
      * @param  \App\CustomerGuarantee  $customerGuarantee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CustomerGuarantee $customerGuarantee)
+    public function destroy(CustomerGuarantee $customerguarantee)
     {
-        //
+        $customerguarantee->delete();
+
+        return response()->json([],204);
     }
 
     public function getAllocateds(Request $request)

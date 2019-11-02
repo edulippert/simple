@@ -22,8 +22,9 @@ class RootGuarantee extends Model
     
     protected $table = 'root_guarantees';
 
-    public static function buildRootGuaranteesResponse($guarantee_id)
+    public static function buildRootGuaranteesResponse($guarantee_id , $condominium_id=null)
     {
+
         $root_guarantees = self::getRootGuarantees($guarantee_id);
 
         $groups = Group::getDistinctGroups($root_guarantees);
@@ -38,33 +39,60 @@ class RootGuarantee extends Model
                 'group_id' => $group['group_id'],
                 'description' => $group['group_description'],
                 'collapse' => true,
-                'items' => self::getGroupedItems($grouped_root_guarantees)
+                'items' => self::getGroupedItems($grouped_root_guarantees,$condominium_id)
             ];
         }
 
         return $response;
     }
 
-    public static function getGroupedItems($grouped_items)
+    public static function getGroupedItems($grouped_items,$condominium_id)
     {
         $response = [];
 
         foreach ($grouped_items as $item ) {
             
-            $response[] = [
-                'id' => $item['id'],
-                'item_id' => $item['item_id'],
-                'description' => $item['item_description'],
-                'guarantee_description' =>$item['guarantee_description'],
-                'amount' => $item['amount'],
-                'period' => $item['period'],
-                'reference' => $item['reference'],
-                'has_maintenance' => self::hasGuaranteeMaintenances($item['id'])
-            ];
+            if ($condominium_id) {
+                $response[] = [
+                    'id' => $item['id'],
+                    'item_id' => $item['item_id'],
+                    'description' => $item['item_description'],
+                    'guarantee_description' =>$item['guarantee_description'],
+                    'amount' => $item['amount'],
+                    'period' => $item['period'],
+                    'reference' => $item['reference'],
+                    'has_maintenance' => self::hasGuaranteeMaintenances($item['id']),
+                    'was_allocated' => self::wasAllocated($condominium_id,$item['group_id'],$item['item_id'])
+                ];
+    
+            }else{
+
+                $response[] = [
+                    'id' => $item['id'],
+                    'item_id' => $item['item_id'],
+                    'description' => $item['item_description'],
+                    'guarantee_description' =>$item['guarantee_description'],
+                    'amount' => $item['amount'],
+                    'period' => $item['period'],
+                    'reference' => $item['reference'],
+                    'has_maintenance' => self::hasGuaranteeMaintenances($item['id'])
+                ];
+            }
+
 
         }
 
         return $response;
+    }
+
+    public static function wasAllocated($condominium_id,$group_id,$item_id)
+    {
+        $customer_guarantee = CustomerGuarantee::where('condominium_id',$condominium_id)
+                                            ->where('group_id',$group_id)
+                                            ->where('item_id',$item_id)
+                                            ->first();
+        
+        return $customer_guarantee ? true:false;
     }
 
     public static function hasGuaranteeMaintenances($root_guarantee_id)

@@ -85,8 +85,15 @@ class RootMaintenanceController extends Controller
 
     public function getRootMaintenances(Request $request)
     {
-        //dd($request->maintenance_id);
-        $root_maintenances_groups = RootMaintenance::buildRootMaintenancesResponse($request->maintenance_id);
+        if ($request->condominium_id) {
+        
+            $root_maintenances_groups = RootMaintenance::buildRootMaintenancesResponse($request->maintenance_id,$request->condominium_id);
+        
+        }else{
+
+            $root_maintenances_groups = RootMaintenance::buildRootMaintenancesResponse($request->maintenance_id);
+        
+        }
         
         return $root_maintenances_groups;
     }
