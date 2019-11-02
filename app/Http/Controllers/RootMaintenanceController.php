@@ -128,6 +128,7 @@ class RootMaintenanceController extends Controller
                                             ->where('root_maintenances.group_id',$request->group_id)
                                             ->where('root_maintenances.item_id',$request->item_id)
                                             ->select(
+                                                'root_maintenances.id as root_maintenance_id',
                                                 'activity',
                                                 'description',
                                                 'amount',
@@ -135,7 +136,7 @@ class RootMaintenanceController extends Controller
                                                 'responsable',
                                                 'font'  
                                             )
-                                            ->first();
+                                            ->get();
         return $root_maintenance_values;
 
     }

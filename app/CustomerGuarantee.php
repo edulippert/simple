@@ -17,7 +17,8 @@ class CustomerGuarantee extends Model
                             'due_date',
                             'is_active',
                             'is_expired',
-                            'reference'
+                            'reference',
+                            'coverage'
                         ];
                         
     protected $table = 'customer_guarantees';
@@ -47,6 +48,7 @@ class CustomerGuarantee extends Model
                 'is_active' => $customer_guarantee->is_active,
                 'is_expired' => $customer_guarantee->is_expired,
                 'reference' => $customer_guarantee->reference,
+                'coverage' => $customer_guarantee->coverage,
                 'collapse' => true,
                 'maintenances' => CustomerGuaranteeMaintenance::getGuaranteeMaintenaces($customer_guarantee->id)
             ];
@@ -90,7 +92,8 @@ class CustomerGuarantee extends Model
                                     'customer_guarantees.due_date',
                                     'customer_guarantees.is_active',
                                     'customer_guarantees.is_expired',
-                                    'customer_guarantees.reference'
+                                    'customer_guarantees.reference',
+                                    'customer_guarantees.coverage'
                                 )
                                 ->get();
 

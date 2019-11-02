@@ -26,7 +26,7 @@ class ChangeColumnOnRootGuaranteeMaintenance extends Migration
     public function down()
     {
         Schema::table('root_guarantee_maintenances', function (Blueprint $table) {
-            $table->string('description');
+           // $table->string('description');
         });
     }
 }

@@ -27,7 +27,7 @@ class AddColumnToCustomerGuaranteeMaintenances extends Migration
     public function down()
     {
         Schema::table('customer_guarantee_maintenances', function (Blueprint $table) {
-            $table->dropForeign('condominium_id');
+           // $table->dropForeign('condominium_id');
             $table->dropColumn('condominium_id');
         });
     }

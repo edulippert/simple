@@ -27,7 +27,7 @@ class AddColumnOnAttendancesTable extends Migration
     public function down()
     {
         Schema::table('attendances', function (Blueprint $table) {
-            $table->dropForeign('condominium_id');
+           // $table->dropForeign('condominium_id');
             $table->dropColumn('condominium_id');
         });
     }

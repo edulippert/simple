@@ -26,7 +26,7 @@ class ChangeColumnOnProjectsTable extends Migration
     public function down()
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->integer('file_id');
+           // $table->integer('file_id');
         });
     }
 }

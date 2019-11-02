@@ -27,7 +27,7 @@ class RemoveColumnOnLicenses extends Migration
     public function down()
     {
         Schema::table('licenses', function (Blueprint $table) {
-            $table->integer('option_id');
+            $table->integer('option_id')->nullable();
             $table->foreign('option_id')->references('id')->on('license_options');
         });
     }

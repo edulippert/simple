@@ -36,15 +36,15 @@ class RemoveColumnsOnContracts extends Migration
     public function down()
     {
         Schema::table('contracts', function (Blueprint $table) {
-            $table->integer('file_id');
-            $table->string('name');
-            $table->string('description');
-            $table->string('total_cost');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
-            $table->string('contact_name');
-            $table->string('contact_email');
-            $table->string('contact_phone_number');
+            $table->integer('file_id')->nullable();
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
+            $table->string('total_cost')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->string('contact_name')->nullable();
+            $table->string('contact_email')->nullable();
+            $table->string('contact_phone_number')->nullable();
         });
     }
 }

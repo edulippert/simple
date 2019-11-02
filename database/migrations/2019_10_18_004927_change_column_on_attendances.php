@@ -38,14 +38,14 @@ class ChangeColumnOnAttendances extends Migration
         Schema::table('attendances', function (Blueprint $table) {
             $table->integer('file_id')->nullable();
             $table->foreign('file_id')->references('id')->on('files');
-            $table->timestamp('inspection_date');
-            $table->timestamp('finish_date');
-            $table->text('description');
-            $table->text('solution');
-            $table->string('responsible');
-            $table->string('manpower_cost');
-            $table->string('material_cost');
-            $table->string('total_cost');
+            $table->timestamp('inspection_date')->nullable();
+            $table->timestamp('finish_date')->nullable();
+            $table->text('description')->nullable();
+            $table->text('solution')->nullable();
+            $table->string('responsible')->nullable();
+            $table->string('manpower_cost')->nullable();
+            $table->string('material_cost')->nullable();
+            $table->string('total_cost')->nullable();
         });
     }
 }

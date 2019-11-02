@@ -27,7 +27,7 @@ class AddColumnOnFinishgroups extends Migration
     public function down()
     {
         Schema::table('finish_groups', function (Blueprint $table) {
-            $table->dropForeign('condominium_id');
+            //$table->dropForeign('condominium_id');
             $table->dropColumn('condominium_id');
         });
     }

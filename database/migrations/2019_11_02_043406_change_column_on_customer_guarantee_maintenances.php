@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeColumnOnRootMaintenances extends Migration
+class ChangeColumnOnCustomerGuaranteeMaintenances extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class ChangeColumnOnRootMaintenances extends Migration
      */
     public function up()
     {
-        Schema::table('root_maintenances', function (Blueprint $table) {
+        Schema::table('customer_guarantee_maintenances', function (Blueprint $table) {
             $table->string('description')->nullable()->change();
         });
     }
@@ -25,8 +25,8 @@ class ChangeColumnOnRootMaintenances extends Migration
      */
     public function down()
     {
-        Schema::table('root_maintenances', function (Blueprint $table) {
-           /// $table->string('description');
+        Schema::table('customer_guarantee_maintenances', function (Blueprint $table) {
+            //
         });
     }
 }

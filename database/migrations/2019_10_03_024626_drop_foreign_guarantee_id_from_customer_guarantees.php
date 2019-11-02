@@ -28,7 +28,7 @@ class DropForeignGuaranteeIdFromCustomerGuarantees extends Migration
     public function down()
     {
         Schema::table('customer_guarantees', function (Blueprint $table) {
-            $table->integer('guarantee_id');
+            $table->integer('guarantee_id')->nullable();
             $table->foreign('guarantee_id')->references('id')->on('guarantees');
         });
     }

@@ -99,7 +99,8 @@ class AllocateGuaranteesAndMaintenances extends Controller
                                             'due_date' => $due_date,
                                             'is_active' => true,
                                             'is_expired' => true,
-                                            'reference' => $root_guarantee->reference
+                                            'reference' => $root_guarantee->reference,
+                                            'coverage' => $root_guarantee->description
                                             ];
 
                 $valid_customer_guarantee_request = Validator::make($request_customer_guarantee,[
@@ -211,6 +212,7 @@ class AllocateGuaranteesAndMaintenances extends Controller
                             return $query
                                 ->whereGroupId($request_guarantee_maintenance['group_id'])
                                 ->whereItemId($request_guarantee_maintenance['item_id'])
+                                ->whereActivity($request_guarantee_maintenance['activity'])
                                 ->whereCondominiumId($request_guarantee_maintenance['condominium_id']);
                         }),
                     ]
