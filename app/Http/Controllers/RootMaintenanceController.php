@@ -144,6 +144,24 @@ class RootMaintenanceController extends Controller
                                                 'font'  
                                             )
                                             ->get();
+
+        // $response = [];
+        // foreach ($root_maintenance_values as $root_maintenance_value) {
+
+
+
+        //     $response[]=[
+        //         'root_maintenance_id' => $root_maintenance_value->root_maintenance_id,
+        //         'activity' => $root_maintenance_value->activity,
+        //         'description' => $root_maintenance_value->description,
+        //         'amount' => $root_maintenance_value->amount,
+        //         'period' => $root_maintenance_value->period,
+        //         'responsable' => $root_maintenance_value->responsable,
+        //         'font' => $root_maintenance_value->font,
+        //         'was_saved' =>   
+        //     ];
+        // }
+
         return $root_maintenance_values;
 
     }

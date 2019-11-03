@@ -94,4 +94,9 @@ class CustomerGuaranteeController extends Controller
         return CustomerGuarantee::buildGuaranteeMaintenancesAllocatedsResponse($request->condominium_id);
 
     }
+
+    public function getCustomerGuarantees(Request $request)
+    {
+        return CustomerGuarantee::buildGuaranteesResponse($request->condominium_id);
+    }
 }

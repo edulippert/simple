@@ -128,6 +128,7 @@ Route::name('project_update_file')->post('project_update_file/{id}','ProjectCont
 Route::name('equipment_guarantee_upload_files')->post('equipment_guarantee_upload_files/{id}','EquipmentGuaranteeController@uploadoFiles');
 Route::name('equipment_guarantee_download_files')->get('equipment_guarantee_download_files/{id}','EquipmentGuaranteeController@downloadFile');
 
+Route::name('get_customer_guarantees')->post('get_customer_guarantees','CustomerGuaranteeController@getCustomerGuarantees');
 
 //------------------------------------------------------
 

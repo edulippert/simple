@@ -4,6 +4,7 @@ namespace App;
 
 use App\CustomerGuaranteeMaintenance;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class CustomerGuarantee extends Model
 {
@@ -18,11 +19,69 @@ class CustomerGuarantee extends Model
                             'is_active',
                             'is_expired',
                             'reference',
-                            'coverage'
+                            'coverage',
+                            'status'
                         ];
                         
     protected $table = 'customer_guarantees';
 
+    public static function buildGuaranteesResponse($condominium_id)
+    {
+
+        $customer_guarantees = self::getCustomerGuarantee($condominium_id);
+
+        $groups = Group::getDistinctGroups($customer_guarantees);
+
+
+        $response = [];
+        foreach ($groups as $group) {
+            $grouped_customer_guarantee = $customer_guarantees->where('group_id',$group['group_id']);
+
+            $response[] = [
+                'group_description' => $group['group_description'],
+                'collapse' => true,
+                'guarantees' => self::getGroupedGuarantees($grouped_customer_guarantee)
+            ];
+
+        }
+        return $response;
+
+    }
+
+    public static function getGroupedGuarantees($grouped_guarantees)
+    {
+
+        $response = [];
+
+        foreach ($grouped_guarantees as $grouped_guarantee) {
+
+            //$qt_days = $grouped_guarantee->due_date - $grouped_guarantee->start_date;
+            if ($grouped_guarantee->qt_days_current < 0){
+                $qt_days_current = 0;
+            }else{
+                $qt_days_current = $grouped_guarantee->qt_days_current;
+            }
+
+
+
+            $percent_evaluation = ($qt_days_current*100)/$grouped_guarantee->qt_days_guarantee;
+            
+            $response[] = [
+                'item_description' => $grouped_guarantee->item_description,
+                'coverage' => $grouped_guarantee->coverage,
+                'start_date' => $grouped_guarantee->start_date,
+                'due_date' => $grouped_guarantee->due_date,
+                'percent_evaluation' => $percent_evaluation,
+                'guarantee_time' => $grouped_guarantee->amount.' '.$grouped_guarantee->period,
+                'status' => $grouped_guarantee->status
+               
+            ];
+
+        }
+
+        return $response;
+
+    }
 
     public static function buildGuaranteeMaintenancesAllocatedsResponse($condominium_id)
     {
@@ -93,10 +152,13 @@ class CustomerGuarantee extends Model
                                     'customer_guarantees.is_active',
                                     'customer_guarantees.is_expired',
                                     'customer_guarantees.reference',
-                                    'customer_guarantees.coverage'
+                                    'customer_guarantees.coverage',
+                                    'customer_guarantees.status',
+                                    DB::raw('extract(day from (customer_guarantees.due_date - customer_guarantees.start_date)) as qt_days_guarantee '),
+                                    DB::raw('extract(day from (current_date - customer_guarantees.start_date)) as qt_days_current')
                                 )
                                 ->get();
-
+                                  //  dd($customer_guarantee);
         return $customer_guarantee;
 
     }

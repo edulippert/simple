@@ -36,7 +36,7 @@ class RootMaintenance extends Model
             $response[] = [
                 'group_id' => $group['group_id'],
                 'description' => $group['group_description'],
-                'collapse' => false,
+                'collapse' => true,
                 'items' => self::getGroupedItems($grouped_root_maintenances,$condominium_id)
             ];
         }
@@ -61,7 +61,7 @@ class RootMaintenance extends Model
                     'amount' => $item['amount'],
                     'period' => $item['period'],
                     'font' => $item['font'],
-                    'was_allocated' => self::wasAllocated($condominium_id,$item['group_id'],$item['item_id'])
+                    'was_allocated' => self::wasAllocated($condominium_id,$item['group_id'],$item['item_id'],$item['activity'])
                 ];
 
             }else {
@@ -85,11 +85,12 @@ class RootMaintenance extends Model
         return $response;
     }
 
-    public static function wasAllocated($condominium_id,$group_id,$item_id)
+    public static function wasAllocated($condominium_id,$group_id,$item_id,$activity)
     {
         $customer_guarantee = CustomerGuaranteeMaintenance::where('condominium_id',$condominium_id)
                                             ->where('group_id',$group_id)
                                             ->where('item_id',$item_id)
+                                            ->where('activity',$activity)
                                             ->first();
         
         return $customer_guarantee ? true:false;
