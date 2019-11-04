@@ -16,7 +16,11 @@ class MaintenanceProgram extends Model
                             'executed_day',
                             'status',
                             'is_done',
-                            'is_blocked'
+                            'is_blocked',
+                            'estimated_cost',
+                            'executed_cost',
+                            'condominium_comments',
+                            'company_comments'
                         ];
 
     protected $table = 'maintenance_programs';
@@ -217,6 +221,10 @@ class MaintenanceProgram extends Model
         }
         return $maintenance_programs;
 
+    }
+
+    public function file(){
+        return $this->belongsTo(File::class,'file_id');
     }
 
     function customer_guarantee_maintenance()

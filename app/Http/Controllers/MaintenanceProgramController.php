@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\File;
 use App\MaintenanceProgram;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class MaintenanceProgramController extends Controller
@@ -44,9 +46,31 @@ class MaintenanceProgramController extends Controller
      * @param  \App\MaintenanceProgram  $maintenanceProgram
      * @return \Illuminate\Http\Response
      */
-    public function show(MaintenanceProgram $maintenanceProgram)
+    public function show(MaintenanceProgram $maintenanceprogram)
     {
-        //
+        if ($maintenanceprogram->customer_guarantee_maintenance->first()){
+         
+            $maintenance_program = $maintenanceprogram;
+            $file = $maintenance_program->file;
+            $customer_guarantee_maintenace = $maintenance_program->customer_guarantee_maintenance;
+            $customer_guarantee=$maintenance_program->customer_guarantee_maintenance->customer_guarantee;
+            $item = $maintenance_program->customer_guarantee_maintenance->customer_guarantee->item;
+        
+        }
+            $response = [
+                'guarantee_item' => $item->description,
+                'guarantee_coverage' => $customer_guarantee->coverage,
+                'id' => $maintenance_program->id,
+                'maintenance_day' => $maintenance_program->maintenance_day,
+                'executed_day' => $maintenance_program->executed_day,
+                'estimated_cost' => $maintenance_program->estimated_cost,
+                'executed_cost' => $maintenance_program->executed_cost,
+                'condominium_comments' => $maintenance_program->condominium_comments,
+                'company_comments' => $maintenance_program->company_comments,
+                'file' => $file ? $file->file : null
+            ];
+
+        return $response;
     }
 
     /**
@@ -91,5 +115,59 @@ class MaintenanceProgramController extends Controller
     public function getMaintenanceProgramsMonthGrouped(Request $request)
     {
         return MaintenanceProgram::buildMaintenanceResponse($request->condominium_id);
+    }
+
+    public function updateMaintenanceProgram(Request $request)
+    {
+       
+        if ($request->is_user=="true") {
+
+            if ($request->hasFile('file')) {
+        
+                $file = File::create([
+                    'file' => $request->file('file')->getClientOriginalName(),
+                    'name' => $request->file('file')->hashName(),
+                    'type' => $request->file('file')->getClientOriginalExtension(),
+                    'subtype' => 'ProgramMaintenance'
+                ]);
+    
+                $file->refresh();
+    
+                $fileName = $file->name;
+                $project_path = '/program_maintenance'.'/'.$file->id;
+                        
+                $path = $request->file('file')->move(public_path($project_path),$fileName);
+                
+                $fileUrl = url('/program_maintenance'.'/'.$file->id.'/'.$fileName);
+    
+                $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
+                $maintenance_program->condominium_comments = $request->condominium_comments;
+                $maintenance_program->estimated_cost = $request->estimated_cost;
+                $maintenance_program->executed_cost = $request->executed_cost;
+                $maintenance_program->file_id = $file->id;
+                $maintenance_program->executed_day = Carbon::now();
+                $maintenance_program->is_done = true;
+                
+
+                $maintenance_program->save();
+                $maintenance_program->refresh();
+                return $maintenance_program; 
+            }else{
+                $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
+                $maintenance_program->condominium_comments = $request->condominium_comments;
+                $maintenance_program->estimated_cost = $request->estimated_cost;
+                $maintenance_program->save();
+                $maintenance_program->refresh();
+                return $maintenance_program; 
+            }
+
+            
+        }else{
+            $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
+            $maintenance_program->company_comments = $request->company_comments;
+            $maintenance_program->save();
+            $maintenance_program->refresh();
+            return $maintenance_program;
+        }
     }
 }

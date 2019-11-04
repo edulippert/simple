@@ -78,5 +78,8 @@ class CustomerGuaranteeMaintenance extends Model
         return $allocateds_maintenances;
     }
 
+    public function customer_guarantee(){
+        return $this->belongsTo(CustomerGuarantee::class,'customer_guarantee_id');
+    }
 
 }

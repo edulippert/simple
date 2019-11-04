@@ -162,5 +162,9 @@ class CustomerGuarantee extends Model
         return $customer_guarantee;
 
     }
+
+    public function item(){
+        return $this->belongsTo(Item::class,'item_id');
+    }
          
 }

@@ -105,7 +105,7 @@ Route::name('get_finish_groups')->post('get_finish_groups','FinishGroupControlle
 
 Route::name('get_finish_items')->post('get_finish_items','FinishItemController@getFinishItems');
 
-
+Route::name('update_maintenance_program')->post('update_maintenance_program','MaintenanceProgramController@updateMaintenanceProgram');
 
 Route::name('attendance_upload_files')->post('attendance_upload_files/{id}','AttendanceController@uploadoFiles');
 Route::name('attendance_download_files')->get('attendance_download_files/{id}','AttendanceController@downloadFile');
