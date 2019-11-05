@@ -108,24 +108,44 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        $file = $project->file;
-        $name = $file->name;
-        $licensePath = '/projects'.'/'.$file->id;
-        $completePath = $licensePath;
+        if ($project->file){
+            $file = $project->file;
+            $name = $file->name;
+            $licensePath = '/projects'.'/'.$file->id;
+            $completePath = $licensePath;
 
-       
-        \File::deleteDirectory(\public_path($completePath));
+            
+            \File::deleteDirectory(\public_path($completePath));
 
-        $project->delete();
-        $file->delete();
+            $project->delete();
+            $file->delete();
 
-        return response()->json([],204);
+            return response()->json([],204);
+        }else{
+            $project->delete();
+            return response()->json([],204);
+        }
+        
     }
 
     public function getProjects(Request $request)
     {
         $projects = Project::whereCondominiumId($request->condominium_id)->get();
-        return $projects;
+
+        $response=[];
+        foreach ($projects as $project) {
+            $response[] = [
+                'id' => $project->id,
+                'condominium_id' => $project->condominium_id,
+                'file_id' => $project->file_id,
+                'name' => $project->name,
+                'created_at' => $project->created_at,
+                'updated_at' => $project->updated_at,
+                'file_name' => $project->file? $project->file->file:null
+            ];
+        }
+
+        return $response;
     }
 
     public function uploadoFiles(Request $request){
@@ -221,13 +241,18 @@ class ProjectController extends Controller
             $path = $request->file('file')->move(public_path($project_path),$fileName);
             
             $fileUrl = url('/projects'.'/'.$file->id.'/'.$fileName);
+
+            $project = Project::find($project_id);
+            $project->name = $request->name;
+            $project->file_id = $file->id;
+            $project->save();
+        }else{
+            
+            $project = Project::find($project_id);
+            $project->name = $request->name;
+            $project->save();
+
         }
-        
-        $project = Project::find($project_id);
-        
-        $project->name = $request->name;
-        $project->file_id = $file->id;
-        $project->save();
 
 
         return $project;

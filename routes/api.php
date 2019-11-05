@@ -120,8 +120,8 @@ Route::name('license_download_files')->get('license_download_files/{id}','Licens
 Route::name('manual_upload_files')->post('manual_upload_files','ManualController@uploadoFiles');
 Route::name('manual_download_files')->get('manual_download_files/{id}','ManualController@downloadFile');
 
-Route::name('project_upload_files')->post('project_upload_files','ProjectController@uploadoFiles');
-Route::name('project_download_files')->get('project_download_files/{id}','ProjectController@downloadFile');
+Route::name('project_upload_file')->post('project_upload_file','ProjectController@uploadoFiles');
+Route::name('project_download_file')->get('project_download_file/{id}','ProjectController@downloadFile');
 Route::name('project_delete_file')->post('project_delete_file','ProjectController@deleteFile');
 Route::name('project_update_file')->post('project_update_file/{id}','ProjectController@updateFile');
 
