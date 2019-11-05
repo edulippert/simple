@@ -178,7 +178,10 @@ class ProjectController extends Controller
             return response()->json(['url' => $fileUrl],200);
 
         } else {
-            return 'no file!';
+            $file_error = ['file' => ['Arquivo obrigatorio']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
         }      
 
     }
@@ -195,7 +198,7 @@ class ProjectController extends Controller
 
             return response()->download(\public_path($completePath),$file->file);
         }else{
-            return response()->json(['Arquivo nao localizado'],202);
+            return response()->json(['errors'=>'Arquivo nao localizado'],422);
         }
 
         

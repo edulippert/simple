@@ -41,6 +41,7 @@ class Contract extends Model
             $response[] = [
                 'condominium_id' => $contract->condominium_id,
                 'file_id'=> $contract->file_id,
+                'file_name' => $contract->file? $contract->file->file:null,
                 'name' => $contract->name,
                 'description' => $contract->description,
                 'total_cost' => $contract->total_cost,

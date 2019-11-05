@@ -95,7 +95,7 @@ class ContractController extends Controller
         return $contracts;
     }
 
-    public function uploadoFiles(Request $request, $id ){
+    public function uploadoFiles(Request $request){
 
         if ($request->hasFile('file')) {
             
@@ -114,15 +114,33 @@ class ContractController extends Controller
             $path = $request->file('file')->move(public_path($contract_path),$fileName);
             
             $fileUrl = url('/contracts'.'/'.$file->id.'/'.$fileName);
+
+            $request->request->add(['file_id'=> $file->id]);
             
-            $contract = Contract::find($id);
-            $contract->file_id = $file->id;
-            $contract->save();
+            
+            $attributes = request()->validate([
+                'condominium_id' => 'required',
+                'file_id' => 'required',
+                'name' => 'required',
+                'description' => '',
+                'total_cost' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'contact_name' => 'required',
+                'contact_email' => '',
+                'contact_phone_number' => 'required'
+            ]);
+
+            Contract::create($attributes);
 
             return response()->json(['url' => $fileUrl],200);
 
         } else {
-            return 'no file!';
+
+            $file_error = ['file' => ['Arquivo obrigatorio']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
         }      
 
     }
@@ -139,5 +157,87 @@ class ContractController extends Controller
         }
 
         return response()->download(\public_path($completePath),$file->file);
+    }
+
+    public function deleteFile(Request $request)
+    {
+
+        $contract = Contract::find($request->contract_id);
+        
+        $file = File::find($request->file_id);
+
+        $licensePath = '/contracts'.'/'.$file->id;
+        $completePath = $licensePath;
+
+        \File::deleteDirectory(\public_path($completePath));
+
+        $contract->file_id = null;
+        $contract->save();
+        $file->delete();
+
+        return response()->json([],204);
+
+    }
+
+    public function updateFile(Request $request, $contract_id)
+    {
+
+        if ($request->hasFile('file')) {
+            
+            $file = File::create([
+                'file' => $request->file('file')->getClientOriginalName(),
+                'name' => $request->file('file')->hashName(),
+                'type' => $request->file('file')->getClientOriginalExtension(),
+                'subtype' => 'Project'
+            ]);
+
+            $file->refresh();
+
+            $fileName = $file->name;
+            $project_path = '/contracts'.'/'.$file->id;
+                 
+            $path = $request->file('file')->move(public_path($project_path),$fileName);
+            
+            $fileUrl = url('/contracts'.'/'.$file->id.'/'.$fileName);
+
+            $request->request->add(['file_id'=> $file->id]);
+            
+            
+            $attributes = request()->validate([
+                'condominium_id' => 'required',
+                'file_id' => 'required',
+                'name' => 'required',
+                'description' => '',
+                'total_cost' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'contact_name' => 'required',
+                'contact_email' => '',
+                'contact_phone_number' => 'required'
+            ]);
+
+
+            $contract = Contract::fill($attributes);
+            
+        }else{
+            
+            $attributes = request()->validate([
+                'condominium_id' => 'required',
+                'name' => 'required',
+                'description' => '',
+                'total_cost' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'contact_name' => 'required',
+                'contact_email' => '',
+                'contact_phone_number' => 'required'
+            ]);
+            $contract = Contract::fill($attributes);
+          
+
+        }
+
+
+        return $contract;
     }
 }

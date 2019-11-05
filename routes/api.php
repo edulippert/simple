@@ -111,14 +111,18 @@ Route::name('attendance_upload_files')->post('attendance_upload_files/{id}','Att
 Route::name('attendance_download_files')->get('attendance_download_files/{id}','AttendanceController@downloadFile');
 Route::name('attendance_acceptance_term')->get('attendance_acceptance_term/{id}','AttendanceController@acceptanceTerm');
 
-Route::name('contract_upload_files')->post('contract_upload_files/{id}','ContractController@uploadoFiles');
-Route::name('contract_download_files')->get('contract_download_files/{id}','ContractController@downloadFile');
+Route::name('contract_upload_file')->post('contract_upload_file','ContractController@uploadoFiles');
+Route::name('contract_download_file')->get('contract_download_files/{id}','ContractController@downloadFile');
+Route::name('contract_delete_file')->post('contract_delete_file','ContractController@deleteFile');
+Route::name('contract_update_file')->post('contract_update_file/{id}','ContractController@updateFile');
 
 Route::name('license_upload_files')->post('license_upload_files','LicenseController@uploadoFiles');
 Route::name('license_download_files')->get('license_download_files/{id}','LicenseController@downloadFile');
 
 Route::name('manual_upload_files')->post('manual_upload_files','ManualController@uploadoFiles');
 Route::name('manual_download_files')->get('manual_download_files/{id}','ManualController@downloadFile');
+Route::name('manual_delete_files')->post('manual_delete_file','ManualController@deleteFile');
+Route::name('manual_update_file')->post('manual_update_file/{id}','ManualController@updateFile');
 
 Route::name('project_upload_file')->post('project_upload_file','ProjectController@uploadoFiles');
 Route::name('project_download_file')->get('project_download_file/{id}','ProjectController@downloadFile');

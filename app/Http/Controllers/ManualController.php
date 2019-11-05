@@ -81,24 +81,45 @@ class ManualController extends Controller
      */
     public function destroy(Manual $manual)
     {
-        $file = $manual->file;
-        $name = $file->name;
-        $licensePath = '/manuals'.'/'.$file->id;
-        $completePath = $licensePath;
 
-       
-        \File::deleteDirectory(\public_path($completePath));
+        if ($manual->file){
+            $file = $manual->file;
+            $name = $file->name;
+            $licensePath = '/manuals'.'/'.$file->id;
+            $completePath = $licensePath;
 
-        $manual->delete();
-        $file->delete();
+            
+            \File::deleteDirectory(\public_path($completePath));
 
-        return response()->json([],204);
+            $manual->delete();
+            $file->delete();
+
+            return response()->json([],204);
+        }else{
+            $manual->delete();
+            return response()->json([],204);
+        }
     }
 
     public function getProjects(Request $request)
     {
-        $projects = Manual::whereCondominiumId($request->condominium_id)->get();
-        return $projects;
+
+        $manuals = Manual::whereCondominiumId($request->condominium_id)->get();
+
+        $response=[];
+        foreach ($manuals as $manual) {
+            $response[] = [
+                'id' => $manual->id,
+                'condominium_id' => $manual->condominium_id,
+                'file_id' => $manual->file_id,
+                'name' => $manual->name,
+                'created_at' => $manual->created_at,
+                'updated_at' => $manual->updated_at,
+                'file_name' => $manual->file? $manual->file->file:null
+            ];
+        }
+
+        return $response;
     }
 
     public function uploadoFiles(Request $request){
@@ -131,7 +152,10 @@ class ManualController extends Controller
             return response()->json(['url' => $fileUrl],200);
 
         } else {
-            return 'no file!';
+            $file_error = ['file' => ['Arquivo obrigatorio']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
         }      
 
     }
@@ -145,8 +169,67 @@ class ManualController extends Controller
             $name = $file->name;
             $manual_path = '/manuals'.'/'.$file->id.'/';
             $completePath = $manual_path.$name;
+            return response()->download(\public_path($completePath),$file->file);
+        }else{
+            return response()->json(['errors'=>'Arquivo nao localizado'],422);
         }
 
-        return response()->download(\public_path($completePath),$file->file);
+    }
+
+    public function deleteFile(Request $request)
+    {
+
+        $manual = Manual::find($request->manual_id);
+        
+        $file = File::find($request->file_id);
+
+        $licensePath = '/manuals'.'/'.$file->id;
+        $completePath = $licensePath;
+
+        \File::deleteDirectory(\public_path($completePath));
+
+        $manual->file_id = null;
+        $manual->save();
+        $file->delete();
+
+        return response()->json([],204);
+
+    }
+
+    public function updateFile(Request $request, $manual_id)
+    {
+
+        if ($request->hasFile('file')) {
+            
+            $file = File::create([
+                'file' => $request->file('file')->getClientOriginalName(),
+                'name' => $request->file('file')->hashName(),
+                'type' => $request->file('file')->getClientOriginalExtension(),
+                'subtype' => 'Manual'
+            ]);
+
+            $file->refresh();
+
+            $fileName = $file->name;
+            $project_path = '/manuals'.'/'.$file->id;
+                 
+            $path = $request->file('file')->move(public_path($project_path),$fileName);
+            
+            $fileUrl = url('/manuals'.'/'.$file->id.'/'.$fileName);
+
+            $manual = Manual::find($manual_id);
+            $manual->name = $request->name;
+            $manual->file_id = $file->id;
+            $manual->save();
+        }else{
+            
+            $manual = Manual::find($manual_id);
+            $manual->name = $request->name;
+            $manual->save();
+
+        }
+
+
+        return $manual;
     }
 }
