@@ -70,11 +70,53 @@ class AttendanceController extends Controller
      * @param  \App\Attendance  $attendance
      * @return \Illuminate\Http\Response
      */
-    public function update(AttendanceRequest $request, Attendance $attendance)
-    {
-        $attendance->fill($request->all());
-        $attendance->save();
-        return $attendance;
+    public function update(Request $request, Attendance $attendance)
+    {   
+        if ($request->is_finalized == "true"){
+
+            $attributes = request()->validate([
+                'attendance_place' => 'required',
+                'call_date' => 'required',
+                'inspection_date' => 'required',
+                'finish_date' => 'required',
+                'description' => 'required',
+                'solution' => 'required',
+                'responsible'=> 'required',
+                'manpower_cost'=> 'required',
+                'material_cost'=> 'required',
+                'total_cost'=> 'required',
+                'contact_name'=> 'required',
+                'contact_email'=> 'required',
+                'contact_phone_number'=> 'required',
+                'condominium_id' => 'required'
+               // 'company_id' => 'required'
+            ]);
+
+            $attendance->fill($attributes);
+            $attendance->save();
+            return $attendance;
+        }else{
+            $attributes = request()->validate([
+                'attendance_place' => 'required',
+                'call_date' => 'required',
+                'inspection_date' => '',
+                'finish_date' => '',
+                'description' => 'required',
+                'solution' => '',
+                'responsible'=> '',
+                'manpower_cost'=> '',
+                'material_cost'=> '',
+                'total_cost'=> '',
+                'contact_name'=> 'required',
+                'contact_email'=> '',
+                'contact_phone_number'=> 'required',
+            ]);
+
+            $attendance->fill($attributes);
+            $attendance->save();
+            return $attendance;
+        }
+      
     }
 
     /**

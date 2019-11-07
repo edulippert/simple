@@ -179,6 +179,13 @@ return [
         'remember'              => 'lembrar-me',
         'id_number'             => 'CPF',
         'complement'            => 'complemento',
-        'phone_number'          => 'telefone'
+        'phone_number'          => 'telefone',
+        'inspection_date'       => 'data da vistoria',
+        'finish_date'           => 'data da solução',
+        'solution'              => 'solução',
+        'responsible'           => 'responsável',
+        'manpower_cost'         => 'custo mão de obra',
+        'material_cost'         => 'custo do material',
+        'total_cost'            => 'custo total'
     ],
 ];
