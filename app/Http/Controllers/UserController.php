@@ -16,7 +16,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::with('role')->get();
+        
+        return User::with('role')->with('user_companies.user_condominiums')->get();
     }
 
     /**
