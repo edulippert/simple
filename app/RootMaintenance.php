@@ -15,7 +15,9 @@ class RootMaintenance extends Model
                             'amount',
                             'period',
                             'responsable',
-                            'font'
+                            'font',
+                            'is_informed',
+                            'optional_period'
                         ];
 
     protected $table = 'root_maintenances';
