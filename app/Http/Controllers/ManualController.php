@@ -47,7 +47,14 @@ class ManualController extends Controller
      */
     public function show(Manual $manual)
     {
-        //
+        $file = $manual->file;
+
+        return [
+            'condominium_id' => $manual->condominium_id,
+            'file_id' => $manual->file_id,
+            'file_name' => $file? $file->file : null,
+            'name' => $manual->name,
+        ];
     }
 
     /**

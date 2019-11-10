@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MaintenanceProgramUpdatedEvent;
 use App\File;
 use App\MaintenanceProgram;
 use Carbon\Carbon;
@@ -114,6 +115,7 @@ class MaintenanceProgramController extends Controller
 
     public function getMaintenanceProgramsMonthGrouped(Request $request)
     {
+       // dd($request);
         return MaintenanceProgram::buildMaintenanceResponse($request->condominium_id);
     }
 
@@ -148,9 +150,12 @@ class MaintenanceProgramController extends Controller
                 $maintenance_program->executed_day = Carbon::now();
                 $maintenance_program->is_done = true;
                 
-
                 $maintenance_program->save();
                 $maintenance_program->refresh();
+               // dd($maintenance_program);
+                
+                event(new MaintenanceProgramUpdatedEvent($maintenance_program));
+
                 return $maintenance_program; 
             }else{
                 $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
