@@ -37,6 +37,7 @@ class EquipmentGuaranteeController extends Controller
     public function store(Request $request)
     {
         $attributes = request()->validate([
+            'condominium_id' => 'required',
             'item' => 'required',
             'start_date'=> '',
             'duration'=> '',

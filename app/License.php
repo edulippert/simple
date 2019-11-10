@@ -42,6 +42,7 @@ class License extends Model
         foreach ($licenses as $license) {
             
             $response[] = [
+                'id' => $license->id,
                 'condominium_id' => $license->condominium_id, 
                 'file_id' => $license->file_id, 
                 'file_name' => $license->file ? $license->file->file : null,
