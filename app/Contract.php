@@ -39,6 +39,7 @@ class Contract extends Model
             }
 
             $response[] = [
+                'id' => $contract->id,
                 'condominium_id' => $contract->condominium_id,
                 'file_id'=> $contract->file_id,
                 'file_name' => $contract->file? $contract->file->file:null,
@@ -57,5 +58,9 @@ class Contract extends Model
         }
 
         return $response;       
+    }
+
+    public function file(){
+        return $this->belongsTo(File::class,'file_id');
     }
 }

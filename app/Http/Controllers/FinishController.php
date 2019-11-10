@@ -84,6 +84,7 @@ class FinishController extends Controller
      */
     public function destroy(Finish $finish)
     {
+        dd($finish);
         $finish->delete();
         return response()->json([],402);
     }

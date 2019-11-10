@@ -15,7 +15,9 @@ class Condominium extends Model
         'complement',
         'zipcode',
         'licence_due_date',
-        'is_active'
+        'is_active',
+        'city',
+        'state'
     ];
 
     protected $guarded = ['id'];

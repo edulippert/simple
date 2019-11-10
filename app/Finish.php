@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\FinishGroup;
+//use App\FinishGroup;
 use Illuminate\Database\Eloquent\Model;
 
 class Finish extends Model

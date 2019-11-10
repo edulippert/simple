@@ -47,6 +47,13 @@ class LicenseController extends Controller
      */
     public function show(License $license)
     {
+        $file = $license->file;
+        return [
+            'condominium_id' => $license->condominium_id, 
+            'file_id' => $license->file_id,
+            'file_name' => $file ? $file->file : null,
+            'description' => $license->description
+        ];
         return $license;
     }
 
@@ -97,7 +104,7 @@ class LicenseController extends Controller
     public function getLicenses(Request $request)
     {
 
-        $licenses = License::where('condominium_id',$request->condominium_id)->get();
+        $licenses = License::buildLicenseResponse($request->condominium_id);
        // $licenses = License::getLicenses($request->condominium_id);
         //::with('licenses')->where('licenses.condominium_id',$request->condominium_id)->get();
         return $licenses;
@@ -133,7 +140,10 @@ class LicenseController extends Controller
             return response()->json(['url' => $fileUrl],200);
 
         } else {
-            return 'no file!';
+            $file_error = ['file' => ['Arquivo obrigatorio']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
         }      
 
     }
@@ -147,8 +157,67 @@ class LicenseController extends Controller
             $name = $file->name;
             $equipment_path = '/licenses'.'/'.$file->id.'/';
             $completePath = $equipment_path.$name;
+            return response()->download(\public_path($completePath),$file->file);
+        }else{
+
+            return response()->json(['errors'=>'Arquivo nao localizado'],422);
         }
 
-        return response()->download(\public_path($completePath),$file->file);
+    }
+
+    public function deleteFile(Request $request)
+    {
+
+        $license = License::find($request->project_id);
+        
+        $file = File::find($request->file_id);
+
+        $licensePath = '/licenses'.'/'.$file->id;
+        $completePath = $licensePath;
+
+        \File::deleteDirectory(\public_path($completePath));
+
+        $license->file_id = null;
+        $license->save();
+        $file->delete();
+
+        return response()->json([],204);
+
+    }
+
+    public function updateFile(Request $request, $project_id)
+    {
+
+        if ($request->hasFile('file')) {
+            
+            $file = File::create([
+                'file' => $request->file('file')->getClientOriginalName(),
+                'name' => $request->file('file')->hashName(),
+                'type' => $request->file('file')->getClientOriginalExtension(),
+                'subtype' => 'Project'
+            ]);
+
+            $file->refresh();
+
+            $fileName = $file->name;
+            $project_path = '/licenses'.'/'.$file->id;
+                 
+            $path = $request->file('file')->move(public_path($project_path),$fileName);
+            
+            $fileUrl = url('/licenses'.'/'.$file->id.'/'.$fileName);
+
+            $license = License::find($project_id);
+            $license->description = $request->description;
+            $license->file_id = $file->id;
+            $license->save();
+        }else{
+            
+            $license = License::find($project_id);
+            $license->description = $request->description;
+            $license->save();
+
+        }
+
+        return $license;
     }
 }

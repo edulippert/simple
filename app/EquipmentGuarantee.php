@@ -59,8 +59,10 @@ class EquipmentGuarantee extends Model
             }
 
              $response[] = [
+                 'id' => $equipment_guarantee->id,
                  'condominium_id' => $equipment_guarantee->condominium_id,
                  'file_id' => $equipment_guarantee->file_id,
+                 'file_name' => $equipment_guarantee->file ? $equipment_guarantee->file->file : null,
                  'item' => $equipment_guarantee->item,
                  'start_date' => $equipment_guarantee->start_date,
                  'duration' => $equipment_guarantee->duration,
@@ -78,5 +80,9 @@ class EquipmentGuarantee extends Model
         }
                         
         return $response;
+    }
+
+    public function file(){
+        return $this->belongsTo(File::class,'file_id');
     }
 }

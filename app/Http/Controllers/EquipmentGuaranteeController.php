@@ -36,7 +36,21 @@ class EquipmentGuaranteeController extends Controller
      */
     public function store(Request $request)
     {
-        $equipment_guarantee = EquipmentGuarantee::create($request->all());
+        $attributes = request()->validate([
+            'item' => 'required',
+            'start_date'=> '',
+            'duration'=> '',
+            'period'=> '',
+            'total_cost'=> 'required',
+            'reference'=> '',
+            'comments' => '',
+            'company' => '',
+            'company_number_id' => '',
+            'phone' => '',
+            'email' => ''
+        ]);
+
+        $equipment_guarantee = EquipmentGuarantee::create($attributes);
         return $equipment_guarantee; 
     }
 

@@ -48,6 +48,23 @@ class ContractController extends Controller
      */
     public function show(Contract $contract)
     {
+
+        $file = $contract->file;
+
+        return [
+            'id' => $contract->id,
+            'condominium_id' => $contract->condominium_id,
+            'file_id' => $contract->file_id,
+            'file_name' => $file? $file->file : null,
+            'name' => $contract->name,
+            'description' => $contract->description,
+            'total_cost' => $contract->total_cost,
+            'start_date' => $contract->start_date,
+            'end_date' => $contract->end_date,
+            'contact_name' => $contract->contact_name,
+            'contact_email' => $contract->contact_email,
+            'contact_phone_number' => $contract->contact_phone_number
+        ];
         return $contract;
     }
 

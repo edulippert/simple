@@ -151,6 +151,18 @@ class AllocateGuaranteesAndMaintenances extends Controller
                         }elseif ($customer_guarantee_maintenance->period == "2") {
                             $days_to_next_maintenance = (int)(30/$customer_guarantee_maintenance->amount);
                             $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                        }elseif ($customer_guarantee_maintenance->period == "3") {
+                            $days_to_next_maintenance = (int)($customer_guarantee_maintenance->amount);
+                            $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                        }elseif ($customer_guarantee_maintenance->period == "4") {
+                            $days_to_next_maintenance = (int)(7*$customer_guarantee_maintenance->amount);
+                            $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                        }elseif ($customer_guarantee_maintenance->period == "5") {
+                            $days_to_next_maintenance = (int)(30*$customer_guarantee_maintenance->amount);
+                            $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                        }elseif ($customer_guarantee_maintenance->period == "6") {
+                            $days_to_next_maintenance = (int)(365*$customer_guarantee_maintenance->amount);
+                            $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
                         }
 
 
@@ -232,6 +244,18 @@ class AllocateGuaranteesAndMaintenances extends Controller
                     $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
                 }elseif ($customer_guarantee_maintenance->period == "1") {
                     $days_to_next_maintenance = (int)(30/$customer_guarantee_maintenance->amount);
+                    $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                }elseif ($customer_guarantee_maintenance->period == "3") {
+                    $days_to_next_maintenance = (int)($customer_guarantee_maintenance->amount);
+                    $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                }elseif ($customer_guarantee_maintenance->period == "4") {
+                    $days_to_next_maintenance = (int)(7*$customer_guarantee_maintenance->amount);
+                    $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                }elseif ($customer_guarantee_maintenance->period == "5") {
+                    $days_to_next_maintenance = (int)(30*$customer_guarantee_maintenance->amount);
+                    $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
+                }elseif ($customer_guarantee_maintenance->period == "6") {
+                    $days_to_next_maintenance = (int)(365*$customer_guarantee_maintenance->amount);
                     $maintenance_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay($days_to_next_maintenance);
                 }
 
