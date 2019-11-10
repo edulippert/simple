@@ -48,6 +48,8 @@ class License extends Model
                 'description' => $license->description    
             ];
         }
+
+        return $response;
     }
 
     public function option()
