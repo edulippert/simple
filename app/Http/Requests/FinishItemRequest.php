@@ -25,7 +25,7 @@ class FinishItemRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'group_id' => 'required|integer'
+            //'group_id' => 'required|integer'
         ];
     }
 }

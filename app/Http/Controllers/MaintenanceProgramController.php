@@ -68,7 +68,8 @@ class MaintenanceProgramController extends Controller
                 'executed_cost' => $maintenance_program->executed_cost,
                 'condominium_comments' => $maintenance_program->condominium_comments,
                 'company_comments' => $maintenance_program->company_comments,
-                'file' => $file ? $file->file : null
+                'file_name' => $file ? $file->file : null,
+                'file_id' => $file ? $file->id : null
             ];
 
         return $response;
@@ -168,11 +169,17 @@ class MaintenanceProgramController extends Controller
 
             
         }else{
-            $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
-            $maintenance_program->company_comments = $request->company_comments;
-            $maintenance_program->save();
-            $maintenance_program->refresh();
-            return $maintenance_program;
+            $maintenance_program = MaintenanceProgram::find($request->maintenance_program_id);
+            if ($maintenance_program) {
+                
+                $maintenance_program->company_comments = $request->company_comments;
+                $maintenance_program->save();
+                $maintenance_program->refresh();
+                return $maintenance_program;
+
+            }else{
+                return response()->json(['errors'=>'Manutencao nao localizada'.$request->maintenance_program_id.'nr'],422);
+            }
         }
     }
 }

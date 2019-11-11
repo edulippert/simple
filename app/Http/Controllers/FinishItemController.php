@@ -36,6 +36,7 @@ class FinishItemController extends Controller
      */
     public function store(FinishItemRequest $request)
     {
+
         $finish_item = FinishItem::create($request->all());
         return $finish_item;
     }

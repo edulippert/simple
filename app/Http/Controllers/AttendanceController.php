@@ -88,7 +88,8 @@ class AttendanceController extends Controller
                 'contact_name'=> 'required',
                 'contact_email'=> 'required',
                 'contact_phone_number'=> 'required',
-                'condominium_id' => 'required'
+                'condominium_id' => 'required',
+                'is_finalized' => ''
                // 'company_id' => 'required'
             ]);
 
@@ -110,6 +111,8 @@ class AttendanceController extends Controller
                 'contact_name'=> 'required',
                 'contact_email'=> '',
                 'contact_phone_number'=> 'required',
+                'condominium_id' => '',
+                'is_finalized' => ''
             ]);
 
             $attendance->fill($attributes);
@@ -127,15 +130,28 @@ class AttendanceController extends Controller
      */
     public function destroy(Attendance $attendance)
     {
-        $attendance->delete();
-        return response()->json([],204);
+        if ($attendance->file){
+            $file = $attendance->file;
+            $name = $file->name;
+            $licensePath = '/attendances'.'/'.$file->id;
+            $completePath = $licensePath;
+
+            
+            \File::deleteDirectory(\public_path($completePath));
+
+            $attendance->delete();
+            $file->delete();
+
+            return response()->json([],204);
+        }else{
+            $attendance->delete();
+            return response()->json([],204);
+        }
     }
 
     public function getAttendances(Request $request)
     {
-        $attendances = Attendance::whereCompanyId($request->company_id)
-                                ->whereCondominiumId($request->condominium_id)
-                                ->get();
+        $attendances = Attendance::whereCondominiumId($request->condominium_id)->get();
         return $attendances;
     }
     /**
