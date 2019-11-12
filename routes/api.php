@@ -107,7 +107,7 @@ Route::name('get_finish_items')->post('get_finish_items','FinishItemController@g
 
 Route::name('update_maintenance_program')->post('update_maintenance_program','MaintenanceProgramController@updateMaintenanceProgram');
 
-Route::name('maintenance_download_file')->post('maintenance_download_file/{id}','MaintenanceProgramController@downloadFile');
+Route::name('maintenance_download_file')->get('maintenance_download_file/{id}','MaintenanceProgramController@downloadFile');
 Route::name('maintenance_delete_file')->post('maintenance_delete_file','MaintenanceProgramController@deleteFile');
 
 Route::name('attendance_upload_files')->post('attendance_upload_files/{id}','AttendanceController@uploadoFiles');
