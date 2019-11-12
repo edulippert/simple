@@ -55,12 +55,16 @@ class MaintenanceProgramController extends Controller
             $file = $maintenance_program->file;
             $customer_guarantee_maintenace = $maintenance_program->customer_guarantee_maintenance;
             $customer_guarantee=$maintenance_program->customer_guarantee_maintenance->customer_guarantee;
-            $item = $maintenance_program->customer_guarantee_maintenance->customer_guarantee->item;
+            
+            if ($customer_guarantee) {
+                
+                $item = $maintenance_program->customer_guarantee_maintenance->customer_guarantee->item;
+            }
         
         }
             $response = [
-                'guarantee_item' => $item->description,
-                'guarantee_coverage' => $customer_guarantee->coverage,
+                'guarantee_item' => $customer_guarantee ? $item->description:'Nao possui garantia',
+                'guarantee_coverage' => $customer_guarantee ? $customer_guarantee->coverage : 'Sem Cobertura',
                 'id' => $maintenance_program->id,
                 'maintenance_day' => $maintenance_program->maintenance_day,
                 'executed_day' => $maintenance_program->executed_day,
@@ -122,7 +126,7 @@ class MaintenanceProgramController extends Controller
 
     public function updateMaintenanceProgram(Request $request)
     {
-       
+      
         if ($request->is_user=="true") {
 
             if ($request->hasFile('file')) {
@@ -169,7 +173,7 @@ class MaintenanceProgramController extends Controller
 
             
         }else{
-            $maintenance_program = MaintenanceProgram::find($request->maintenance_program_id);
+            $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
             if ($maintenance_program) {
                 
                 $maintenance_program->company_comments = $request->company_comments;
@@ -178,8 +182,48 @@ class MaintenanceProgramController extends Controller
                 return $maintenance_program;
 
             }else{
-                return response()->json(['errors'=>'Manutencao nao localizada'.$request->maintenance_program_id.'nr'],422);
+                return response()->json(['errors'=>'Manutencao nao localizada'.serialize($request->all()).'nr'],422);
             }
         }
+    }
+
+    public function downloadFile($id)
+    {
+        
+        $file = File::find($id);
+
+        if ($file) {
+            $name = $file->name;
+            $project_path = '/program_maintenance'.'/'.$file->id.'/';
+            $completePath = $project_path.$name;
+
+            return response()->download(\public_path($completePath),$file->file);
+        }else{
+            return response()->json(['errors'=>'Arquivo nao localizado'],422);
+        }
+
+        
+    }
+
+    public function deleteFile(Request $request)
+    {
+
+        $maintenance_program = MaintenanceProgram::find($request->maintenance_program_id);
+        
+        $file = File::find($request->file_id);
+
+        $licensePath = '/program_maintenance'.'/'.$file->id;
+        $completePath = $licensePath;
+
+        \File::deleteDirectory(\public_path($completePath));
+
+        $maintenance_program->executed_day = null;
+        $maintenance_program->is_done = false;
+        $maintenance_program->file_id = null;
+        $maintenance_program->save();
+        $file->delete();
+
+        return response()->json([],204);
+
     }
 }
