@@ -142,7 +142,13 @@ Route::name('equipment_guarantee_download_files')->get('equipment_guarantee_down
 
 Route::name('get_customer_guarantees')->post('get_customer_guarantees','CustomerGuaranteeController@getCustomerGuarantees');
 
+
+Route::name('build_user_dashboard')->post('build_user_dashboard','UserDashboardController@buildDashboard');
+
+
 //------------------------------------------------------
+
+
 
 
 

@@ -28,6 +28,75 @@ class MaintenanceProgram extends Model
 
     protected $guarded = ['id'];
 
+    public static function get_maintenance_info_by_month($condominium_id,$month,$year)
+    {
+        $maintenance_headers = self::getMaintenanceHeader($condominium_id,$month,$year);
+
+        $response = [];
+
+        foreach ($maintenance_headers as $maintenance_header) {
+        
+            switch ($month) {
+                case '01':
+                    $text_month = 'Janeiro';
+                    break;
+                case '02':
+                    $text_month = 'Fevereiro';
+                    break;
+                case '03':
+                    $text_month = 'Março';
+                    break;
+                case '04':
+                    $text_month = 'Abril';
+                    break;
+                case '05':
+                    $text_month = 'Maio';
+                    break;    
+                case '06':
+                    $text_month = 'Junho';
+                    break;
+                case '07':
+                    $text_month = 'Julho';
+                    break;    
+                case '08':
+                    $text_month = 'Agosto';
+                    break;
+                case '09':
+                    $text_month = 'Setembro';
+                    break;
+                case '10':
+                    $text_month = 'Outubro';
+                    break;
+                case '11':
+                    $text_month = 'Novembro';
+                    break;
+                case '12':
+                    $text_month = 'Dezembro';
+                    break;
+            }
+
+            if ($maintenance_header->total != 0) {
+               
+                $percent_done = round(($maintenance_header->nr_done * 100) / $maintenance_header->total);
+            
+            }else{
+            
+                $percent_done = 0;
+            }     
+   
+            $response[] = [
+                'month_year' => $text_month.'/'.$maintenance_header->just_year,
+                'tasks_done' => $maintenance_header->nr_done,
+                'tasks_not_done' => $maintenance_header->nr_not_done,
+                'percent_done' => $percent_done,
+                'estimated_cost' => $maintenance_header->estimated_cost,
+                'executed_cost' => $maintenance_header->executed_cost,
+            ];
+        }
+
+        return $response;
+    }
+
 
     public static function buildMaintenanceResponse($condominium_id)
     {
@@ -149,6 +218,8 @@ class MaintenanceProgram extends Model
                 'estimated_cost' => $maintenance->estimated_cost,
                 'executed_cost' => $maintenance->executed_cost,
                 'status' => $status,
+                'amount' => $maintenance->amount,
+                'period' => $maintenance->period
 
             ];
         }
@@ -157,22 +228,45 @@ class MaintenanceProgram extends Model
 
     }
 
-    public static function getMaintenanceHeader($condominium_id)
+    public static function getMaintenanceHeader($condominium_id,$month=null,$year=null)
     {
-        $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
-                                ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
-                                ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
-                                extract(month from maintenance_day) as just_month,
-                                extract(year from maintenance_day) as just_year,
-                                sum(case when is_done = true then 1 else 0 end ) as nr_done,
-                                sum(case when is_done = false then 1 else 0 end ) as nr_not_done,
-                                sum(estimated_cost) as estimated_cost,
-                                sum(executed_cost) as executed_cost,
-                                count(*) as total"))
-                                ->groupBy('month_year','just_month','just_year')
-                                ->orderBy('just_year','asc')
-                                ->orderBy('just_month','asc')
-                                ->get();
+
+        if ($month) {
+
+            $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
+                                    ->whereRaw('extract(month from maintenance_day) = '.$month)
+                                    ->whereRaw('extract(year from maintenance_day) = '.$year)
+                                    ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
+                                    ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
+                                    extract(month from maintenance_day) as just_month,
+                                    extract(year from maintenance_day) as just_year,
+                                    sum(case when is_done = true then 1 else 0 end ) as nr_done,
+                                    sum(case when is_done = false then 1 else 0 end ) as nr_not_done,
+                                    sum(estimated_cost) as estimated_cost,
+                                    sum(executed_cost) as executed_cost,
+                                    count(*) as total"))
+                                    ->groupBy('month_year','just_month','just_year')
+                                    ->orderBy('just_year','asc')
+                                    ->orderBy('just_month','asc')
+                                    ->get();
+        }else{
+
+            $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
+                                    ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
+                                    ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
+                                    extract(month from maintenance_day) as just_month,
+                                    extract(year from maintenance_day) as just_year,
+                                    sum(case when is_done = true then 1 else 0 end ) as nr_done,
+                                    sum(case when is_done = false then 1 else 0 end ) as nr_not_done,
+                                    sum(estimated_cost) as estimated_cost,
+                                    sum(executed_cost) as executed_cost,
+                                    count(*) as total"))
+                                    ->groupBy('month_year','just_month','just_year')
+                                    ->orderBy('just_year','asc')
+                                    ->orderBy('just_month','asc')
+                                    ->get();
+        }
+
 
         return $grouped_maintenances;
     }
@@ -222,6 +316,8 @@ class MaintenanceProgram extends Model
                                         'items.description as item_description',
                                         'customer_guarantee_maintenances.activity',
                                         'customer_guarantee_maintenances.description',
+                                        'customer_guarantee_maintenances.amount',
+                                        'customer_guarantee_maintenances.period',
                                         'maintenance_day',
                                         'executed_day',
                                         'status',
