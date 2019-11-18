@@ -72,6 +72,7 @@ class MaintenanceProgramController extends Controller
                 'executed_cost' => $maintenance_program->executed_cost,
                 'condominium_comments' => $maintenance_program->condominium_comments,
                 'company_comments' => $maintenance_program->company_comments,
+                'responsible' => $maintenance_program->responsible,
                 'file_name' => $file ? $file->file : null,
                 'file_id' => $file ? $file->id : null
             ];

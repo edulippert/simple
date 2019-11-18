@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\MaintenanceProgram;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserDashboardController extends Controller
@@ -13,32 +14,28 @@ class UserDashboardController extends Controller
         $month = null;
         $year = null;
 
+        $now = Carbon::now();
 
         if ($request->month) {
             $month = $request->month;
         }else{
-            $month = $request->month;
+            $month = $now->month;
         }
 
         if ($request->year) {
             $year= $request->year;
         }else{
-            $year= $request->year;
+            $year= $now->year;
         }
 
         return [
-            'cards' => $this->buildCardsResponse($request->condominium_id,month,year)
+            'cards' => $this->buildCardsResponse($request->condominium_id,$month,$year)
         ];
 
     }
 
     private function buildCardsResponse($condominium_id,$month=null,$year=null)
     {
-        $response = [];
-        
-        return [
-            'maintenance_progress' => 'asd',
-        ];
-
+        return MaintenanceProgram::get_maintenance_info_by_month($condominium_id,$month,$year);
     }
 }

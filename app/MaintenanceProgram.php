@@ -88,6 +88,7 @@ class MaintenanceProgram extends Model
                 'month_year' => $text_month.'/'.$maintenance_header->just_year,
                 'tasks_done' => $maintenance_header->nr_done,
                 'tasks_not_done' => $maintenance_header->nr_not_done,
+                'total_tasks' => $maintenance_header->total,
                 'percent_done' => $percent_done,
                 'estimated_cost' => $maintenance_header->estimated_cost,
                 'executed_cost' => $maintenance_header->executed_cost,

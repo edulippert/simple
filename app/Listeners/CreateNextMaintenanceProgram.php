@@ -58,7 +58,8 @@ class CreateNextMaintenanceProgram
 
         $maintenance_program = MaintenanceProgram::create([
             'customer_guarantee_maintenance_id' => $maintenance->customer_guarantee_maintenance_id,
-            'maintenance_day' => $maintenance_date
+            'maintenance_day' => $maintenance_date,
+            'estimated_cost' => $maintenance->estimated_cost
         ]);
        
 
