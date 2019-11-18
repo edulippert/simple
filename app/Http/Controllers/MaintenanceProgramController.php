@@ -154,7 +154,7 @@ class MaintenanceProgramController extends Controller
                 $maintenance_program->file_id = $file->id;
                 $maintenance_program->executed_day = Carbon::now();
                 $maintenance_program->is_done = true;
-                
+                $maintenance_program->responsible = $request->responsible;
                 $maintenance_program->save();
                 $maintenance_program->refresh();
                // dd($maintenance_program);
@@ -209,21 +209,38 @@ class MaintenanceProgramController extends Controller
     {
 
         $maintenance_program = MaintenanceProgram::find($request->maintenance_program_id);
+
+        if ($maintenance_program) {
+            
+            $file = File::find($request->file_id);
+            
+            if ($file) {
+                
+                $licensePath = '/program_maintenance'.'/'.$file->id;
+                $completePath = $licensePath;
         
-        $file = File::find($request->file_id);
+                \File::deleteDirectory(\public_path($completePath));
+        
+                $maintenance_program->executed_day = null;
+                $maintenance_program->is_done = false;
+                $maintenance_program->file_id = null;
+                $maintenance_program->save();
+                $file->delete();
+        
+                return response()->json([],204);
+            }else{
+                $file_error = ['file' => ['O file_id: '.$request->maintenance_program_id.' nao foi localizado']];
+                return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
+            }
+        }else{
+            $file_error = ['file' => ['O maintenance_program_id: '.$request->maintenance_program_id.' nao foi localizado']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
+        }
 
-        $licensePath = '/program_maintenance'.'/'.$file->id;
-        $completePath = $licensePath;
-
-        \File::deleteDirectory(\public_path($completePath));
-
-        $maintenance_program->executed_day = null;
-        $maintenance_program->is_done = false;
-        $maintenance_program->file_id = null;
-        $maintenance_program->save();
-        $file->delete();
-
-        return response()->json([],204);
 
     }
 }

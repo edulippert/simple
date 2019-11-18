@@ -168,20 +168,28 @@ class LicenseController extends Controller
     public function deleteFile(Request $request)
     {
 
-        $license = License::find($request->project_id);
+        $license = License::find($request->license_id);
         
-        $file = File::find($request->file_id);
-
-        $licensePath = '/licenses'.'/'.$file->id;
-        $completePath = $licensePath;
-
-        \File::deleteDirectory(\public_path($completePath));
-
-        $license->file_id = null;
-        $license->save();
-        $file->delete();
-
-        return response()->json([],204);
+        if ($license) {
+            # code...
+            $file = File::find($request->file_id);
+    
+            $licensePath = '/licenses'.'/'.$file->id;
+            $completePath = $licensePath;
+    
+            \File::deleteDirectory(\public_path($completePath));
+    
+            $license->file_id = null;
+            $license->save();
+            $file->delete();
+    
+            return response()->json([],204);
+        }else{
+            $file_error = ['file' => ['O license_id: '.$request->license_id.' nao localizado']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
+        } 
 
     }
 

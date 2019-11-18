@@ -16,7 +16,9 @@ class CustomerGuaranteeMaintenance extends Model
                             'amount',
                             'period',
                             'responsable',
-                            'font'
+                            'font',
+                            'optional_period',
+                            'is_informed'
                         ];
 
     protected $table = 'customer_guarantee_maintenances';
@@ -45,7 +47,9 @@ class CustomerGuaranteeMaintenance extends Model
                                         'customer_guarantee_maintenances.amount',
                                         'customer_guarantee_maintenances.period',
                                         'customer_guarantee_maintenances.responsable',
-                                        'customer_guarantee_maintenances.font'
+                                        'customer_guarantee_maintenances.font',
+                                        'customer_guarantee_maintenances.is_informed',
+                                        'customer_guarantee_maintenances.optional_period'
                                     )
                                     ->get();
 
@@ -71,7 +75,9 @@ class CustomerGuaranteeMaintenance extends Model
                                         'customer_guarantee_maintenances.amount',
                                         'customer_guarantee_maintenances.period',
                                         'customer_guarantee_maintenances.responsable',
-                                        'customer_guarantee_maintenances.font'
+                                        'customer_guarantee_maintenances.font',
+                                        'customer_guarantee_maintenances.is_informed',
+                                        'customer_guarantee_maintenances.optional_period'
                                     )
                                     ->get();
 

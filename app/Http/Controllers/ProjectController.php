@@ -148,7 +148,7 @@ class ProjectController extends Controller
         return $response;
     }
 
-    public function uploadoFiles(Request $request){
+    public function uploadFiles(Request $request){
 
         
         if ($request->hasFile('file')) {
@@ -169,11 +169,20 @@ class ProjectController extends Controller
             
             $fileUrl = url('/projects'.'/'.$file->id.'/'.$fileName);
 
-            Project::create([
-                'condominium_id' => $request->condominium_id,
-                'file_id' => $file->id,
-                'name' => $request->name
+            $request->request->add(['file_id'=> $file->id]);
+
+            $atrributes = request()->validate([
+                'condominium_id' => 'required',
+                'name' => 'required',
+                'file_id' => 'required'
             ]);
+
+            Project::create($atrributes);
+            // Project::create([
+            //     'condominium_id' => $request->condominium_id,
+            //     'file_id' => $file->id,
+            //     'name' => $request->name
+            // ]);
             
             return response()->json(['url' => $fileUrl],200);
 

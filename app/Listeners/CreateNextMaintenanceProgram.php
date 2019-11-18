@@ -31,7 +31,7 @@ class CreateNextMaintenanceProgram
 
         $maintenance = $event->getMaintenancePrograms();
        
-        $start_date = $maintenance->executed_day;
+        $start_date = $maintenance->maintenance_day;
 
         $customer_maintenance = $maintenance->customer_guarantee_maintenance;
 

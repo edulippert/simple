@@ -20,7 +20,8 @@ class MaintenanceProgram extends Model
                             'estimated_cost',
                             'executed_cost',
                             'condominium_comments',
-                            'company_comments'
+                            'company_comments',
+                            'responsible'
                         ];
 
     protected $table = 'maintenance_programs';
@@ -35,8 +36,17 @@ class MaintenanceProgram extends Model
 
         $response = [];
 
+        $now = Carbon::now();
+        
+        
+
         foreach ($maintenance_headers as $maintenance_header) {
-            
+        
+            $collapse = false;
+           
+            if ($now->month == (int)$maintenance_header->just_month) {
+                $collapse = true;
+            }
             //$nr_month = Str::substr($maintenance_header->month_year,0,2);
             //$nr_year = Str::substr($maintenance_header->month_year,3,4);
 
@@ -81,7 +91,7 @@ class MaintenanceProgram extends Model
 
             if ($maintenance_header->total != 0) {
                
-                $percent_done = ($maintenance_header->nr_done * 100) / $maintenance_header->total;
+                $percent_done = round(($maintenance_header->nr_done * 100) / $maintenance_header->total);
             
             }else{
             
@@ -98,7 +108,7 @@ class MaintenanceProgram extends Model
                 'percent_done' => $percent_done,
                 'estimated_cost' => $maintenance_header->estimated_cost,
                 'executed_cost' => $maintenance_header->executed_cost,
-                'collapse' => false,
+                'collapse' => $collapse,
                 'maintenances' => self::getMaintenacesByMonth($condominium_id,$maintenance_header->just_month,$maintenance_header->just_year)
             ];
         }
@@ -186,6 +196,8 @@ class MaintenanceProgram extends Model
                                         'items.description as item_description',
                                         'customer_guarantee_maintenances.activity',
                                         'customer_guarantee_maintenances.description',
+                                        'customer_guarantee_maintenances.amount',
+                                        'customer_guarantee_maintenances.period',
                                         'maintenance_day',
                                         'executed_day',
                                         'status',

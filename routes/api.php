@@ -127,7 +127,7 @@ Route::name('manual_download_files')->get('manual_download_files/{id}','ManualCo
 Route::name('manual_delete_files')->post('manual_delete_file','ManualController@deleteFile');
 Route::name('manual_update_file')->post('manual_update_file/{id}','ManualController@updateFile');
 
-Route::name('project_upload_file')->post('project_upload_file','ProjectController@uploadoFiles');
+Route::name('project_upload_file')->post('project_upload_file','ProjectController@uploadFiles');
 Route::name('project_download_file')->get('project_download_file/{id}','ProjectController@downloadFile');
 Route::name('project_delete_file')->post('project_delete_file','ProjectController@deleteFile');
 Route::name('project_update_file')->post('project_update_file/{id}','ProjectController@updateFile');

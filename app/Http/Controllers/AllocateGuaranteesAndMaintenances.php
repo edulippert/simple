@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\MaintenanceProgram;
-
+use PhpParser\PrettyPrinter\Standard;
 
 class AllocateGuaranteesAndMaintenances extends Controller
 {
@@ -88,7 +88,11 @@ class AllocateGuaranteesAndMaintenances extends Controller
                     $period = 'Dias';      
                 }
 
-                
+                if ($due_date < Carbon::now()) {
+                    $status = 'Ativa';
+                }else{
+                    $status = 'Expirada';
+                }
                 
                 $request_customer_guarantee = ['condominium_id' => $request->condominium_id,
                                             'group_id' => $root_guarantee->group_id,
@@ -100,7 +104,8 @@ class AllocateGuaranteesAndMaintenances extends Controller
                                             'is_active' => true,
                                             'is_expired' => true,
                                             'reference' => $root_guarantee->reference,
-                                            'coverage' => $root_guarantee->description
+                                            'coverage' => $root_guarantee->description,
+                                            'status' => $status
                                             ];
 
                 $valid_customer_guarantee_request = Validator::make($request_customer_guarantee,[
@@ -139,7 +144,9 @@ class AllocateGuaranteesAndMaintenances extends Controller
                             'amount' => $root_guarantee_maintenance->amount,
                             'period' => $root_guarantee_maintenance->period,
                             'responsable' => $root_guarantee_maintenance->responsable,
-                            'font' => $root_guarantee_maintenance->font
+                            'font' => $root_guarantee_maintenance->font,
+                            'optional_period' => $root_guarantee_maintenance->optional_period,
+                            'is_informed' => $root_guarantee_maintenance->is_informed
                         ]);
 
                         $customer_guarantee_maintenance->refresh();

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\CustomerGuaranteeMaintenance;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -65,6 +66,16 @@ class CustomerGuarantee extends Model
 
 
             $percent_evaluation = ($qt_days_current*100)/$grouped_guarantee->qt_days_guarantee;
+
+            if ($grouped_guarantee->status == '') {
+                if ($grouped_guarantee->due_date < Carbon::now()) {
+                    $status = 'Expirada';
+                }else{
+                    $status = 'Ativa';
+                }
+            }else{
+                $status = $grouped_guarantee->status;
+            }
             
             $response[] = [
                 'item_description' => $grouped_guarantee->item_description,
@@ -73,7 +84,7 @@ class CustomerGuarantee extends Model
                 'due_date' => $grouped_guarantee->due_date,
                 'percent_evaluation' => $percent_evaluation,
                 'guarantee_time' => $grouped_guarantee->amount.' '.$grouped_guarantee->period,
-                'status' => $grouped_guarantee->status
+                'status' => $status
                
             ];
 
