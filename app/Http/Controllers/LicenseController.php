@@ -172,7 +172,7 @@ class LicenseController extends Controller
         
         if ($license) {
             # code...
-            $file = File::find($request->file_id);
+            $file = File::find($license->file_id);
     
             $licensePath = '/licenses'.'/'.$file->id;
             $completePath = $licensePath;

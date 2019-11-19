@@ -180,19 +180,37 @@ class ContractController extends Controller
     {
 
         $contract = Contract::find($request->contract_id);
+       
+        if ($contract) {
+           
+            $file = File::find($contract->file_id);
+
+            if ($file) {
+                
+                $licensePath = '/contracts'.'/'.$file->id;
+                $completePath = $licensePath;
         
-        $file = File::find($request->file_id);
-
-        $licensePath = '/contracts'.'/'.$file->id;
-        $completePath = $licensePath;
-
-        \File::deleteDirectory(\public_path($completePath));
-
-        $contract->file_id = null;
-        $contract->save();
-        $file->delete();
-
-        return response()->json([],204);
+                \File::deleteDirectory(\public_path($completePath));
+        
+                $contract->file_id = null;
+                $contract->save();
+                $file->delete();
+        
+                return response()->json([],204);
+            }else {
+                $file_error = ['file' => ['file_id nao localizado']];
+                return response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => $file_error],422);
+            }      
+    
+        }else {
+            $file_error = ['file' => ['contract_id: '.$request->contract_id.' nao localizado']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
+        }      
+        
 
     }
 

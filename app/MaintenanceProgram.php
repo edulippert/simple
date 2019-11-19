@@ -36,7 +36,7 @@ class MaintenanceProgram extends Model
 
         foreach ($maintenance_headers as $maintenance_header) {
         
-            switch ($month) {
+            switch ($maintenance_header->just_month) {
                 case '01':
                     $text_month = 'Janeiro';
                     break;
@@ -232,24 +232,45 @@ class MaintenanceProgram extends Model
     public static function getMaintenanceHeader($condominium_id,$month=null,$year=null)
     {
 
-        if ($month) {
+        if ($year) {
 
-            $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
-                                    ->whereRaw('extract(month from maintenance_day) = '.$month)
-                                    ->whereRaw('extract(year from maintenance_day) = '.$year)
-                                    ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
-                                    ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
-                                    extract(month from maintenance_day) as just_month,
-                                    extract(year from maintenance_day) as just_year,
-                                    sum(case when is_done = true then 1 else 0 end ) as nr_done,
-                                    sum(case when is_done = false then 1 else 0 end ) as nr_not_done,
-                                    sum(estimated_cost) as estimated_cost,
-                                    sum(executed_cost) as executed_cost,
-                                    count(*) as total"))
-                                    ->groupBy('month_year','just_month','just_year')
-                                    ->orderBy('just_year','asc')
-                                    ->orderBy('just_month','asc')
-                                    ->get();
+            if ($month) {
+                
+                $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
+                                        ->whereRaw('extract(month from maintenance_day) = '.$month)
+                                        ->whereRaw('extract(year from maintenance_day) = '.$year)
+                                        ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
+                                        ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
+                                        extract(month from maintenance_day) as just_month,
+                                        extract(year from maintenance_day) as just_year,
+                                        sum(case when is_done = true then 1 else 0 end ) as nr_done,
+                                        sum(case when is_done = false then 1 else 0 end ) as nr_not_done,
+                                        sum(estimated_cost) as estimated_cost,
+                                        sum(executed_cost) as executed_cost,
+                                        count(*) as total"))
+                                        ->groupBy('month_year','just_month','just_year')
+                                        ->orderBy('just_year','asc')
+                                        ->orderBy('just_month','asc')
+                                        ->get();
+            }else{
+
+                $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
+                                        ->whereRaw('extract(year from maintenance_day) = '.$year)
+                                        ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
+                                        ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
+                                        extract(month from maintenance_day) as just_month,
+                                        extract(year from maintenance_day) as just_year,
+                                        sum(case when is_done = true then 1 else 0 end ) as nr_done,
+                                        sum(case when is_done = false then 1 else 0 end ) as nr_not_done,
+                                        sum(estimated_cost) as estimated_cost,
+                                        sum(executed_cost) as executed_cost,
+                                        count(*) as total"))
+                                        ->groupBy('month_year','just_month','just_year')
+                                        ->orderBy('just_year','asc')
+                                        ->orderBy('just_month','asc')
+                                        ->get();
+            }
+
         }else{
 
             $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)

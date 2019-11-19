@@ -217,19 +217,28 @@ class ProjectController extends Controller
     {
 
         $project = Project::find($request->project_id);
+
+        if ($project) {
+            
+            $file = File::find($project->file_id);
+    
+            $licensePath = '/projects'.'/'.$file->id;
+            $completePath = $licensePath;
+    
+            \File::deleteDirectory(\public_path($completePath));
+    
+            $project->file_id = null;
+            $project->save();
+            $file->delete();
+    
+            return response()->json([],204);
+        }else{
+            $file_error = ['file' => ['O project_id: '.$request->project_id.' nao localizado']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
+        } 
         
-        $file = File::find($request->file_id);
-
-        $licensePath = '/projects'.'/'.$file->id;
-        $completePath = $licensePath;
-
-        \File::deleteDirectory(\public_path($completePath));
-
-        $project->file_id = null;
-        $project->save();
-        $file->delete();
-
-        return response()->json([],204);
 
     }
 

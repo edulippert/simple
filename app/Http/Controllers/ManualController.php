@@ -187,19 +187,28 @@ class ManualController extends Controller
     {
 
         $manual = Manual::find($request->manual_id);
+
+        if ($manual) {
+            # code...
+            $file = File::find($manual->file_id);
+    
+            $licensePath = '/manuals'.'/'.$file->id;
+            $completePath = $licensePath;
+    
+            \File::deleteDirectory(\public_path($completePath));
+    
+            $manual->file_id = null;
+            $manual->save();
+            $file->delete();
+    
+            return response()->json([],204);
+        }else{
+            $file_error = ['file' => ['O manual_id: '.$request->manual_id.' nao localizado']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
+        } 
         
-        $file = File::find($request->file_id);
-
-        $licensePath = '/manuals'.'/'.$file->id;
-        $completePath = $licensePath;
-
-        \File::deleteDirectory(\public_path($completePath));
-
-        $manual->file_id = null;
-        $manual->save();
-        $file->delete();
-
-        return response()->json([],204);
 
     }
 
