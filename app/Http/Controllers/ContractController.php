@@ -101,7 +101,23 @@ class ContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
-        $contract->delete();
+        if($contract->file){
+            $file = $contract->file;
+            $name = $file->name;
+            $contractPath = '/contracts'.'/'.$file->id;
+            $completePath = $contractPath;
+
+            
+            \File::deleteDirectory(\public_path($completePath));
+
+            $contract->delete();
+            $file->delete();
+        }else{
+
+            $contract->delete();
+
+        }
+
         return response()->json([],204);
     }
 
@@ -209,8 +225,7 @@ class ContractController extends Controller
             return response()->json([
                 'message' => 'The given data was invalid.',
                 'errors' => $file_error],422);
-        }      
-        
+        }             
 
     }
 

@@ -88,15 +88,23 @@ class LicenseController extends Controller
     {
        
         $file = $license->file;
-        $name = $file->name;
-        $licensePath = '/licenses'.'/'.$file->id;
-        $completePath = $licensePath;
+        if ($file) {
+            
+            $name = $file->name;
+            $licensePath = '/licenses'.'/'.$file->id;
+            $completePath = $licensePath;
+    
+           
+            \File::deleteDirectory(\public_path($completePath));
+    
+            $license->delete();
+            $file->delete();
+    
+            
+        }else{
+            $license->delete();
 
-       
-        \File::deleteDirectory(\public_path($completePath));
-
-        $license->delete();
-        $file->delete();
+        }
 
         return response()->json([],204);
     }
