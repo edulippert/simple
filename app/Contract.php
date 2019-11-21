@@ -23,6 +23,7 @@ class Contract extends Model
 
     protected $table = 'contracts';
 
+   
     public static function buildContractsReponse($condominium_id)
     {
 
@@ -46,8 +47,8 @@ class Contract extends Model
                 'name' => $contract->name,
                 'description' => $contract->description,
                 'total_cost' => $contract->total_cost,
-                'start_date' => $contract->start_date,
-                'end_date' => $contract->end_date,
+                'start_date' => date('Y-m-d', strtotime($contract->start_date)),
+                'end_date' => date('Y-m-d', strtotime($contract->end_date)),//$contract->end_date,
                 'contact_name' => $contract->contact_name,
                 'contact_email'=> $contract->contact_email,
                 'contact_phone_number' => $contract->contact_phone_number,

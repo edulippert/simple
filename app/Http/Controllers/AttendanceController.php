@@ -152,7 +152,33 @@ class AttendanceController extends Controller
     public function getAttendances(Request $request)
     {
         $attendances = Attendance::whereCondominiumId($request->condominium_id)->get();
-        return $attendances;
+        
+        $response = [];
+
+        foreach ($attendances as $attendance) {
+            $response[] = [
+                'id' => $attendance->id,
+                'company_id' => $attendance->company_id,
+                'file_id'=> $attendance->file_id,
+                'attendance_place'=> $attendance->attendance_place,
+                'call_date'=>date('Y-m-d', strtotime($attendance->call_date)),
+                'inspection_date'=> date('Y-m-d', strtotime($attendance->inspection_date)),
+                'finish_date'=> date('Y-m-d', strtotime($attendance->finish_date)),
+                'description'=> $attendance->description,
+                'solution'=> $attendance->solution,
+                'responsible'=> $attendance->responsible,
+                'manpower_cost'=> $attendance->manpower_cost,
+                'material_cost'=> $attendance->material_cost,
+                'total_cost'=> $attendance->total_cost,
+                'contact_name'=> $attendance->contact_name,
+                'contact_email'=> $attendance->contact_email,
+                'contact_phone_number'=> $attendance->contact_phone_number,
+                'condominium_id'=> $attendance->condominium_id,
+                'is_finalized'=> $attendance->is_finalized
+            ];
+        }
+
+        return $response;
     }
     /**
      * Remove the specified resource from storage.

@@ -63,7 +63,25 @@ class EquipmentGuaranteeController extends Controller
      */
     public function show(EquipmentGuarantee $equipmentguarantee)
     {
-        return $equipmentguarantee;
+        $file = $equipmentguarantee->file;
+        return [
+            'id' => $equipmentguarantee->id,
+            'condominium_id' => $equipmentguarantee->condominium_id,
+            'file_id' => $equipmentguarantee->file_id,
+            'file_name' => $file ? $file->file : null,
+            'item' => $equipmentguarantee->item,
+            'start_date' => date('Y-m-d', strtotime($equipmentguarantee->start_date)),
+            'duration' => $equipmentguarantee->duration,
+            'period' => $equipmentguarantee->period,
+            'total_cost' => $equipmentguarantee->total_cost,
+            'reference' => $equipmentguarantee->reference,
+            'comments' => $equipmentguarantee->comments,
+            'company' => $equipmentguarantee->company,
+            'company_number_id' => $equipmentguarantee->company_number_id,
+            'phone' => $equipmentguarantee->phone,
+            'email' => $equipmentguarantee->email,
+        ];
+        //return $equipmentguarantee;
     }
 
     /**
