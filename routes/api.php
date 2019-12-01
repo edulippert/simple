@@ -144,6 +144,7 @@ Route::name('get_customer_guarantees')->post('get_customer_guarantees','Customer
 
 
 Route::name('build_user_dashboard')->post('build_user_dashboard','UserDashboardController@buildDashboard');
+Route::name('build_company_dashboard')->post('build_company_dashboard','CompanyDashboardController@buildDashboard');
 
 
 //------------------------------------------------------

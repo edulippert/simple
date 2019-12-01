@@ -229,6 +229,92 @@ class MaintenanceProgram extends Model
 
     }
 
+    public static function buildCompanyCondominiumsGroupedByMaintenancesPercent($company_id,$month=null,$year=null)
+    {
+        $condominiums = Condominium::whereCompanyId($company_id)->get();
+        
+        $response = [];
+
+        foreach ($condominiums as $condominium) {
+            
+            switch ($month) {
+                case 1:
+                    $text_month = 'Janeiro';
+                    break;
+                case 2:
+                    $text_month = 'Fevereiro';
+                    break;
+                case 3:
+                    $text_month = 'Março';
+                    break;
+                case 4:
+                    $text_month = 'Abril';
+                    break;
+                case 5:
+                    $text_month = 'Maio';
+                    break;    
+                case 6:
+                    $text_month = 'Junho';
+                    break;
+                case 7:
+                    $text_month = 'Julho';
+                    break;    
+                case 8:
+                    $text_month = 'Agosto';
+                    break;
+                case 9:
+                    $text_month = 'Setembro';
+                    break;
+                case 10:
+                    $text_month = 'Outubro';
+                    break;
+                case 11:
+                    $text_month = 'Novembro';
+                    break;
+                case 12:
+                    $text_month = 'Dezembro';
+                    break;
+            }
+
+            $maintenance_header = self::getMaintenanceHeader($condominium->id,$month,$year)->first();
+
+
+            if ($maintenance_header) {
+                
+               
+    
+                if ($maintenance_header->total != 0) {
+                   
+                    $percent_done = round(($maintenance_header->nr_done * 100) / $maintenance_header->total);
+                
+                }else{
+                
+                    $percent_done = 0;
+                }  
+    
+                $response[] = [
+                    'condominium_id' => $condominium->id,
+                    'name' => $condominium->name,
+                    'text_month' => $text_month,
+                    'percent_done' => $percent_done
+    
+                ];
+            }else{
+
+                $response[] = [
+                    'condominium_id' => $condominium->id,
+                    'name' => $condominium->name,
+                    'text_month' => $text_month,
+                    'percent_done' => 0
+    
+                ];
+            }
+
+        }
+
+        return $response;
+    }
+
     public static function getMaintenanceHeader($condominium_id,$month=null,$year=null)
     {
 

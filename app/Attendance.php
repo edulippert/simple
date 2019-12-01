@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
@@ -44,5 +45,36 @@ class Attendance extends Model
                             )->first();
 
         return $attendance;
+    }
+
+    public static function buildAttendanceGraphResponse($company_id,$month,$year)
+    {
+        $condominiums = Condominium::whereCompanyId($company_id)->get();
+
+        $response = [];
+        foreach ($condominiums as $condominium) {
+            
+            $attendance_cost = self::getTotalCostAttendacesByCondominium($condominium->id,$month,$year)->first();
+
+            $response[] = [
+                'condominium_id' => $condominium->id,
+                'name' => $condominium->name,
+                'total_cost' => $attendance_cost?$attendance_cost->total_cost:0,
+            ];
+
+        }
+
+        return $response;
+    }
+
+    public static function getTotalCostAttendacesByCondominium($condominium_id,$month=null,$year=null)
+    {
+        return  self::whereCondominiumId($condominium_id)
+                    //->whereRaw('extract(month from finish_date) = '.$month)
+                    //->whereRaw('extract(year from finish_date) = '.$year)
+                    ->select('condominium_id')
+                    ->select(DB::raw("sum(coalesce(total_cost,'0')::numeric) as total_cost"))
+                    ->groupBy('condominium_id')
+                    ->get();
     }
 }
