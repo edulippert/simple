@@ -77,4 +77,37 @@ class Attendance extends Model
                     ->groupBy('condominium_id')
                     ->get();
     }
+
+    public static function buildReportDetail($start_date,$end_date,$condominium_id,$is_finalized)
+    {
+        return self::where('call_date','>=',$start_date)
+                    ->where('call_date','<=',$end_date )
+                    ->join('condominiums','condominiums.id','attendances.condominium_id')
+                    ->whereRaw('case when -1 = '.$condominium_id.' then true else condominium_id = '.$condominium_id.' end')
+                    ->whereRaw('case '.$is_finalized.' when -1 then true when 1 then is_finalized = true else is_finalized = false end')
+                    ->select(DB::raw(
+                        "condominiums.name as condominium_name,
+                        attendance_place,
+                        call_date,
+                        description,
+                        contact_name,
+                        contact_phone_number,
+                        total_cost,
+                        case when is_finalized = true then 'Finalizado' else 'Em Aberto' end as status 
+                        ")
+                    )
+                    ->get();
+    }
+
+    public static function buildReportTotal($start_date,$end_date,$condominium_id,$is_finalized)
+    {
+        return self::where('call_date','>=',$start_date)
+                    ->where('call_date','<=',$end_date )
+
+                    ->whereRaw('case when -1 = '.$condominium_id.' then true else condominium_id = '.$condominium_id.' end')
+                    ->whereRaw('case '.$is_finalized.' when -1 then true when 1 then is_finalized = true else is_finalized = false end')
+                    ->select(DB::raw("sum(coalesce(total_cost,'0')::numeric) as total_cost"))
+                    ->get();
+    }
+
 }
