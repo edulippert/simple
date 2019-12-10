@@ -31,7 +31,8 @@ class CompanyDashboardController extends Controller
 
         return [
             'condominiums_percents' => $this->buildCondominiumsMaintenancesPercent($request->company_id,$month,$year),
-            'attendance_graph' => $this->buildAttendanceGraph($request->company_id,$month,$year)
+            'attendance_graph' => $this->buildAttendanceGraph($request->company_id,$month,$year),
+            'notifications' => $this->buildNotifications($request->company_id)
         ];
 
     }
@@ -44,5 +45,10 @@ class CompanyDashboardController extends Controller
     private function buildAttendanceGraph($company_id,$month,$year)
     {
         return Attendance::buildAttendanceGraphResponse($company_id,$month,$year);
+    }
+
+    private function buildNotifications($company_id)
+    {
+        return 'test notification';
     }
 }

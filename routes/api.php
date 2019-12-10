@@ -65,7 +65,7 @@ Route::name('allocates')->post('allocates','AllocateGuaranteesAndMaintenances@al
 Route::name('get_allocateds')->post('get_allocateds','CustomerGuaranteeController@getAllocateds');
 Route::name('get_maintenace_programs')->post('get_maintenace_programs','MaintenanceProgramController@getMaintenancePrograms');
 Route::name('get_maintenance_programs_by_month')->post('get_maintenance_programs_by_month','MaintenanceProgramController@getMaintenanceProgramsMonthGrouped');
-
+Route::name('unblock')->post('unblock','MaintenanceProgramController@unblock');
 
 Route::name('user_assignments')->post('user_assignments','UserController@saveUserAndAssignments');
 Route::name('user_assignments')->get('user_assignments','UserController@getUsersAndAssignments');
@@ -151,6 +151,7 @@ Route::name('build_company_dashboard')->post('build_company_dashboard','CompanyD
 
 // Reports routes ----------------------------------------------
 Route::name('rel_attendances')->post('rel_attendances','ReportController@rel_attendances');
+Route::name('rel_maintenances')->post('rel_maintenances','ReportController@rel_maintenances');
 
 
 

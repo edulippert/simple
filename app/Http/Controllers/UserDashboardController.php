@@ -30,7 +30,9 @@ class UserDashboardController extends Controller
 
         return [
             'cards' => $this->buildCardsResponse($request->condominium_id,$month,$year),
-            'graph' => $this->buildGraphResponse($request->condominium_id,null,$year)
+            'graph' => $this->buildGraphResponse($request->condominium_id,null,$year),
+            'notification' => $this->buildNotification($request->condominium_id)
+
         ];
 
     }
@@ -43,5 +45,10 @@ class UserDashboardController extends Controller
     private function buildGraphResponse($condominium_id,$month=null,$year=null)
     {
         return MaintenanceProgram::get_maintenance_info_by_month($condominium_id,$month,$year);
+    }
+
+    private function buildNotification($condominium_id)
+    {
+        return 'Notification test';
     }
 }

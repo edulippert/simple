@@ -125,6 +125,21 @@ class MaintenanceProgramController extends Controller
         return MaintenanceProgram::buildMaintenanceResponse($request->condominium_id);
     }
 
+    public function unblock(Request $request)
+    {
+        $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
+        if ($maintenance_program) {
+            
+            $maintenance_program->is_blocked = $request->is_blocked;
+            $maintenance_program->save();
+            $maintenance_program->refresh();
+            return $maintenance_program;
+
+        }else{
+            return response()->json(['errors'=>'Manutencao nao localizada '.serialize($request->all()).' nr'],422);
+        }
+    }
+
     public function updateMaintenanceProgram(Request $request)
     {
       

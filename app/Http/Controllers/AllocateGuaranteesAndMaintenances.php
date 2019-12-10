@@ -175,7 +175,8 @@ class AllocateGuaranteesAndMaintenances extends Controller
 
                         $maintenance_program = MaintenanceProgram::create([
                             'customer_guarantee_maintenance_id' => $customer_guarantee_maintenance->id,
-                            'maintenance_day' => $maintenance_date
+                            'maintenance_day' => $maintenance_date,
+                            'is_blocked' => true
                         ]);
 
                     }
@@ -269,7 +270,8 @@ class AllocateGuaranteesAndMaintenances extends Controller
 
                 $maintenance_program = MaintenanceProgram::create([
                     'customer_guarantee_maintenance_id' => $customer_guarantee_maintenance->id,
-                    'maintenance_day' => $maintenance_date
+                    'maintenance_day' => $maintenance_date,
+                    'is_blocked' => true
                 ]);
 
             }

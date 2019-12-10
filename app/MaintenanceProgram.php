@@ -439,6 +439,48 @@ class MaintenanceProgram extends Model
 
     }
 
+    public static function buildReportDetail($start_date,$end_date,$condominium_id)
+    {
+        $maintenance_programs = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
+        ->where('maintenance_day','>=',$start_date)
+        ->where('maintenance_day','<=',$end_date)
+        ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
+        ->join('groups','groups.id','customer_guarantee_maintenances.group_id')
+        ->join('items','items.id','customer_guarantee_maintenances.item_id')
+        ->select(DB::raw("
+                            case when executed_day is not null then
+                                case 
+                                    when executed_day > maintenance_day then
+                                        'Executado com atraso'
+                                    else
+                                        'Executado'
+                                end
+                            else
+                                case when maintenance_day > current_date then
+                                    'Atrasado'
+                                else
+                                    'Em Aberto' 
+                                end
+                            end as status"),
+            'groups.description as group_description',
+            'items.description as item_description',
+            'customer_guarantee_maintenances.activity',
+            'customer_guarantee_maintenances.amount',
+            'customer_guarantee_maintenances.period',
+            'maintenance_day',
+            'executed_day',
+            'estimated_cost',
+            'executed_cost',
+            'is_done',
+            'is_blocked'
+        )
+        ->orderBy('maintenance_day')
+        ->get();
+
+        return $maintenance_programs;
+
+    }
+
     public function file(){
         return $this->belongsTo(File::class,'file_id');
     }
