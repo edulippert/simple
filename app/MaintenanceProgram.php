@@ -220,7 +220,8 @@ class MaintenanceProgram extends Model
                 'executed_cost' => $maintenance->executed_cost,
                 'status' => $status,
                 'amount' => $maintenance->amount,
-                'period' => $maintenance->period
+                'period' => $maintenance->period,
+                'is_blocked' => $maintenance->is_blocked
 
             ];
         }

@@ -152,6 +152,7 @@ Route::name('build_company_dashboard')->post('build_company_dashboard','CompanyD
 // Reports routes ----------------------------------------------
 Route::name('rel_attendances')->post('rel_attendances','ReportController@rel_attendances');
 Route::name('rel_maintenances')->post('rel_maintenances','ReportController@rel_maintenances');
+Route::name('rel_finishes')->post('rel_finishes','ReportController@rel_finishes');
 
 
 
