@@ -105,7 +105,9 @@ class UserController extends Controller
     }
 
     public function deleteUserAndAssignments($id){
+        
         $user_assignments = User::find($id);
+      
         $user_assignments->delete();
         return response()->json([],'204');
     }

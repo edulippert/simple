@@ -12,9 +12,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable,SoftDeletes;
+    use Notifiable;
 
-    protected $dates = ['deleted_at'];
+    //protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'role_id',
@@ -63,8 +63,8 @@ class User extends Authenticatable implements JWTSubject
     {
         if ($role){
         
-            $user_assignments = DB::table('users')
-                        ->where('roles.id',$role->id)
+            $user_assignments = 
+                        self::where('roles.id',$role->id)
                         ->leftjoin('user_companies','users.id','user_companies.user_id')
                         ->leftjoin('companies','companies.id','user_companies.company_id')
                         ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
@@ -80,8 +80,8 @@ class User extends Authenticatable implements JWTSubject
 
         }else{
 
-            $user_assignments = DB::table('users')
-                            ->leftjoin('user_companies','users.id','user_companies.user_id')
+            $user_assignments = 
+                            self::leftjoin('user_companies','users.id','user_companies.user_id')
                             ->leftjoin('companies','companies.id','user_companies.company_id')
                             ->leftJoin('user_condominiums','user_condominiums.user_company_id','user_companies.id')
                             ->leftJoin('condominiums','condominiums.id','user_condominiums.condominium_id')
