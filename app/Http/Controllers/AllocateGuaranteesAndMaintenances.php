@@ -223,7 +223,9 @@ class AllocateGuaranteesAndMaintenances extends Controller
                     'amount' => $root_maintenance->amount,
                     'period' => $root_maintenance->period,
                     'responsable' => $root_maintenance->responsable,
-                    'font' => $root_maintenance->font
+                    'font' => $root_maintenance->font,
+                    'optional_period' => $root_maintenance->optional_period,
+                    'is_informed' => $root_maintenance->is_informed
                 ];
                 
                 $valid_customer_maintenanace_request = Validator::make($request_guarantee_maintenance,[

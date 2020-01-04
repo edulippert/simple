@@ -106,6 +106,18 @@ class MaintenanceProgram extends Model
 
         $response = [];
 
+        $response[] = [
+            'month_year' => 'Lembretes Diarios',
+            'tasks_done' => 0,
+            'tasks_not_done' => 0,
+            'percent_done' => 0,
+            'estimated_cost' => 0,
+            'executed_cost' => 0,
+            'is_informed' => false,
+            'collapse' => false,
+            'maintenances' => self::getMaintenacesByMonth($condominium_id,null,null,false)
+        ];
+
         $now = Carbon::now();
         
         
@@ -178,6 +190,7 @@ class MaintenanceProgram extends Model
                 'percent_done' => $percent_done,
                 'estimated_cost' => $maintenance_header->estimated_cost,
                 'executed_cost' => $maintenance_header->executed_cost,
+                'is_informed' => $maintenance_header->is_informed,
                 'collapse' => $collapse,
                 'maintenances' => self::getMaintenacesByMonth($condominium_id,$maintenance_header->just_month,$maintenance_header->just_year)
             ];
@@ -187,9 +200,9 @@ class MaintenanceProgram extends Model
 
     }
 
-    public static function getMaintenacesByMonth($condominium_id,$month,$year)
+    public static function getMaintenacesByMonth($condominium_id,$month,$year,$is_informed = true)
     {
-        $maintenances = self::getMaintenancesPrograms($condominium_id,$month,$year);
+        $maintenances = self::getMaintenancesPrograms($condominium_id,$month,$year,$is_informed);
 
         $response = [];
         foreach ($maintenances as $maintenance) {
@@ -210,7 +223,7 @@ class MaintenanceProgram extends Model
             
             $response[] = [
                 'id' => $maintenance->id,
-                'day' => $maintenance->just_day,
+                'day' => $maintenance->is_informed? $maintenance->just_day:' - ',
                 'file_id' => $maintenance->file_id,
                 'item_id' => $maintenance->item_id,
                 'item_description' => $maintenance->item_description,
@@ -218,7 +231,7 @@ class MaintenanceProgram extends Model
                 'executed_day' => $maintenance->executed_day,
                 'estimated_cost' => $maintenance->estimated_cost,
                 'executed_cost' => $maintenance->executed_cost,
-                'status' => $status,
+                'status' => $maintenance->is_informed ? $status:'Nao Informar',
                 'amount' => $maintenance->amount,
                 'period' => $maintenance->period,
                 'is_blocked' => $maintenance->is_blocked
@@ -326,6 +339,7 @@ class MaintenanceProgram extends Model
                 $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
                                         ->whereRaw('extract(month from maintenance_day) = '.$month)
                                         ->whereRaw('extract(year from maintenance_day) = '.$year)
+                                       // ->where('customer_guarantee_maintenances.is_informed','true')
                                         ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
                                         ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
                                         extract(month from maintenance_day) as just_month,
@@ -343,6 +357,7 @@ class MaintenanceProgram extends Model
 
                 $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
                                         ->whereRaw('extract(year from maintenance_day) = '.$year)
+                                     //   ->where('customer_guarantee_maintenances.is_informed','true')
                                         ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
                                         ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
                                         extract(month from maintenance_day) as just_month,
@@ -362,6 +377,7 @@ class MaintenanceProgram extends Model
 
             $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
                                     ->leftjoin('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
+                                   //->where('customer_guarantee_maintenances.is_informed','true')
                                     ->select(DB::raw("lpad(extract(month from maintenance_day)::text,2,'0') || '/' || extract(year from maintenance_day)::text as month_year,
                                     extract(month from maintenance_day) as just_month,
                                     extract(year from maintenance_day) as just_year,
@@ -380,13 +396,14 @@ class MaintenanceProgram extends Model
         return $grouped_maintenances;
     }
 
-    public static function getMaintenancesPrograms($condominium_id,$month=null,$year=null)
+    public static function getMaintenancesPrograms($condominium_id,$month=null,$year=null,$is_informed = true)
     {
         if ($month) {
             
             $maintenance_programs = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
                                     ->whereRaw('extract(month from maintenance_day) = '.$month)
                                     ->whereRaw('extract(year from maintenance_day) = '.$year)
+                                    ->where('customer_guarantee_maintenances.is_informed',$is_informed)
                                     ->join('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
                                     ->join('groups','groups.id','customer_guarantee_maintenances.group_id')
                                     ->join('items','items.id','customer_guarantee_maintenances.item_id')
@@ -401,6 +418,7 @@ class MaintenanceProgram extends Model
                                         'customer_guarantee_maintenances.description',
                                         'customer_guarantee_maintenances.amount',
                                         'customer_guarantee_maintenances.period',
+                                        'customer_guarantee_maintenances.is_informed',
                                         'maintenance_day',
                                         'executed_day',
                                         'status',
@@ -414,6 +432,7 @@ class MaintenanceProgram extends Model
         }else{
 
             $maintenance_programs = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
+                                    ->where('customer_guarantee_maintenances.is_informed',$is_informed)
                                     ->join('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
                                     ->join('groups','groups.id','customer_guarantee_maintenances.group_id')
                                     ->join('items','items.id','customer_guarantee_maintenances.item_id')
@@ -427,6 +446,7 @@ class MaintenanceProgram extends Model
                                         'customer_guarantee_maintenances.description',
                                         'customer_guarantee_maintenances.amount',
                                         'customer_guarantee_maintenances.period',
+                                        'customer_guarantee_maintenances.is_informed',
                                         'maintenance_day',
                                         'executed_day',
                                         'status',
@@ -440,6 +460,37 @@ class MaintenanceProgram extends Model
 
     }
 
+
+    public static function getNotInformedMaintenaces($condominium_id)
+    {
+        $maintenance_programs = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
+                                    ->where('customer_guarantee_maintenances.is_informed','false')
+                                    ->join('customer_guarantee_maintenances','customer_guarantee_maintenances.id','maintenance_programs.customer_guarantee_maintenance_id')
+                                    ->join('groups','groups.id','customer_guarantee_maintenances.group_id')
+                                    ->join('items','items.id','customer_guarantee_maintenances.item_id')
+                                    ->select(DB::raw("extract(month from maintenance_day) as just_month,extract(year from maintenance_day) as just_year"),
+                                        'maintenance_programs.id',
+                                        'customer_guarantee_maintenances.group_id',
+                                        'groups.description as group_description',
+                                        'customer_guarantee_maintenances.item_id',
+                                        'items.description as item_description',
+                                        'customer_guarantee_maintenances.activity',
+                                        'customer_guarantee_maintenances.description',
+                                        'customer_guarantee_maintenances.amount',
+                                        'customer_guarantee_maintenances.period',
+                                        'customer_guarantee_maintenances.is_informed',
+                                        'maintenance_day',
+                                        'executed_day',
+                                        'status',
+                                        'is_done',
+                                        'is_blocked'
+                                    )
+                                    ->orderBy('maintenance_day')
+                                    ->get();
+        
+        return $maintenance_programs;
+
+    }
     public static function buildReportDetail($start_date,$end_date,$condominium_id)
     {
         $maintenance_programs = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
