@@ -88,11 +88,17 @@ class AllocateGuaranteesAndMaintenances extends Controller
                     $period = 'Dias';      
                 }
 
-                if ($due_date < Carbon::now()) {
-                    $status = 'Ativa';
-                }else{
-                    $status = 'Expirada';
+                if ($root_guarantee->period === "0") {
+                        
+                    $due_date = Carbon::createFromFormat('Y-m-d', $start_date )->addDay(0);
+                    $period = 'Na Entrega';      
                 }
+
+                // if ($due_date > Carbon::now()) {
+                //     $status = 'Ativa';
+                // }else{
+                //     $status = 'Expirada';
+                // }
                 
                 $request_customer_guarantee = ['condominium_id' => $request->condominium_id,
                                             'group_id' => $root_guarantee->group_id,
@@ -105,7 +111,7 @@ class AllocateGuaranteesAndMaintenances extends Controller
                                             'is_expired' => true,
                                             'reference' => $root_guarantee->reference,
                                             'coverage' => $root_guarantee->description,
-                                            'status' => $status
+                                            'status' => ''
                                             ];
 
                 $valid_customer_guarantee_request = Validator::make($request_customer_guarantee,[
@@ -114,13 +120,18 @@ class AllocateGuaranteesAndMaintenances extends Controller
                             return $query
                                 ->whereGroupId($request_customer_guarantee['group_id'])
                                 ->whereItemId($request_customer_guarantee['item_id'])
-                                ->whereCondominiumId($request_customer_guarantee['condominium_id']);
+                                ->whereCondominiumId($request_customer_guarantee['condominium_id'])
+                                ->whereCoverage($request_customer_guarantee['coverage']);
                         }),
                     ]
                 ]);
                 
                 if ($valid_customer_guarantee_request->fails()){
-                    return response()->json(['errors'=>'Essa Garantia ja foi atribuida para esse Condominio'],422); 
+                    $file_error = ['file' => ['Essa Garantia: '.$request_customer_guarantee['item_id'].' ja foi atribuida para esse Condominio']];
+                    return response()->json([
+                        'message' => 'The given data was invalid.',
+                        'errors' => $file_error],422);
+                    //return response()->json(['errors'=>''],422); 
                 }
 
                 $customer_guarantees = CustomerGuarantee::create($request_customer_guarantee);
@@ -241,7 +252,10 @@ class AllocateGuaranteesAndMaintenances extends Controller
                 ]);
 
                 if ($valid_customer_maintenanace_request->fails()){
-                    return response()->json(['errors'=>'Essa Manutencao ja foi atribuida para esse Condominio'],422); 
+                    $file_error = ['file' => ['Essa Manutencao: '.$request_guarantee_maintenance['item_id'].' ja foi atribuida para esse Condominio']];
+                    return response()->json([
+                        'message' => 'The given data was invalid.',
+                        'errors' => $file_error],422);
                 }
 
                 $customer_guarantee_maintenance =  CustomerGuaranteeMaintenance::create($request_guarantee_maintenance);

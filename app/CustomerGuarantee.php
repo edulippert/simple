@@ -64,18 +64,23 @@ class CustomerGuarantee extends Model
             }
 
 
+            if ($grouped_guarantee->qt_days_guarantee == 0){
+                $percent_evaluation = 0;
+            }else{
+                $percent_evaluation = ($qt_days_current*100)/$grouped_guarantee->qt_days_guarantee;
+            }
 
-            $percent_evaluation = ($qt_days_current*100)/$grouped_guarantee->qt_days_guarantee;
+            
 
-            if ($grouped_guarantee->status == '') {
+            //if ($grouped_guarantee->status == '') {
                 if ($grouped_guarantee->due_date < Carbon::now()) {
                     $status = 'Expirada';
                 }else{
                     $status = 'Ativa';
                 }
-            }else{
-                $status = $grouped_guarantee->status;
-            }
+            //}else{
+               // $status = $grouped_guarantee->status;
+            //}
             
             $response[] = [
                 'item_description' => $grouped_guarantee->item_description,
@@ -83,7 +88,7 @@ class CustomerGuarantee extends Model
                 'start_date' => $grouped_guarantee->start_date,
                 'due_date' => $grouped_guarantee->due_date,
                 'percent_evaluation' => $percent_evaluation,
-                'guarantee_time' => $grouped_guarantee->amount.' '.$grouped_guarantee->period,
+                'guarantee_time' => $grouped_guarantee->qt_days_guarantee == 0 ? 'Na Entrega' : $grouped_guarantee->amount.' '.$grouped_guarantee->period,
                 'status' => $status
                
             ];

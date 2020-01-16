@@ -187,17 +187,37 @@ class UserController extends Controller
     public function updateUserAndAssignments(Request $request,$id)
     {
 
+        $attributes = request()->validate([
+            'role_id' => '',
+            'username' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'id_number' => 'required',
+            'cep' => 'required',
+            'address' => 'required',
+            'complement' => 'required',
+            'phone_number' => 'required',
+            'is_active' => '',
+        ]);
+        
+        $attributes['password'] = bcrypt($attributes['password']);
+
         $user = User::find($id);
-        $user->role_id = $request->role_id;
-        $user->username = $request->username;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->id_number = $request->id_number;
-        $user->cep = $request->cep;
-        $user->address = $request->address;
-        $user->complement = $request->complement;
-        $user->phone_number = $request->phone_number;
-        $user->is_active = $request->is_active;
+        $user->fill($attributes);
+        // $user->role_id = $request->role_id;
+        // $user->username = $request->username;
+        // $user->email = $request->email;
+        // $user->password = bcrypt($request->password);
+        // $user->id_number = $request->id_number;
+        // $user->cep = $request->cep;
+        // $user->address = $request->address;
+        // $user->complement = $request->complement;
+        // $user->phone_number = $request->phone_number;
+        // $user->is_active = $request->is_active;
+        
+        $user->save();
+
+        $user->refresh();
 
         if ($request->company_id!=-1){
 
@@ -283,10 +303,6 @@ class UserController extends Controller
                 }
             }
         }
-
-        $user->push();
-
-        $user->refresh();
 
         return $user;
         
