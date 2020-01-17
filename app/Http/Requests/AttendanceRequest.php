@@ -37,7 +37,8 @@ class AttendanceRequest extends FormRequest
             'contact_name'=> 'required',
             'contact_email'=> '',
             'contact_phone_number'=> 'required',
-            'condominium_id' => 'required'
+            'condominium_id' => 'required',
+            'company_id' => 'required'
         ];
     }
 }

@@ -14,6 +14,5 @@
 <script type="text/javascript" src="/js/runtime.26209474bfa8dc87a77c.js"></script>
 <script type="text/javascript" src="/js/es2015-polyfills.8324bb31dd8aa5f2460c.js" nomodule></script>
 <script type="text/javascript" src="/js/polyfills.8bbb231b43165d65d357.js"></script>
-<script type="text/javascript" src="/js/main.f8fc4170440cbcfff71b.js"></script>
-</body>
+<script type="text/javascript" src="/js/main.b7552961c34e3640e61d.js"></script></body>
 </html>
