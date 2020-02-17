@@ -28,6 +28,19 @@ class MaintenanceProgram extends Model
 
     protected $guarded = ['id'];
 
+    public static function need_to_call_event($customer_guarantee_maintenance_id,$maintenance_date)
+    {
+        $maintenance_program = self::where('customer_guarantee_maintenance_id',$customer_guarantee_maintenance_id)
+                                ->where('maintenance_day','>',$maintenance_date)->first();
+
+        if ($maintenance_program) {
+            return false;
+        }else{
+            return true;
+        }
+
+    }
+
     public static function get_maintenance_info_by_month($condominium_id,$month,$year)
     {
         $maintenance_headers = self::getMaintenanceHeader($condominium_id,$month,$year);

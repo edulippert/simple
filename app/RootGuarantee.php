@@ -62,7 +62,7 @@ class RootGuarantee extends Model
                     'period' => $item['period'],
                     'reference' => $item['reference'],
                     'has_maintenance' => self::hasGuaranteeMaintenances($item['id']),
-                    'was_allocated' => self::wasAllocated($condominium_id,$item['group_id'],$item['item_id'])
+                    'was_allocated' => self::wasAllocated($condominium_id,$item['group_id'],$item['item_id'],$item['guarantee_description'])
                 ];
     
             }else{
@@ -85,11 +85,12 @@ class RootGuarantee extends Model
         return $response;
     }
 
-    public static function wasAllocated($condominium_id,$group_id,$item_id)
+    public static function wasAllocated($condominium_id,$group_id,$item_id,$guatantee_description)
     {
         $customer_guarantee = CustomerGuarantee::where('condominium_id',$condominium_id)
                                             ->where('group_id',$group_id)
                                             ->where('item_id',$item_id)
+                                            ->where('coverage',$guatantee_description)
                                             ->first();
         
         return $customer_guarantee ? true:false;

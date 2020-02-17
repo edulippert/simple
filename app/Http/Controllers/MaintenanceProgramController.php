@@ -174,12 +174,15 @@ class MaintenanceProgramController extends Controller
                 $maintenance_program->save();
                 $maintenance_program->refresh();
                // dd($maintenance_program);
-                
-                event(new MaintenanceProgramUpdatedEvent($maintenance_program));
 
+                if (MaintenanceProgram::need_to_call_event($maintenance_program->customer_guarantee_maintenance_id,$maintenance_program->maintenance_day)) {
+                    event(new MaintenanceProgramUpdatedEvent($maintenance_program));
+                }
+                
                 return $maintenance_program; 
             }else{
                 $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
+                
                 $maintenance_program->condominium_comments = $request->condominium_comments;
                 $maintenance_program->estimated_cost = $request->estimated_cost;
                 $maintenance_program->save();
