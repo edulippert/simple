@@ -74,7 +74,8 @@ class MaintenanceProgramController extends Controller
                 'company_comments' => $maintenance_program->company_comments,
                 'responsible' => $maintenance_program->responsible,
                 'file_name' => $file ? $file->file : null,
-                'file_id' => $file ? $file->id : null
+                'file_id' => $file ? $file->id : null,
+                'is_done' => $maintenance_program->is_done
             ];
 
         return $response;
