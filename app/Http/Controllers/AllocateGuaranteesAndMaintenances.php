@@ -173,25 +173,28 @@ class AllocateGuaranteesAndMaintenances extends Controller
 
                                 $carbon_date = Carbon::parse($start_date);
                                 
-                                $days_in_a_month = (int)($carbon_date->daysInMonth);
-
-                                $days_to_next_maintenance = 0;
-
                                 $loop_times = $customer_guarantee_maintenance->amount;
-                                
-                                for ($i=1; $i <= $loop_times; $i++) {
-                                
-                                    if (Carbon::createFromDate($start_date)->startOfMonth()->addDay($days_to_next_maintenance) > $start_date ) {
-                                        $maintenance_program = MaintenanceProgram::create([
-                                            'customer_guarantee_maintenance_id' => $customer_guarantee_maintenance->id,
-                                            'maintenance_day' => Carbon::createFromDate($start_date)->startOfMonth()->addDay($days_to_next_maintenance),
-                                            'is_blocked' => true
-                                        ]);
-                                    }           
-                                    $days_to_next_maintenance += (int)($days_in_a_month/$customer_guarantee_maintenance->amount);  
-                                }    
-                            }
 
+                                for ($j=0; $j <=11 ; $j++) { 
+                                    
+                                    $days_in_a_month = (int)(Carbon::createFromDate($start_date)->addMonth($j)->daysInMonth);
+                                    
+                                    $days_to_next_maintenance = 0;
+
+                                    for ($i=1; $i <= $loop_times; $i++) {
+                                    
+                                        if (Carbon::createFromDate($start_date)->addMonth($j)->startOfMonth()->addDay($days_to_next_maintenance) > $start_date ) {
+                                            $maintenance_program = MaintenanceProgram::create([
+                                                'customer_guarantee_maintenance_id' => $customer_guarantee_maintenance->id,
+                                                'maintenance_day' => Carbon::createFromDate($start_date)->addMonth($j)->startOfMonth()->addDay($days_to_next_maintenance),
+                                                'is_blocked' => true
+                                            ]);
+                                        }           
+                                        $days_to_next_maintenance += (int)($days_in_a_month/$customer_guarantee_maintenance->amount);  
+                                    }    
+                                }
+                            }
+                            
                             // x por ano
                             if ($customer_guarantee_maintenance->period == "2") {
 
@@ -387,28 +390,33 @@ class AllocateGuaranteesAndMaintenances extends Controller
 
                 if ($customer_guarantee_maintenance->is_informed){
 
-                    // x por mes
-                    if ($customer_guarantee_maintenance->period == "1") {
+                     // x por mes
+                     if ($customer_guarantee_maintenance->period == "1") {
 
                         $carbon_date = Carbon::parse($start_date);
                         
-                        $days_in_a_month = (int)($carbon_date->daysInMonth);
-
-                        $days_to_next_maintenance = 0;
-
                         $loop_times = $customer_guarantee_maintenance->amount;
-                        
-                        for ($i=1; $i <= $loop_times; $i++) {
-                        
-                            if (Carbon::createFromDate($start_date)->startOfMonth()->addDay($days_to_next_maintenance) > $start_date ) {
-                                $maintenance_program = MaintenanceProgram::create([
-                                    'customer_guarantee_maintenance_id' => $customer_guarantee_maintenance->id,
-                                    'maintenance_day' => Carbon::createFromDate($start_date)->startOfMonth()->addDay($days_to_next_maintenance),
-                                    'is_blocked' => true
-                                ]);
-                            }           
-                            $days_to_next_maintenance += (int)($days_in_a_month/$customer_guarantee_maintenance->amount);  
-                        }    
+
+                        for ($j=0; $j <=11 ; $j++) { 
+                            
+                            $days_in_a_month = (int)(Carbon::createFromDate($start_date)->addMonth($j)->daysInMonth);
+                            
+                            $days_to_next_maintenance = 0;
+
+                            for ($i=1; $i <= $loop_times; $i++) {
+                            
+                                if (Carbon::createFromDate($start_date)->addMonth($j)->startOfMonth()->addDay($days_to_next_maintenance) > $start_date ) {
+                                    $maintenance_program = MaintenanceProgram::create([
+                                        'customer_guarantee_maintenance_id' => $customer_guarantee_maintenance->id,
+                                        'maintenance_day' => Carbon::createFromDate($start_date)->addMonth($j)->startOfMonth()->addDay($days_to_next_maintenance),
+                                        'is_blocked' => true
+                                    ]);
+                                }           
+                                $days_to_next_maintenance += (int)($days_in_a_month/$customer_guarantee_maintenance->amount);  
+                            }    
+
+                        }
+                            
                     }
 
                     // x por ano
