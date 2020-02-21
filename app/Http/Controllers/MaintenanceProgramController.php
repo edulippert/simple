@@ -174,7 +174,10 @@ class MaintenanceProgramController extends Controller
                 $maintenance_program->responsible = $request->responsible;
                 $maintenance_program->save();
                 $maintenance_program->refresh();
-               // dd($maintenance_program);
+               
+                MaintenanceProgram::where('customer_guarantee_maintenance_id',$maintenance_program->customer_guarantee_maintenance_id)
+                ->where('is_done',false)
+                ->update(['estimated_cost' => $maintenance_program->estimated_cost]);
 
                 if (MaintenanceProgram::need_to_call_event($maintenance_program->customer_guarantee_maintenance_id,$maintenance_program->maintenance_day)) {
                     event(new MaintenanceProgramUpdatedEvent($maintenance_program));
@@ -188,6 +191,11 @@ class MaintenanceProgramController extends Controller
                 $maintenance_program->estimated_cost = $request->estimated_cost;
                 $maintenance_program->save();
                 $maintenance_program->refresh();
+
+                MaintenanceProgram::where('customer_guarantee_maintenance_id',$maintenance_program->customer_guarantee_maintenance_id)
+                                        ->where('is_done',false)
+                                        ->update(['estimated_cost' => $maintenance_program->estimated_cost]);
+
                 return $maintenance_program; 
             }
 
