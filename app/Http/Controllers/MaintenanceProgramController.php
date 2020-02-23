@@ -60,6 +60,8 @@ class MaintenanceProgramController extends Controller
                 
                 $item = $maintenance_program->customer_guarantee_maintenance->customer_guarantee->item;
             }
+
+            
         
         }
             $response = [
@@ -75,7 +77,8 @@ class MaintenanceProgramController extends Controller
                 'responsible' => $maintenance_program->responsible,
                 'file_name' => $file ? $file->file : null,
                 'file_id' => $file ? $file->id : null,
-                'is_done' => $maintenance_program->is_done
+                'is_done' => $maintenance_program->is_done,
+                'is_editable' => $maintenance_program->maintenance_day < Carbon::now() ? 'false' : 'true'
             ];
 
         return $response;
