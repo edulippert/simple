@@ -247,7 +247,8 @@ class MaintenanceProgram extends Model
                 'status' => $maintenance->is_informed ? $status:'Nao Informar',
                 'amount' => $maintenance->amount,
                 'period' => $maintenance->period,
-                'is_blocked' => $maintenance->is_blocked
+                'is_blocked' => $maintenance->is_blocked,
+                'is_done' => $maintenance->is_done
 
             ];
         }
