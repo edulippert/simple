@@ -78,7 +78,7 @@ class MaintenanceProgramController extends Controller
                 'file_name' => $file ? $file->file : null,
                 'file_id' => $file ? $file->id : null,
                 'is_done' => $maintenance_program->is_done,
-                'is_editable' => $maintenance_program->maintenance_day < Carbon::now() ? 'false' : 'true'
+                'is_editable' => $maintenance_program->maintenance_day < Carbon::now() ? false : true
             ];
 
         return $response;
