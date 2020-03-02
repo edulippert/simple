@@ -104,6 +104,21 @@ class EquipmentGuaranteeController extends Controller
      */
     public function update(Request $request, EquipmentGuarantee $equipmentguarantee)
     {
+        $attributes = request()->validate([
+            'condominium_id' => 'required',
+            'item' => 'required',
+            'start_date'=> '',
+            'duration'=> '',
+            'period'=> '',
+            'total_cost'=> 'required',
+            'reference'=> '',
+            'comments' => '',
+            'company' => '',
+            'company_number_id' => '',
+            'phone' => '',
+            'email' => ''
+        ]);
+
         $equipmentguarantee->fill($request->all());
         $equipmentguarantee->save();
         return $equipmentguarantee;
