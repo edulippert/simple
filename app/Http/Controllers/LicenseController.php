@@ -211,7 +211,5 @@ class LicenseController extends Controller
 
             return $license;
         }
-
-        
     }
 }
