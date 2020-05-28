@@ -151,27 +151,13 @@ class MaintenanceProgramController extends Controller
 
             if ($request->hasFile('file')) {
         
-                $file = File::create([
-                    'file' => $request->file('file')->getClientOriginalName(),
-                    'name' => $request->file('file')->hashName(),
-                    'type' => $request->file('file')->getClientOriginalExtension(),
-                    'subtype' => 'ProgramMaintenance'
-                ]);
-    
-                $file->refresh();
-    
-                $fileName = $file->name;
-                $project_path = '/program_maintenance'.'/'.$file->id;
-                        
-                $path = $request->file('file')->move(public_path($project_path),$fileName);
-                
-                $fileUrl = url('/program_maintenance'.'/'.$file->id.'/'.$fileName);
-    
+                $create_file = File::createFile($request,'ProgramMaintenances',null);
+
                 $maintenance_program = MaintenanceProgram::whereId($request->maintenance_program_id)->first();
                 $maintenance_program->condominium_comments = $request->condominium_comments;
                 $maintenance_program->estimated_cost = $request->estimated_cost;
                 $maintenance_program->executed_cost = $request->executed_cost;
-                $maintenance_program->file_id = $file->id;
+                $maintenance_program->file_id = $create_file['file_id'];
                 $maintenance_program->executed_day = Carbon::now();
                 $maintenance_program->is_done = true;
                 $maintenance_program->responsible = $request->responsible;
@@ -220,20 +206,7 @@ class MaintenanceProgramController extends Controller
 
     public function downloadFile($id)
     {
-        
-        $file = File::find($id);
-
-        if ($file) {
-            $name = $file->name;
-            $project_path = '/program_maintenance'.'/'.$file->id.'/';
-            $completePath = $project_path.$name;
-
-            return response()->download(\public_path($completePath),$file->file);
-        }else{
-            return response()->json(['errors'=>'Arquivo nao localizado'],422);
-        }
-
-        
+        return File::downloadFile($id);
     }
 
     public function deleteFile(Request $request)
@@ -246,19 +219,14 @@ class MaintenanceProgramController extends Controller
             $file = File::find($request->file_id);
             
             if ($file) {
-                
-                $licensePath = '/program_maintenance'.'/'.$file->id;
-                $completePath = $licensePath;
-        
-                \File::deleteDirectory(\public_path($completePath));
-        
+                   
                 $maintenance_program->executed_day = null;
                 $maintenance_program->is_done = false;
                 $maintenance_program->file_id = null;
                 $maintenance_program->save();
-                $file->delete();
-        
-                return response()->json([],204);
+                
+                return File::deleteFile($file);
+
             }else{
                 $file_error = ['file' => ['O file_id: '.$request->maintenance_program_id.' nao foi localizado']];
                 return response()->json([

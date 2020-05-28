@@ -131,25 +131,10 @@ class ContractController extends Controller
     public function uploadoFiles(Request $request){
 
         if ($request->hasFile('file')) {
-            
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Contracts'
-            ]);
 
-            $file->refresh();
+            $create_file = File::createFile($request,'Contracts',null);
 
-            $fileName = $file->name;
-            $contract_path = '/contracts'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($contract_path),$fileName);
-            
-            $fileUrl = url('/contracts'.'/'.$file->id.'/'.$fileName);
-
-            $request->request->add(['file_id'=> $file->id]);
-            
+            $request->request->add(['file_id'=> $create_file['file_id']]);
             
             $attributes = request()->validate([
                 'condominium_id' => 'required',
@@ -166,7 +151,7 @@ class ContractController extends Controller
 
             Contract::create($attributes);
 
-            return response()->json(['url' => $fileUrl],200);
+            return response()->json(['url' => $create_file['file_url']],200);
 
         } else {
 
@@ -180,16 +165,7 @@ class ContractController extends Controller
 
     public function downloadFile($file_id)
     {
-
-        $file = File::find($file_id);
-
-        if ($file) {
-            $name = $file->name;
-            $contract_path = '/contracts'.'/'.$file->id.'/';
-            $completePath = $contract_path.$name;
-        }
-
-        return response()->download(\public_path($completePath),$file->file);
+        return File::downloadFile($file_id);
     }
 
     public function deleteFile(Request $request)
@@ -202,17 +178,12 @@ class ContractController extends Controller
             $file = File::find($contract->file_id);
 
             if ($file) {
-                
-                $licensePath = '/contracts'.'/'.$file->id;
-                $completePath = $licensePath;
-        
-                \File::deleteDirectory(\public_path($completePath));
-        
+                        
                 $contract->file_id = null;
                 $contract->save();
-                $file->delete();
-        
-                return response()->json([],204);
+
+                return File::deleteFile($file);
+
             }else {
                 $file_error = ['file' => ['file_id nao localizado']];
                 return response()->json([
@@ -232,26 +203,15 @@ class ContractController extends Controller
     public function updateFile(Request $request, $contract_id)
     {
 
+        $contract = Contract::find($contract_id);
+
         if ($request->hasFile('file')) {
             
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Project'
-            ]);
-
-            $file->refresh();
-
-            $fileName = $file->name;
-            $project_path = '/contracts'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($project_path),$fileName);
+            $file_to_remove = $contract->file_id;
             
-            $fileUrl = url('/contracts'.'/'.$file->id.'/'.$fileName);
+            $create_file = File::createFile($request,'Contracts',null);
 
-            $request->request->add(['file_id'=> $file->id]);
-            
+            $request->request->add(['file_id'=> $create_file['file_id']]);
             
             $attributes = request()->validate([
                 'condominium_id' => 'required',
@@ -266,9 +226,18 @@ class ContractController extends Controller
                 'contact_phone_number' => 'required'
             ]);
 
+            $contract->fill($attributes);
+            $contract->save();
+            $contract->refresh();
 
-            $contract = Contract::fill($attributes);
-            
+            $file = File::find($file_to_remove);
+            if ($file) {
+                
+                $response_delete = File::deleteFile($file);
+            }
+
+            return $contract;
+        
         }else{
             
             $attributes = request()->validate([
@@ -282,12 +251,12 @@ class ContractController extends Controller
                 'contact_email' => '',
                 'contact_phone_number' => 'required'
             ]);
-            $contract = Contract::fill($attributes);
-          
-
+            
+            $contract->fill($attributes);
+            $contract->save();    
+            return $contract;    
         }
 
-
-        return $contract;
+        
     }
 }

@@ -190,48 +190,26 @@ class AttendanceController extends Controller
 
         if ($request->hasFile('file')) {
             
-           
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Attendance'
-            ]);
-
-
-            $file->refresh();
-
-            $fileName = $file->name;
-            $attendance_path = '/attendances'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($attendance_path),$fileName);
-            
-            $fileUrl = url('/attendances'.'/'.$file->id.'/'.$fileName);
+            $create_file = File::createFile($request,'Attendances',null);
             
             $attendance = Attendance::find($id);
-            $attendance->file_id = $file->id;
+            $attendance->file_id = $create_file['file_id'];
             $attendance->save();
 
-            return response()->json(['url' => $fileUrl],200);
+            return response()->json(['url' => $create_file['file_url']],200);
 
         } else {
-            return 'no file!';
+            $file_error = ['file' => ['Arquivo obrigatorio']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
         }       
 
     }
 
     public function downloadFile($file_id)
     {
-
-        $file = File::find($file_id);
-        
-        if ($file) {
-            $name = $file->name;
-            $attendance_path = '/attendances'.'/'.$file->id.'/';
-            $completePath = $attendance_path.$name;
-        }
-        
-        return response()->download(\public_path($completePath),$file->file);
+        return File::downloadFile($file_id);
     }
 
     public function acceptanceTerm($id)

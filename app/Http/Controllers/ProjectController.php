@@ -71,33 +71,15 @@ class ProjectController extends Controller
 
         if ($request->hasFile('file')) {
             
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Project'
-            ]);
+            $create_file = File::createFile($request,'Projects',null);
 
-            $file->refresh();
+            $project->name = $request->name;
+            $project->file_id = $create_file['file_id'];
+            $project->save();
+            $project->refresh();
+            return $project;
 
-            $fileName = $file->name;
-            $project_path = '/projects'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($project_path),$fileName);
-            
-            $fileUrl = url('/projects'.'/'.$file->id.'/'.$fileName);
         }
-        // $attributes = request()->validate([
-        //     'condominium_id' => 'required',
-        //     'file_id' => 'required',
-        //     'name' => 'required'
-        // ]);
-        $project->name = $request->name;
-        $project->file_id = $file->id;
-        $project->save();
-
-
-        return $project;
     }
 
     /**
@@ -109,18 +91,13 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         if ($project->file){
-            $file = $project->file;
-            $name = $file->name;
-            $licensePath = '/projects'.'/'.$file->id;
-            $completePath = $licensePath;
-
             
-            \File::deleteDirectory(\public_path($completePath));
+            $file = $project->file;
 
             $project->delete();
-            $file->delete();
 
-            return response()->json([],204);
+            return File::deleteFile($file);
+
         }else{
             $project->delete();
             return response()->json([],204);
@@ -152,24 +129,10 @@ class ProjectController extends Controller
 
         
         if ($request->hasFile('file')) {
-            
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Project'
-            ]);
+         
+            $create_file = File::createFile($request,'Projects',null);
 
-            $file->refresh();
-
-            $fileName = $file->name;
-            $project_path = '/projects'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($project_path),$fileName);
-            
-            $fileUrl = url('/projects'.'/'.$file->id.'/'.$fileName);
-
-            $request->request->add(['file_id'=> $file->id]);
+            $request->request->add(['file_id'=> $create_file['file_id']]);
 
             $atrributes = request()->validate([
                 'condominium_id' => 'required',
@@ -178,13 +141,8 @@ class ProjectController extends Controller
             ]);
 
             Project::create($atrributes);
-            // Project::create([
-            //     'condominium_id' => $request->condominium_id,
-            //     'file_id' => $file->id,
-            //     'name' => $request->name
-            // ]);
             
-            return response()->json(['url' => $fileUrl],200);
+            return response()->json(['url' => $create_file['file_url']],200);
 
         } else {
             $file_error = ['file' => ['Arquivo obrigatorio']];
@@ -197,86 +155,72 @@ class ProjectController extends Controller
 
     public function downloadFile($id)
     {
-        
-        $file = File::find($id);
-
-        if ($file) {
-            $name = $file->name;
-            $project_path = '/projects'.'/'.$file->id.'/';
-            $completePath = $project_path.$name;
-
-            return response()->download(\public_path($completePath),$file->file);
-        }else{
-            return response()->json(['errors'=>'Arquivo nao localizado'],422);
-        }
-
-        
+        return File::downloadFile($id);
     }
 
     public function deleteFile(Request $request)
     {
-
         $project = Project::find($request->project_id);
 
         if ($project) {
             
             $file = File::find($project->file_id);
     
-            $licensePath = '/projects'.'/'.$file->id;
-            $completePath = $licensePath;
-    
-            \File::deleteDirectory(\public_path($completePath));
-    
-            $project->file_id = null;
-            $project->save();
-            $file->delete();
-    
-            return response()->json([],204);
+            if ($file) {
+                        
+                $project->file_id = null;
+                $project->save();
+            
+                return File::deleteFile($file);
+
+            }else {
+                $file_error = ['file' => ['file_id nao localizado']];
+                return response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => $file_error],422);
+            }
+
         }else{
             $file_error = ['file' => ['O project_id: '.$request->project_id.' nao localizado']];
             return response()->json([
                 'message' => 'The given data was invalid.',
                 'errors' => $file_error],422);
         } 
-        
-
     }
 
     public function updateFile(Request $request, $project_id)
     {
 
+        $project = Project::find($project_id);
+
         if ($request->hasFile('file')) {
             
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Project'
-            ]);
-
-            $file->refresh();
-
-            $fileName = $file->name;
-            $project_path = '/projects'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($project_path),$fileName);
+            $file_to_remove = $project->file_id;
             
-            $fileUrl = url('/projects'.'/'.$file->id.'/'.$fileName);
+            $create_file = File::createFile($request,'Projects',null);
 
-            $project = Project::find($project_id);
             $project->name = $request->name;
             $project->file_id = $file->id;
             $project->save();
+            $project->refresh();
+
+            $file = File::find($file_to_remove);
+            
+            if ($file) {    
+                $response_delete = File::deleteFile($file);
+            }
+
+            return $project;
+
         }else{
             
             $project = Project::find($project_id);
             $project->name = $request->name;
             $project->save();
+            $project->refresh();
 
+            return $project;
         }
-
-
-        return $project;
     }
 
 }

@@ -123,29 +123,15 @@ class LicenseController extends Controller
         
         if ($request->hasFile('file')) {
             
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'License'
-            ]);
-
-            $file->refresh();
-
-            $fileName = $file->name;
-            $equipment_path = '/licenses'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($equipment_path),$fileName);
-            
-            $fileUrl = url('/licenses'.'/'.$file->id.'/'.$fileName);
+            $create_file = File::createFile($request,'Licenses',null);
 
             License::create([
                 'condominium_id' => $request->condominium_id,
-                'file_id' => $file->id,
+                'file_id' => $create_file['file_id'],
                 'description' => $request->description
             ]);
             
-            return response()->json(['url' => $fileUrl],200);
+            return response()->json(['url' => $create_file['file_url']],200);
 
         } else {
             $file_error = ['file' => ['Arquivo obrigatorio']];
@@ -158,19 +144,7 @@ class LicenseController extends Controller
 
     public function downloadFile($file_id)
     {
-
-        $file = File::find($file_id);
-
-        if ($file) {
-            $name = $file->name;
-            $equipment_path = '/licenses'.'/'.$file->id.'/';
-            $completePath = $equipment_path.$name;
-            return response()->download(\public_path($completePath),$file->file);
-        }else{
-
-            return response()->json(['errors'=>'Arquivo nao localizado'],422);
-        }
-
+        return File::downloadFile($file_id);
     }
 
     public function deleteFile(Request $request)
@@ -179,19 +153,23 @@ class LicenseController extends Controller
         $license = License::find($request->license_id);
         
         if ($license) {
-            # code...
+            
             $file = File::find($license->file_id);
     
-            $licensePath = '/licenses'.'/'.$file->id;
-            $completePath = $licensePath;
-    
-            \File::deleteDirectory(\public_path($completePath));
-    
-            $license->file_id = null;
-            $license->save();
-            $file->delete();
-    
-            return response()->json([],204);
+            if ($file) {
+                        
+                $license->file_id = null;
+                $license->save();
+            
+                return File::deleteFile($file);
+
+            }else {
+                $file_error = ['file' => ['file_id nao localizado']];
+                return response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => $file_error],422);
+            }
+
         }else{
             $file_error = ['file' => ['O license_id: '.$request->license_id.' nao localizado']];
             return response()->json([
@@ -204,36 +182,36 @@ class LicenseController extends Controller
     public function updateFile(Request $request, $project_id)
     {
 
+        $license = License::find($project_id);
+
         if ($request->hasFile('file')) {
             
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Project'
-            ]);
-
-            $file->refresh();
-
-            $fileName = $file->name;
-            $project_path = '/licenses'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($project_path),$fileName);
+            $file_to_remove = $license->file_id;
             
-            $fileUrl = url('/licenses'.'/'.$file->id.'/'.$fileName);
-
-            $license = License::find($project_id);
+            $create_file = File::createFile($request,'Licenses',null);
+            
             $license->description = $request->description;
-            $license->file_id = $file->id;
+            $license->file_id = $create_file['file_id'];
             $license->save();
+            $license->refresh();    
+
+            $file = File::find($file_to_remove);
+            if ($file) {
+                
+                $response_delete = File::deleteFile($file);
+            }
+
+            return $license;
+
         }else{
             
             $license = License::find($project_id);
             $license->description = $request->description;
             $license->save();
 
+            return $license;
         }
 
-        return $license;
+        
     }
 }

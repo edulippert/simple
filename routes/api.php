@@ -137,7 +137,7 @@ Route::name('license_download_file')->get('license_download_file/{id}','LicenseC
 Route::name('license_delete_file')->post('license_delete_file','LicenseController@deleteFile');
 Route::name('license_update_file')->post('license_update_file/{id}','LicenseController@updateFile');
 
-Route::name('equipment_guarantee_upload_files')->post('equipment_guarantee_upload_files/{id}','EquipmentGuaranteeController@uploadoFiles');
+Route::name('equipment_guarantee_upload_files')->post('equipment_guarantee_upload_files/{id}','EquipmentGuaranteeController@uploadFiles');
 Route::name('equipment_guarantee_download_files')->get('equipment_guarantee_download_files/{id}','EquipmentGuaranteeController@downloadFile');
 
 Route::name('get_customer_guarantees')->post('get_customer_guarantees','CustomerGuaranteeController@getCustomerGuarantees');

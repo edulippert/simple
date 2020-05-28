@@ -146,49 +146,29 @@ class EquipmentGuaranteeController extends Controller
 
     }
 
-    public function uploadoFiles(Request $request, $id ){
+    public function uploadFiles(Request $request, $id ){
 
         if ($request->hasFile('file')) {
             
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'EquipmentGuarantee'
-            ]);
+            $create_file = File::createFile($request,'EquipmentGuarantees',null);
 
-            $file->refresh();
+            $equipmentGuarantee = EquipmentGuarantee::find($id);
+            $equipmentGuarantee->file_id = $create_file['file_id'];
+            $equipmentGuarantee->save();
 
-            $fileName = $file->name;
-            $equipment_path = '/equipment_guarantees'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($equipment_path),$fileName);
-            
-            $fileUrl = url('/equipment_guarantees'.'/'.$file->id.'/'.$fileName);
-            
-            $attendance = EquipmentGuarantee::find($id);
-            $attendance->file_id = $file->id;
-            $attendance->save();
-
-            return response()->json(['url' => $fileUrl],200);
+            return response()->json(['url' => $create_file['file_url']],200);
 
         } else {
-            return 'no file!';
+            $file_error = ['file' => ['Arquivo obrigatorio']];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
         }      
 
     }
 
     public function downloadFile($file_id)
     {
-
-        $file = File::find($file_id);
-
-        if ($file) {
-            $name = $file->name;
-            $equipment_path = '/equipment_guarantees'.'/'.$file->id.'/';
-            $completePath = $equipment_path.$name;
-        }
-
-        return response()->download(\public_path($completePath),$file->file);
+        return File::downloadFile($file_id);
     }
 }

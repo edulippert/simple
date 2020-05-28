@@ -14,40 +14,81 @@ class File extends Model
     protected $table = 'files';
 
     const BASE_PATH = 'app/public';
+    const DIR_ATTACHMENTS = 'attachments';
 
-    public static function createFiles($files):Collection{
-        try {
-            
-            self::uploadFiles($files);
-            DB::beginTransaction();
-            $files = self::createFileModels($files);
-            DB::commit();
-            return new Collection($files);
+    const ATTACHMENTS_PATH = self::BASE_PATH . '/' . self::DIR_ATTACHMENTS;
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
-    }
-
-    public static function uploadFiles($files){
-        $dir = 'attendance';
-        dd($files); 
-        $files->store($dir,['disk'=>'public']);
-        //}
-    }
-
-    private static function createFileModels($files):array{
+    public static function createFile($request, $subtype,$id_sender=1){
         
-        //foreach ($files as $file){
-            $files =self::create([
-                'file' => 'attendance',
-                'name' => $files->hashName(),
-                'type' => 'pdf',
-                'subtypo' => 'pdf'
-            ]); 
-        //}
-        return $files;
+        
+        
+        $file = self::create([
+            'file' => $request->file('file')->getClientOriginalName(),
+            'name' => $request->file('file')->hashName(),
+            'type' => $request->file('file')->getClientOriginalExtension(),
+            'subtype' => $subtype
+        ]);
+
+        $file->refresh();
+
+        $file_path = ('/'.$subtype.'/'.$file->id);
+
+        $fileName = $file->name;   
+        
+        $dir = self::attachmentsPath($file_path);
+        
+        $path = $request->file('file')->move($dir,$fileName);
+        
+        $file_url = $file_path.'/'.$file->name;    
+
+        return $response = [
+            'file_url' =>  $file_url,
+            'file_id' => $file->id
+        ];
     }
+
+    public static function downloadFile($file_id)
+    {
+
+        $file = File::find($file_id);
+
+        if ($file) {
+      
+            $completePath = '/'.$file->subtype.'/'.$file->id.'/'.$file->name;
+
+            //$completePath = $file->file_path.'/'.$file->hash_name;
+            
+            $dir = self::attachmentsPath($completePath);
+
+            return response()->download($dir,$file->file);
+            
+        }else{
+            $file_error = ['file_id' => ['Arquivo nao localizado no banco. ID = '.$file_id]];
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $file_error],422);
+        }    
+    }
+
+    public static function deleteFile($file){
+        
+        
+        $file_path = '/'.$file->subtype.'/'.$file->id;
+
+        $dir = self::attachmentsPath($file_path);
+        
+        $file->delete();
+
+        \File::deleteDirectory($dir);
+
+        return response()->json([],204);
+        
+    }
+
+    public static function attachmentsPath($attachPath)
+    {
+        $path = self::ATTACHMENTS_PATH;
+        return storage_path("{$path}{$attachPath}");
+    }
+
 }

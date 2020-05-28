@@ -133,30 +133,16 @@ class ManualController extends Controller
 
         
         if ($request->hasFile('file')) {
-            
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Manual'
-            ]);
 
-            $file->refresh();
-
-            $fileName = $file->name;
-            $manual_path = '/manuals'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($manual_path),$fileName);
-            
-            $fileUrl = url('/manuals'.'/'.$file->id.'/'.$fileName);
+            $create_file = File::createFile($request,'Manuals',null);
 
             Manual::create([
                 'condominium_id' => $request->condominium_id,
-                'file_id' => $file->id,
+                'file_id' => $create_file['file_id'],
                 'name' => $request->name
             ]);
             
-            return response()->json(['url' => $fileUrl],200);
+            return response()->json(['url' => $create_file['file_url']],200);
 
         } else {
             $file_error = ['file' => ['Arquivo obrigatorio']];
@@ -169,18 +155,7 @@ class ManualController extends Controller
 
     public function downloadFile($file_id)
     {
-       
-        $file = File::find($file_id);
-      
-        if ($file) {
-            $name = $file->name;
-            $manual_path = '/manuals'.'/'.$file->id.'/';
-            $completePath = $manual_path.$name;
-            return response()->download(\public_path($completePath),$file->file);
-        }else{
-            return response()->json(['errors'=>'Arquivo nao localizado'],422);
-        }
-
+        return File::downloadFile($file_id);
     }
 
     public function deleteFile(Request $request)
@@ -192,16 +167,22 @@ class ManualController extends Controller
             # code...
             $file = File::find($manual->file_id);
     
-            $licensePath = '/manuals'.'/'.$file->id;
-            $completePath = $licensePath;
-    
-            \File::deleteDirectory(\public_path($completePath));
-    
-            $manual->file_id = null;
-            $manual->save();
-            $file->delete();
-    
+            if ($file) {
+                        
+                $manual->file_id = null;
+                $manual->save();
+
+                return File::deleteFile($file);
+
+            }else {
+                $file_error = ['file' => ['file_id nao localizado']];
+                return response()->json([
+                    'message' => 'The given data was invalid.',
+                    'errors' => $file_error],422);
+            }
+
             return response()->json([],204);
+
         }else{
             $file_error = ['file' => ['O manual_id: '.$request->manual_id.' nao localizado']];
             return response()->json([
@@ -215,37 +196,38 @@ class ManualController extends Controller
     public function updateFile(Request $request, $manual_id)
     {
 
+        $manual = Manual::find($manual_id);
+
         if ($request->hasFile('file')) {
+         
+            $file_to_remove = $manual->file_id;
             
-            $file = File::create([
-                'file' => $request->file('file')->getClientOriginalName(),
-                'name' => $request->file('file')->hashName(),
-                'type' => $request->file('file')->getClientOriginalExtension(),
-                'subtype' => 'Manual'
-            ]);
+            $create_file = File::createFile($request,'Manuals',null);
 
-            $file->refresh();
-
-            $fileName = $file->name;
-            $project_path = '/manuals'.'/'.$file->id;
-                 
-            $path = $request->file('file')->move(public_path($project_path),$fileName);
-            
-            $fileUrl = url('/manuals'.'/'.$file->id.'/'.$fileName);
-
-            $manual = Manual::find($manual_id);
             $manual->name = $request->name;
-            $manual->file_id = $file->id;
+            $manual->file_id = $create_file['file_id'];
             $manual->save();
+            $manual->refresh();
+            
+            $file = File::find($file_to_remove);
+            
+            if ($file) {
+                
+                $response_delete = File::deleteFile($file);
+            }
+
+            return $manual;
+
         }else{
             
             $manual = Manual::find($manual_id);
             $manual->name = $request->name;
             $manual->save();
+            $manual->refresh();
+
+            return $manual;
 
         }
 
-
-        return $manual;
     }
 }
