@@ -85,7 +85,7 @@ class File extends Model
         
         $file->delete();
 
-        Storage::deleteDirectory($file_path);
+        Storage::disk('s3')->deleteDirectory($file_path);
         
         //\File::deleteDirectory($dir);
 
