@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
 
 class File extends Model
 {
@@ -36,8 +38,12 @@ class File extends Model
         $fileName = $file->name;   
         
         $dir = self::attachmentsPath($file_path);
+
+        $path = Storage::disk('s3')->put('uploads/originals', $request->file);
+
+        //$path = $request->file('file')->store('teste', 's3');
         
-        $path = $request->file('file')->move($dir,$fileName);
+        //$path = $request->file('file')->move($dir,$fileName);
         
         $file_url = $file_path.'/'.$file->name;    
 
