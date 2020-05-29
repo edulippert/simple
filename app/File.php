@@ -33,13 +33,13 @@ class File extends Model
 
         $file->refresh();
 
-        $file_path = ('/'.$subtype.'/'.$file->id);
+        $file_path = (self::DIR_ATTACHMENTS.'/'.$subtype.'/'.$file->id);
 
         $fileName = $file->name;   
         
-        $dir = self::attachmentsPath($file_path);
+        //$dir = self::attachmentsPath($file_path);
 
-        $path = Storage::disk('s3')->put('uploads/originals', $request->file);
+        $path = Storage::disk('s3')->put($file_path, $request->file);
 
         //$path = $request->file('file')->store('teste', 's3');
         
