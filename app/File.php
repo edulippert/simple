@@ -60,13 +60,13 @@ class File extends Model
 
         if ($file) {
       
-            $completePath = '/'.$file->subtype.'/'.$file->id.'/'.$file->name;
+            $completePath =  self::DIR_ATTACHMENTS.'/'.$file->subtype.'/'.$file->id.'/'.$file->name;
 
             //$completePath = $file->file_path.'/'.$file->hash_name;
             
-            $dir = self::attachmentsPath($completePath);
-
-            return response()->download($dir,$file->file);
+            //$dir = self::attachmentsPath($completePath);
+            return Storage::download($completePath, $file->file);
+           //return response()->download($dir,);
             
         }else{
             $file_error = ['file_id' => ['Arquivo nao localizado no banco. ID = '.$file_id]];
@@ -79,13 +79,15 @@ class File extends Model
     public static function deleteFile($file){
         
         
-        $file_path = '/'.$file->subtype.'/'.$file->id;
+        $file_path = self::DIR_ATTACHMENTS.'/'.$file->subtype.'/'.$file->id;
 
-        $dir = self::attachmentsPath($file_path);
+        //$dir = self::attachmentsPath($file_path);
         
         $file->delete();
 
-        \File::deleteDirectory($dir);
+        Storage::deleteDirectory($file_path);
+        
+        //\File::deleteDirectory($dir);
 
         return response()->json([],204);
         
