@@ -91,17 +91,11 @@ class ManualController extends Controller
 
         if ($manual->file){
             $file = $manual->file;
-            $name = $file->name;
-            $licensePath = '/manuals'.'/'.$file->id;
-            $completePath = $licensePath;
-
             
-            \File::deleteDirectory(\public_path($completePath));
-
             $manual->delete();
-            $file->delete();
-
-            return response()->json([],204);
+            
+            return File::deleteFile($file);
+            
         }else{
             $manual->delete();
             return response()->json([],204);
