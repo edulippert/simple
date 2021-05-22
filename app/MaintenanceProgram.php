@@ -48,7 +48,7 @@ class MaintenanceProgram extends Model
         $response = [];
 
         foreach ($maintenance_headers as $maintenance_header) {
-        
+
             switch ($maintenance_header->just_month) {
                 case '01':
                     $text_month = 'Janeiro';
@@ -64,13 +64,13 @@ class MaintenanceProgram extends Model
                     break;
                 case '05':
                     $text_month = 'Maio';
-                    break;    
+                    break;
                 case '06':
                     $text_month = 'Junho';
                     break;
                 case '07':
                     $text_month = 'Julho';
-                    break;    
+                    break;
                 case '08':
                     $text_month = 'Agosto';
                     break;
@@ -89,14 +89,14 @@ class MaintenanceProgram extends Model
             }
 
             if ($maintenance_header->total != 0) {
-               
+
                 $percent_done = round(($maintenance_header->nr_done * 100) / $maintenance_header->total);
-            
+
             }else{
-            
+
                 $percent_done = 0;
-            }     
-   
+            }
+
             $response[] = [
                 'month_year' => $text_month.'/'.$maintenance_header->just_year,
                 'tasks_done' => $maintenance_header->nr_done,
@@ -132,13 +132,13 @@ class MaintenanceProgram extends Model
         ];
 
         $now = Carbon::now();
-        
-        
+
+
 
         foreach ($maintenance_headers as $maintenance_header) {
-        
+
             $collapse = false;
-           
+
             if ($now->month == (int)$maintenance_header->just_month) {
                 $collapse = true;
             }
@@ -160,13 +160,13 @@ class MaintenanceProgram extends Model
                     break;
                 case '05':
                     $text_month = 'Maio';
-                    break;    
+                    break;
                 case '06':
                     $text_month = 'Junho';
                     break;
                 case '07':
                     $text_month = 'Julho';
-                    break;    
+                    break;
                 case '08':
                     $text_month = 'Agosto';
                     break;
@@ -185,17 +185,17 @@ class MaintenanceProgram extends Model
             }
 
             if ($maintenance_header->total != 0) {
-               
+
                 $percent_done = round(($maintenance_header->nr_done * 100) / $maintenance_header->total);
-            
+
             }else{
-            
+
                 $percent_done = 0;
-            }     
+            }
 
 
 
-            
+
             $response[] = [
                 'month_year' => $text_month.'/'.$maintenance_header->just_year,
                 'tasks_done' => $maintenance_header->nr_done,
@@ -219,7 +219,7 @@ class MaintenanceProgram extends Model
 
         $response = [];
         foreach ($maintenances as $maintenance) {
-            
+
             $status = 'Aberto';
 
             if ($maintenance->executed_day != null) {
@@ -233,7 +233,7 @@ class MaintenanceProgram extends Model
                     $status = 'Atrasado';
                 }
             }
-            
+
             $response[] = [
                 'id' => $maintenance->id,
                 'day' => $maintenance->is_informed? $maintenance->just_day:' - ',
@@ -260,11 +260,11 @@ class MaintenanceProgram extends Model
     public static function buildCompanyCondominiumsGroupedByMaintenancesPercent($company_id,$month=null,$year=null)
     {
         $condominiums = Condominium::whereCompanyId($company_id)->get();
-        
+
         $response = [];
 
         foreach ($condominiums as $condominium) {
-            
+
             switch ($month) {
                 case 1:
                     $text_month = 'Janeiro';
@@ -280,13 +280,13 @@ class MaintenanceProgram extends Model
                     break;
                 case 5:
                     $text_month = 'Maio';
-                    break;    
+                    break;
                 case 6:
                     $text_month = 'Junho';
                     break;
                 case 7:
                     $text_month = 'Julho';
-                    break;    
+                    break;
                 case 8:
                     $text_month = 'Agosto';
                     break;
@@ -308,24 +308,24 @@ class MaintenanceProgram extends Model
 
 
             if ($maintenance_header) {
-                
-               
-    
+
+
+
                 if ($maintenance_header->total != 0) {
-                   
+
                     $percent_done = round(($maintenance_header->nr_done * 100) / $maintenance_header->total);
-                
+
                 }else{
-                
+
                     $percent_done = 0;
-                }  
-    
+                }
+
                 $response[] = [
                     'condominium_id' => $condominium->id,
                     'name' => $condominium->name,
                     'text_month' => $text_month,
                     'percent_done' => $percent_done
-    
+
                 ];
             }else{
 
@@ -334,7 +334,7 @@ class MaintenanceProgram extends Model
                     'name' => $condominium->name,
                     'text_month' => $text_month,
                     'percent_done' => 0
-    
+
                 ];
             }
 
@@ -349,7 +349,7 @@ class MaintenanceProgram extends Model
         if ($year) {
 
             if ($month) {
-                
+
                 $grouped_maintenances = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
                                         ->whereRaw('extract(month from maintenance_day) = '.$month)
                                         ->whereRaw('extract(year from maintenance_day) = '.$year)
@@ -413,7 +413,7 @@ class MaintenanceProgram extends Model
     public static function getMaintenancesPrograms($condominium_id,$month=null,$year=null,$is_informed = true)
     {
         if ($month) {
-            
+
             $maintenance_programs = self::where('customer_guarantee_maintenances.condominium_id',$condominium_id)
                                     ->whereRaw('extract(month from maintenance_day) = '.$month)
                                     ->whereRaw('extract(year from maintenance_day) = '.$year)
@@ -501,7 +501,7 @@ class MaintenanceProgram extends Model
                                     )
                                     ->orderBy('maintenance_day')
                                     ->get();
-        
+
         return $maintenance_programs;
 
     }
@@ -515,17 +515,17 @@ class MaintenanceProgram extends Model
         ->join('items','items.id','customer_guarantee_maintenances.item_id')
         ->select(DB::raw("
                             case when executed_day is not null then
-                                case 
+                                case
                                     when executed_day > maintenance_day then
                                         'Executado com atraso'
                                     else
                                         'Executado'
                                 end
                             else
-                                case when maintenance_day > current_date then
+                               case when maintenance_day > current_date then
                                     'Atrasado'
                                 else
-                                    'Em Aberto' 
+                                    'Em Aberto'
                                 end
                             end as status"),
             'groups.description as group_description',
@@ -555,5 +555,5 @@ class MaintenanceProgram extends Model
     {
         return $this->belongsTo(CustomerGuaranteeMaintenance::class, 'customer_guarantee_maintenance_id' , 'id');
     }
-    
+
 }
